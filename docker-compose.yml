@@ -1,0 +1,12 @@
+services:
+  cv:
+    image: ghcr.io/agosalvez/cv-adriangosalvez:latest
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    labels:
+      # Ejemplo con Traefik (opcional, borra si no lo usas)
+      - "traefik.enable=true"
+      - "traefik.http.routers.cv.rule=Host(`cv.adriangosalvez.es`)"
+      - "traefik.http.routers.cv.entrypoints=websecure"
+      - "traefik.http.routers.cv.tls.certresolver=letsencrypt"

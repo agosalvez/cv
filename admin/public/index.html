@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CV Admin — Adrián Gosálvez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            surface: { DEFAULT: '#1C2333', hover: '#232D42', border: '#2D3B55' },
+            ink: { DEFAULT: '#F1F5F9', muted: '#94A3B8', faint: '#475569' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #0F1624; color: #F1F5F9; font-family: 'Inter', sans-serif; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2D3B55; border-radius: 999px; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 500;
+      color: #94A3B8; cursor: pointer; transition: all .15s; white-space: nowrap;
+    }
+    .nav-item:hover { background: #1C2333; color: #F1F5F9; }
+    .nav-item.active { background: #1E3A5F; color: #60A5FA; }
+    .nav-item .icon { font-size: 15px; width: 20px; text-align: center; }
+
+    .field {
+      width: 100%; background: #0F1624; border: 1px solid #2D3B55;
+      border-radius: 8px; padding: 9px 12px; font-size: 13.5px; color: #F1F5F9;
+      font-family: inherit; transition: border-color .15s; outline: none;
+    }
+    .field:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+    .field::placeholder { color: #475569; }
+    textarea.field { resize: vertical; }
+
+    .label { display: block; font-size: 11.5px; font-weight: 600; color: #64748B;
+              text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+
+    .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px;
+           border-radius:8px; font-size:13px; font-weight:500; cursor:pointer;
+           border:none; transition:all .15s; font-family:inherit; }
+    .btn-primary { background:#2563EB; color:#fff; }
+    .btn-primary:hover { background:#1D4ED8; }
+    .btn-sm { padding:5px 10px; font-size:12px; border-radius:6px; }
+    .btn-ghost { background:#1C2333; color:#94A3B8; border:1px solid #2D3B55; }
+    .btn-ghost:hover { background:#232D42; color:#F1F5F9; }
+    .btn-danger { background:rgba(239,68,68,.08); color:#F87171; border:1px solid rgba(239,68,68,.15); }
+    .btn-danger:hover { background:rgba(239,68,68,.18); }
+
+    .card {
+      background: #1C2333; border: 1px solid #2D3B55;
+      border-radius: 12px; padding: 18px 20px;
+    }
+    .card-row {
+      background: #1C2333; border: 1px solid #2D3B55; border-radius: 10px;
+      padding: 14px 16px; transition: border-color .15s;
+    }
+    .card-row:hover { border-color: #3B4E6B; }
+
+    .badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px;
+             border-radius:99px; font-size:11px; font-weight:600; }
+    .badge-green { background:rgba(16,185,129,.12); color:#34D399; border:1px solid rgba(16,185,129,.2); }
+    .badge-blue  { background:rgba(59,130,246,.12); color:#60A5FA; border:1px solid rgba(59,130,246,.2); }
+
+    .tag { display:inline-block; background:#162032; color:#7DD3FC; border:1px solid #1E3A5F;
+           padding:2px 8px; border-radius:5px; font-size:11.5px; font-family:monospace; }
+
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(4px);
+      z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;
+    }
+    .modal-box {
+      background:#1C2333; border:1px solid #2D3B55; border-radius:16px;
+      width:100%; max-width:620px; max-height:90vh; overflow-y:auto;
+      box-shadow: 0 25px 60px rgba(0,0,0,.5);
+    }
+
+    .section-header { font-size:17px; font-weight:700; color:#F1F5F9; }
+    .section-sub { font-size:13px; color:#64748B; margin-top:3px; }
+
+    .toast {
+      position:fixed; bottom:24px; right:24px; z-index:100;
+      background:#1C2333; border:1px solid #2D3B55; border-radius:10px;
+      padding:12px 18px; display:flex; align-items:center; gap:10px;
+      font-size:13.5px; box-shadow:0 8px 24px rgba(0,0,0,.4);
+      transform:translateY(80px); opacity:0; transition:all .3s;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast-dot { width:8px; height:8px; background:#34D399; border-radius:50%; flex-shrink:0; }
+
+    input[type=range] { accent-color: #3B82F6; }
+    input[type=checkbox] { accent-color: #3B82F6; width:15px; height:15px; cursor:pointer; }
+
+    .divider { border-top: 1px solid #2D3B55; margin: 20px 0; }
+  </style>
+</head>
+<body>
+
+<!-- ══ LAYOUT ══════════════════════════════════════════════════ -->
+<div style="display:flex; min-height:100vh;">
+
+  <!-- SIDEBAR -->
+  <aside style="width:220px; flex-shrink:0; background:#111827; border-right:1px solid #1E293B;
+                display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; padding:20px 12px;">
+
+    <!-- Logo -->
+    <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; margin-bottom:24px;">
+      <div style="width:32px; height:32px; background:linear-gradient(135deg,#2563EB,#1D4ED8);
+                  border-radius:8px; display:flex; align-items:center; justify-content:center;
+                  font-weight:700; font-size:12px;">CV</div>
+      <div>
+        <div style="font-size:13px; font-weight:700; color:#F1F5F9;">CV Admin</div>
+        <div style="font-size:11px; color:#475569;">adriangosalvez.es</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav style="flex:1; display:flex; flex-direction:column; gap:2px;">
+      <div class="nav-item active" onclick="switchTab('personal')" data-tab="personal">
+        <span class="icon">👤</span> Personal
+      </div>
+      <div class="nav-item" onclick="switchTab('experiencia')" data-tab="experiencia">
+        <span class="icon">💼</span> Experiencia
+      </div>
+      <div class="nav-item" onclick="switchTab('skills')" data-tab="skills">
+        <span class="icon">⚡</span> Skills
+      </div>
+      <div class="nav-item" onclick="switchTab('educacion')" data-tab="educacion">
+        <span class="icon">🎓</span> Educación
+      </div>
+      <div class="nav-item" onclick="switchTab('publicaciones')" data-tab="publicaciones">
+        <span class="icon">📄</span> Publicaciones
+      </div>
+      <div class="nav-item" onclick="switchTab('certificaciones')" data-tab="certificaciones">
+        <span class="icon">🏅</span> Certificaciones
+      </div>
+      <div class="nav-item" onclick="switchTab('idiomas')" data-tab="idiomas">
+        <span class="icon">🌐</span> Idiomas
+      </div>
+    </nav>
+
+    <!-- Footer sidebar -->
+    <div style="border-top:1px solid #1E293B; padding-top:16px; margin-top:16px;">
+      <a href="http://localhost:4321/es" target="_blank" class="nav-item" style="text-decoration:none;">
+        <span class="icon">🔗</span> Ver CV
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+
+    <!-- TOPBAR -->
+    <header style="background:#111827; border-bottom:1px solid #1E293B;
+                   padding:14px 28px; display:flex; align-items:center; justify-content:space-between;
+                   position:sticky; top:0; z-index:20;">
+      <div>
+        <h1 id="page-title" class="section-header">Datos personales</h1>
+        <p id="page-sub" class="section-sub">Información básica de contacto y presentación</p>
+      </div>
+      <button onclick="saveAll()" class="btn btn-primary">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+        </svg>
+        Guardar cambios
+      </button>
+    </header>
+
+    <!-- CONTENT -->
+    <main id="content" style="flex:1; overflow-y:auto; padding:28px; max-width:860px; width:100%;"></main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid #2D3B55;">
+      <h3 id="modal-title" style="font-size:16px; font-weight:700;"></h3>
+      <button onclick="closeModal()" style="background:none;border:none;color:#64748B;font-size:20px;cursor:pointer;padding:2px 6px;border-radius:6px;" onmouseover="this.style.color='#F1F5F9'" onmouseout="this.style.color='#64748B'">✕</button>
+    </div>
+    <div id="modal-body" style="padding:24px; display:flex; flex-direction:column; gap:16px;"></div>
+    <div style="display:flex; justify-content:flex-end; gap:10px; padding:16px 24px; border-top:1px solid #2D3B55;">
+      <button onclick="closeModal()" class="btn btn-ghost">Cancelar</button>
+      <button onclick="saveModal()" class="btn btn-primary">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <div class="toast-dot"></div>
+  <span>Cambios guardados correctamente</span>
+</div>
+
+<script>
+let data = {};
+let currentTab = 'personal';
+let modalCb = null;
+
+const tabMeta = {
+  personal:       { title: 'Datos personales',  sub: 'Información básica de contacto y presentación' },
+  experiencia:    { title: 'Experiencia',        sub: 'Historial de posiciones y empresas' },
+  skills:         { title: 'Skills',             sub: 'Habilidades técnicas agrupadas' },
+  educacion:      { title: 'Educación',          sub: 'Formación académica y títulos' },
+  publicaciones:  { title: 'Publicaciones',      sub: 'Artículos y trabajos académicos' },
+  certificaciones:{ title: 'Certificaciones',    sub: 'Cursos y certificados obtenidos' },
+  idiomas:        { title: 'Idiomas',            sub: 'Lenguas y nivel de dominio' },
+};
+
+async function init() {
+  data = await fetch('/api/data').then(r => r.json());
+  renderTab(currentTab);
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-item[data-tab]').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  document.getElementById('page-title').textContent = tabMeta[tab].title;
+  document.getElementById('page-sub').textContent   = tabMeta[tab].sub;
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  const fns = { personal, experiencia, skills, educacion, publicaciones, certificaciones, idiomas };
+  fns[tab]?.();
+}
+
+// ── PERSONAL ──────────────────────────────────────────────────
+function personal() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:grid; gap:20px;">
+
+      <!-- Foto -->
+      <div class="card" style="display:flex; align-items:center; gap:24px;">
+        <div style="position:relative; flex-shrink:0;">
+          <img id="photo-img" src="/profile.jpg?t=${Date.now()}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #2563EB;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22><rect fill=%22%231E3A5F%22 width=%2280%22 height=%2280%22 rx=%2240%22/><text y=%2252%22 x=%2240%22 text-anchor=%22middle%22 font-size=%2228%22 fill=%22%2360A5FA%22 font-family=%22Inter%22>AG</text></svg>'"/>
+        </div>
+        <div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">Foto de perfil</div>
+          <div style="font-size:12.5px; color:#64748B; margin-bottom:12px;">Se guarda en <code style="background:#162032;padding:1px 5px;border-radius:4px;font-size:11px;">public/profile.jpg</code></div>
+          <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="uploadPhoto(this)"/>
+          <button onclick="document.getElementById('photo-input').click()" class="btn btn-ghost btn-sm">📷 Cambiar foto</button>
+        </div>
+      </div>
+
+      <!-- Datos -->
+      <div class="card">
+        <div style="font-size:12px; font-weight:600; color:#475569; text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px;">Información personal</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div><label class="label">Nombre completo</label>
+            <input class="field" value="${esc(data.personal.name)}" oninput="data.personal.name=this.value" placeholder="Nombre completo"/></div>
+          <div><label class="label">Título / Cargo</label>
+            <input class="field" value="${esc(data.personal.title)}" oninput="data.personal.title=this.value" placeholder="Título / Cargo"/></div>
+          <div><label class="label">Ubicación (ES)</label>
+            <input class="field" value="${esc(data.personal.locationEs)}" oninput="data.personal.locationEs=this.value" placeholder="Ubicación ES"/></div>
+          <div><label class="label">Location (EN)</label>
+            <input class="field" value="${esc(data.personal.locationEn)}" oninput="data.personal.locationEn=this.value" placeholder="Location EN"/></div>
+          <div><label class="label">Email</label>
+            <input class="field" value="${esc(data.personal.email)}" oninput="data.personal.email=this.value" placeholder="Email"/></div>
+          <div><label class="label">Premio (opcional)</label>
+            <input class="field" value="${esc(data.personal.award||'')}" oninput="data.personal.award=this.value" placeholder="Premio"/></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:12px; font-weight:600; color:#475569; text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px;">Links</div>
+        <div style="display:grid; gap:14px;">
+          <div><label class="label">LinkedIn URL</label>
+            <input class="field" value="${esc(data.personal.linkedin)}" oninput="data.personal.linkedin=this.value" placeholder="https://linkedin.com/in/..."/></div>
+          <div><label class="label">GitHub URL</label>
+            <input class="field" value="${esc(data.personal.github)}" oninput="data.personal.github=this.value" placeholder="https://github.com/..."/></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:12px; font-weight:600; color:#475569; text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px;">Extracto / About</div>
+        <div style="display:grid; gap:14px;">
+          <div><label class="label">Español</label>
+            <textarea class="field" rows="4" oninput="data.about.es=this.value">${esc(data.about.es)}</textarea></div>
+          <div><label class="label">English</label>
+            <textarea class="field" rows="4" oninput="data.about.en=this.value">${esc(data.about.en)}</textarea></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function uploadPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const form = new FormData();
+  form.append('photo', file);
+  await fetch('/api/photo', { method:'POST', body:form });
+  document.getElementById('photo-img').src = '/profile.jpg?t=' + Date.now();
+  showToast('Foto actualizada');
+}
+
+// ── EXPERIENCIA ───────────────────────────────────────────────
+function experiencia() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-size:13px; color:#64748B;">${data.experiences.length} posiciones</div>
+      <button onclick="editExp(-1)" class="btn btn-primary btn-sm">+ Añadir posición</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${data.experiences.map((e,i) => `
+        <div class="card-row" style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;" style="background:${e.color}"
+               style="background-color:${e.color}">
+            ${e.company.slice(0,2).toUpperCase()}
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
+              <span style="font-weight:600; font-size:14px;">${esc(e.company)}</span>
+              ${e.current ? `<span class="badge badge-green"><span style="width:6px;height:6px;background:#34D399;border-radius:50%;display:inline-block;"></span> Actual</span>` : ''}
+            </div>
+            <div style="font-size:13px; color:#60A5FA; margin-bottom:6px;">${esc(e.roleEs)}</div>
+            <div style="font-size:12px; color:#64748B; margin-bottom:8px;">${esc(e.periodEs)}</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              ${e.tech.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+            </div>
+          </div>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button onclick="editExp(${i})" class="btn btn-ghost btn-sm">✏ Editar</button>
+            <button onclick="deleteItem('experiences',${i},experiencia)" class="btn btn-danger btn-sm">🗑</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function editExp(i) {
+  const e = i === -1
+    ? {company:'',domain:'',color:'#3B82F6',roleEs:'',roleEn:'',periodEs:'',periodEn:'',current:false,descriptionEs:[],descriptionEn:[],tech:[]}
+    : {...data.experiences[i], descriptionEs:[...data.experiences[i].descriptionEs], descriptionEn:[...data.experiences[i].descriptionEn], tech:[...data.experiences[i].tech]};
+
+  openModal(i === -1 ? '+ Nueva experiencia' : `Editar — ${e.company}`, `
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      ${mf('company','Empresa',e.company)}
+      ${mf('domain','Dominio (logo)',e.domain||'')}
+    </div>
+    <div style="display:grid; grid-template-columns:1fr auto; gap:14px; align-items:end;">
+      ${mf('color','Color',e.color)}
+      <div style="width:42px;height:42px;border-radius:9px;border:1px solid #2D3B55;overflow:hidden;">
+        <input type="color" id="color-picker" value="${e.color}" style="width:100%;height:100%;border:none;cursor:pointer;padding:0;background:none;"
+          oninput="document.getElementById('m-color').value=this.value"/>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      ${mf('roleEs','Rol (ES)',e.roleEs)}
+      ${mf('roleEn','Role (EN)',e.roleEn)}
+      ${mf('periodEs','Periodo (ES)',e.periodEs)}
+      ${mf('periodEn','Period (EN)',e.periodEn)}
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;color:#94A3B8;">
+      <input type="checkbox" id="m-current" ${e.current?'checked':''}/> Puesto actual
+    </label>
+    ${mta('descriptionEs','Descripción ES (una línea por punto)',e.descriptionEs.join('\n'),3)}
+    ${mta('descriptionEn','Description EN (one line per point)',e.descriptionEn.join('\n'),3)}
+    ${mf('tech','Tecnologías (separadas por coma)',e.tech.join(', '))}
+  `, () => {
+    const updated = {
+      company:mval('company'), domain:mval('domain'), color:mval('color'),
+      current: document.getElementById('m-current').checked,
+      roleEs:mval('roleEs'), roleEn:mval('roleEn'),
+      periodEs:mval('periodEs'), periodEn:mval('periodEn'),
+      descriptionEs: mval('descriptionEs').split('\n').filter(Boolean),
+      descriptionEn: mval('descriptionEn').split('\n').filter(Boolean),
+      tech: mval('tech').split(',').map(t=>t.trim()).filter(Boolean),
+    };
+    if(i===-1) data.experiences.push(updated); else data.experiences[i]=updated;
+    experiencia();
+  });
+
+  // sync color picker ↔ text input
+  setTimeout(() => {
+    const inp = document.getElementById('m-color');
+    if(inp) inp.addEventListener('input', e => {
+      const picker = document.getElementById('color-picker');
+      if(picker) picker.value = e.target.value;
+    });
+  }, 50);
+}
+
+// ── SKILLS ────────────────────────────────────────────────────
+function skills() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-size:13px; color:#64748B;">${data.skillGroups.length} grupos</div>
+      <button onclick="addSkillGroup()" class="btn btn-primary btn-sm">+ Añadir grupo</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      ${data.skillGroups.map((g,gi) => `
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+            <input class="field" style="width:160px;font-weight:600;" value="${esc(g.labelEs)}"
+              oninput="data.skillGroups[${gi}].labelEs=this.value" placeholder="Nombre ES"/>
+            <span style="color:#475569; font-size:12px;">/</span>
+            <input class="field" style="width:160px;" value="${esc(g.labelEn)}"
+              oninput="data.skillGroups[${gi}].labelEn=this.value" placeholder="Name EN"/>
+            <div style="margin-left:auto; display:flex; gap:6px;">
+              <button onclick="addSkill(${gi})" class="btn btn-ghost btn-sm">+ Skill</button>
+              <button onclick="deleteItem('skillGroups',${gi},skills)" class="btn btn-danger btn-sm">🗑</button>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            ${g.items.map((s,si) => `
+              <div style="display:grid; grid-template-columns:1fr 180px auto auto; align-items:center; gap:10px;">
+                <input class="field" style="font-size:13px; font-family:monospace;" value="${esc(s.name)}"
+                  oninput="data.skillGroups[${gi}].items[${si}].name=this.value" placeholder="Nombre"/>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="range" min="0" max="100" value="${s.level}" style="flex:1;"
+                    oninput="data.skillGroups[${gi}].items[${si}].level=+this.value;this.nextElementSibling.textContent=this.value+'%'"/>
+                  <span style="font-size:12px; color:#64748B; width:35px; text-align:right; font-variant-numeric:tabular-nums;">${s.level}%</span>
+                </div>
+                <button onclick="deleteSkill(${gi},${si})" class="btn btn-danger btn-sm" style="padding:5px 8px;">✕</button>
+              </div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function addSkillGroup() { data.skillGroups.push({labelEs:'Nuevo grupo',labelEn:'New group',items:[]}); skills(); }
+function addSkill(gi) { data.skillGroups[gi].items.push({name:'',level:80}); skills(); }
+function deleteSkill(gi,si) { data.skillGroups[gi].items.splice(si,1); skills(); }
+
+// ── EDUCACIÓN ─────────────────────────────────────────────────
+function educacion() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-size:13px; color:#64748B;">${data.education.length} entradas</div>
+      <button onclick="editEdu(-1)" class="btn btn-primary btn-sm">+ Añadir</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${data.education.map((e,i) => `
+        <div class="card-row" style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="width:40px;height:40px;background:#162032;border:1px solid #1E3A5F;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;">🎓</div>
+          <div style="flex:1;">
+            <div style="font-weight:600; font-size:14px; margin-bottom:3px;">${esc(e.degreeEs)}</div>
+            <div style="font-size:13px; color:#60A5FA;">${esc(e.institution)}</div>
+            ${e.specialityEs ? `<div style="font-size:12px; color:#64748B; margin-top:3px;">${esc(e.specialityEs)}</div>` : ''}
+          </div>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button onclick="editEdu(${i})" class="btn btn-ghost btn-sm">✏ Editar</button>
+            <button onclick="deleteItem('education',${i},educacion)" class="btn btn-danger btn-sm">🗑</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function editEdu(i) {
+  const e = i===-1 ? {degreeEs:'',degreeEn:'',institution:'',specialityEs:'',specialityEn:''} : {...data.education[i]};
+  openModal(i===-1 ? '+ Nueva educación' : 'Editar educación', `
+    ${mf('degreeEs','Título (ES)',e.degreeEs)}
+    ${mf('degreeEn','Degree (EN)',e.degreeEn)}
+    ${mf('institution','Institución',e.institution)}
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      ${mf('specialityEs','Especialidad (ES)',e.specialityEs||'')}
+      ${mf('specialityEn','Speciality (EN)',e.specialityEn||'')}
+    </div>
+  `, () => {
+    const u = {degreeEs:mval('degreeEs'),degreeEn:mval('degreeEn'),institution:mval('institution'),specialityEs:mval('specialityEs'),specialityEn:mval('specialityEn')};
+    if(i===-1) data.education.push(u); else data.education[i]=u;
+    educacion();
+  });
+}
+
+// ── PUBLICACIONES ─────────────────────────────────────────────
+function publicaciones() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-size:13px; color:#64748B;">${data.publications.length} publicaciones</div>
+      <button onclick="editPub(-1)" class="btn btn-primary btn-sm">+ Añadir</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${data.publications.map((p,i) => `
+        <div class="card-row" style="display:flex; align-items:flex-start; gap:14px;">
+          <div style="width:40px;height:40px;background:#1a1040;border:1px solid #2D1B69;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;">📄</div>
+          <div style="flex:1;">
+            <div style="font-weight:500; font-size:13.5px; line-height:1.5; margin-bottom:4px;">${esc(p.title)}</div>
+            ${p.institution ? `<div style="font-size:12px; color:#64748B;">${esc(p.institution)}</div>` : ''}
+          </div>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button onclick="editPub(${i})" class="btn btn-ghost btn-sm">✏ Editar</button>
+            <button onclick="deleteItem('publications',${i},publicaciones)" class="btn btn-danger btn-sm">🗑</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function editPub(i) {
+  const p = i===-1 ? {title:'',institution:''} : {...data.publications[i]};
+  openModal(i===-1 ? '+ Nueva publicación' : 'Editar publicación', `
+    ${mta('title','Título',p.title,3)}
+    ${mf('institution','Institución',p.institution||'')}
+  `, () => {
+    const u = {title:mval('title'),institution:mval('institution')};
+    if(i===-1) data.publications.push(u); else data.publications[i]=u;
+    publicaciones();
+  });
+}
+
+// ── CERTIFICACIONES ───────────────────────────────────────────
+function certificaciones() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-size:13px; color:#64748B;">${data.certifications.length} certificaciones</div>
+      <button onclick="addCert()" class="btn btn-primary btn-sm">+ Añadir</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${data.certifications.map((cert,i) => `
+        <div class="card-row" style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:18px; flex-shrink:0;">🏅</span>
+          <input class="field" style="flex:1; font-size:13.5px;" value="${esc(cert.name)}"
+            oninput="data.certifications[${i}].name=this.value" placeholder="Nombre del certificado"/>
+          <button onclick="deleteItem('certifications',${i},certificaciones)" class="btn btn-danger btn-sm">🗑</button>
+        </div>`).join('')}
+    </div>`;
+}
+function addCert() { data.certifications.push({name:''}); certificaciones(); }
+
+// ── IDIOMAS ───────────────────────────────────────────────────
+function idiomas() {
+  const c = document.getElementById('content');
+  c.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div style="font-size:13px; color:#64748B;">${data.languages.length} idiomas</div>
+      <button onclick="addLang()" class="btn btn-primary btn-sm">+ Añadir</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${data.languages.map((l,i) => `
+        <div class="card-row" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px; align-items:center;">
+          <div>
+            <div class="label">Idioma</div>
+            <input class="field" value="${esc(l.name)}" oninput="data.languages[${i}].name=this.value" placeholder="Idioma"/>
+          </div>
+          <div>
+            <div class="label">Nivel ES</div>
+            <input class="field" value="${esc(l.levelEs)}" oninput="data.languages[${i}].levelEs=this.value" placeholder="Nivel"/>
+          </div>
+          <div>
+            <div class="label">Level EN</div>
+            <input class="field" value="${esc(l.levelEn)}" oninput="data.languages[${i}].levelEn=this.value" placeholder="Level"/>
+          </div>
+          <button onclick="deleteItem('languages',${i},idiomas)" class="btn btn-danger btn-sm" style="margin-top:18px;">🗑</button>
+        </div>`).join('')}
+    </div>`;
+}
+function addLang() { data.languages.push({name:'',levelEs:'',levelEn:''}); idiomas(); }
+
+// ── HELPERS ───────────────────────────────────────────────────
+function mf(id, lbl, val, prefix='') {
+  return `<div><label class="label">${lbl}</label>
+    <input id="m-${id}" class="field" value="${esc(val)}" placeholder="${lbl}"/></div>`;
+}
+function mta(id, lbl, val, rows=3) {
+  return `<div><label class="label">${lbl}</label>
+    <textarea id="m-${id}" class="field" rows="${rows}">${esc(val)}</textarea></div>`;
+}
+function mval(id) { return (document.getElementById('m-'+id)?.value||'').trim(); }
+function bindField(id, fn) { document.getElementById('m-'+id)?.addEventListener('input', e => fn(e.target.value)); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function deleteItem(section, i, rerender) {
+  if(!confirm('¿Eliminar este elemento?')) return;
+  data[section].splice(i,1);
+  rerender();
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(title, bodyHtml, onSave) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = bodyHtml;
+  document.getElementById('modal').style.display = 'flex';
+  modalCb = onSave;
+}
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+  modalCb = null;
+}
+function saveModal() { modalCb?.(); closeModal(); }
+
+// ── GUARDAR ───────────────────────────────────────────────────
+async function saveAll() {
+  await fetch('/api/data', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(data, null, 2)
+  });
+  showToast('Cambios guardados correctamente');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.querySelector('span').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>

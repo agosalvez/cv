@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+admin/node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.dockerignore

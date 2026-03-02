@@ -1,0 +1,533 @@
+{
+  "personal": {
+    "name": "Adrián Gosálvez",
+    "title": "AI Engineer · Technical Lead",
+    "locationEs": "Valencia, España",
+    "locationEn": "Valencia, Spain",
+    "email": "adrian.gosalvez@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/adriangosalvez",
+    "github": "https://github.com/agosalvez",
+    "award": "Premio Meninas 2017"
+  },
+  "about": {
+    "es": "Empecé a programar con 8 años, publiqué mi primera web con 12 y a los 15 entendí el potencial real de internet. Más de 12 años después, sigo con la misma pasión. Ingeniero en Inteligencia Artificial especializado en arquitectura IT, liderazgo técnico y automatización de procesos. He liderado equipos en procesos de transformación digital para el sector público y privado, con foco en Node.js, DevOps e IA conversacional. Mi enfoque combina eficiencia operativa e innovación para diseñar soluciones escalables y alineadas con el negocio.",
+    "en": "I started programming at 8, published my first website at 12, and by 15 I understood the real potential of the internet. 12+ years later, I'm still driven by the same passion. AI Engineer specializing in IT architecture, technical leadership, and process automation. I've led teams through digital transformation in both public and private sectors, focusing on Node.js, DevOps, and conversational AI. My approach combines operational efficiency with innovation to build scalable, business-aligned solutions."
+  },
+  "experiences": [
+    {
+      "company": "aunoa",
+      "domain": "aunoa.ai",
+      "color": "#6366F1",
+      "roleEs": "AI Engineer / Technical Lead",
+      "roleEn": "AI Engineer / Technical Lead",
+      "periodEs": "Ene 2022 — Presente",
+      "periodEn": "Jan 2022 — Present",
+      "current": true,
+      "descriptionEs": [
+        "Desarrollo de soluciones conversacionales basadas en inteligencia artificial.",
+        "Responsable de plataforma: análisis y diseño de arquitecturas, infra Kubernetes.",
+        "Liderazgo de iniciativas estratégicas y definición técnica de nuevos productos.",
+        "Participación en procesos de selección técnica y crecimiento del equipo."
+      ],
+      "descriptionEn": [
+        "Development of AI-powered conversational solutions.",
+        "Platform owner: architecture design and analysis, Kubernetes infrastructure.",
+        "Leadership of strategic initiatives and technical definition of new products.",
+        "Involvement in technical hiring processes and team growth."
+      ],
+      "tech": [
+        "Node.js",
+        "AI / NLP",
+        "LLMs",
+        "Kubernetes",
+        "Docker",
+        "CI/CD"
+      ]
+    },
+    {
+      "company": "EqualComp",
+      "domain": "equalcomp.es",
+      "color": "#10B981",
+      "roleEs": "Software Engineer — Backend Lead",
+      "roleEn": "Software Engineer — Backend Lead",
+      "periodEs": "Feb 2022 — Oct 2022",
+      "periodEn": "Feb 2022 — Oct 2022",
+      "current": false,
+      "descriptionEs": [
+        "Arranque y puesta en marcha del proyecto desde cero.",
+        "Diseño y modelado del backend, infraestructura y pipeline CI/CD."
+      ],
+      "descriptionEn": [
+        "Project kickoff and launch from scratch.",
+        "Backend design and modelling, infrastructure and CI/CD pipeline setup."
+      ],
+      "tech": [
+        "Node.js",
+        "Docker",
+        "CI/CD",
+        "DevOps"
+      ]
+    },
+    {
+      "company": "ArtesanAlbums",
+      "domain": "artesanalbums.com",
+      "color": "#F59E0B",
+      "roleEs": "IT Manager",
+      "roleEn": "IT Manager",
+      "periodEs": "Sep 2016 — Presente",
+      "periodEn": "Sep 2016 — Present",
+      "current": true,
+      "descriptionEs": [
+        "Responsable de la gestión tecnológica integral de la empresa.",
+        "Administración de sistemas y redes. Desarrollo de software a medida.",
+        "Consultoría tecnológica y soporte técnico a equipo y clientes."
+      ],
+      "descriptionEn": [
+        "Responsible for the full technology management of the company.",
+        "Systems and network administration. Custom software development.",
+        "Tech consulting and technical support for team and clients."
+      ],
+      "tech": [
+        "PHP",
+        "MySQL",
+        "Linux",
+        "Networking"
+      ]
+    },
+    {
+      "company": "Lãberit",
+      "domain": "laberit.com",
+      "color": "#3B82F6",
+      "roleEs": "Tech Lead / Software Engineer",
+      "roleEn": "Tech Lead / Software Engineer",
+      "periodEs": "Abr 2019 — Dic 2021",
+      "periodEn": "Apr 2019 — Dec 2021",
+      "current": false,
+      "descriptionEs": [
+        "Tech Lead y Release Manager para proyectos de eAdministración (Generalitat Valenciana, Ayuntamiento de Valencia).",
+        "Arquitectura IT de soluciones de transformación digital para la Administración Pública.",
+        "DevOps y automatización. Implantación CI/CD con Kubernetes y Swarm.",
+        "Liderazgo técnico de equipos Angular, Ruby on Rails y Java Spring Boot."
+      ],
+      "descriptionEn": [
+        "Tech Lead and Release Manager for e-Government projects (Generalitat Valenciana, Valencia City Hall).",
+        "IT architecture for digital transformation solutions in the Public Administration.",
+        "DevOps and automation. CI/CD with Kubernetes and Swarm.",
+        "Technical leadership of Angular, Ruby on Rails, and Java Spring Boot teams."
+      ],
+      "tech": [
+        "Java",
+        "Angular",
+        "Ruby on Rails",
+        "Kubernetes",
+        "GraphQL",
+        "CI/CD",
+        "PostgreSQL"
+      ]
+    },
+    {
+      "company": "Smart and Fun",
+      "domain": "smartandfun.es",
+      "color": "#EC4899",
+      "roleEs": "Software Engineer",
+      "roleEn": "Software Engineer",
+      "periodEs": "Jul 2018 — Abr 2019",
+      "periodEn": "Jul 2018 — Apr 2019",
+      "current": false,
+      "descriptionEs": [
+        "Start-up de software a medida para pymes. ERP a medida.",
+        "Backend con Python / Django y funciones fullstack."
+      ],
+      "descriptionEn": [
+        "Custom software startup for SMEs. Bespoke ERP.",
+        "Backend with Python / Django and fullstack responsibilities."
+      ],
+      "tech": [
+        "Python",
+        "Django",
+        "Ruby on Rails",
+        "PostgreSQL",
+        "REST API"
+      ]
+    },
+    {
+      "company": "Shopadvizor",
+      "domain": "shopadvizor.com",
+      "color": "#F97316",
+      "roleEs": "Full Stack Developer",
+      "roleEn": "Full Stack Developer",
+      "periodEs": "Oct 2014 — Oct 2016",
+      "periodEn": "Oct 2014 — Oct 2016",
+      "current": false,
+      "descriptionEs": [
+        "Programación embebida para Carrefour France sobre plataformas internacionales de comercialización retail."
+      ],
+      "descriptionEn": [
+        "Embedded programming for Carrefour France on international retail commercialization platforms."
+      ],
+      "tech": [
+        "PHP",
+        "JavaScript",
+        "MySQL",
+        "HTML5",
+        "CSS3"
+      ]
+    },
+    {
+      "company": "VOZ.COM",
+      "domain": "voz.com",
+      "color": "#8B5CF6",
+      "roleEs": "VoIP Developer / Technical Support",
+      "roleEn": "VoIP Developer / Technical Support",
+      "periodEs": "Jul 2013 — Oct 2014",
+      "periodEn": "Jul 2013 — Oct 2014",
+      "current": false,
+      "descriptionEs": [
+        "Desarrollo y gestión técnica de centralitas VoIP y TrunkSIP con Asterisk.",
+        "Especialista en configuración de centralitas VoIP, Trunks SIP y administración de servidores."
+      ],
+      "descriptionEn": [
+        "Technical development and management of VoIP switchboards and TrunkSIP with Asterisk.",
+        "Specialist in VoIP switchboard configuration, SIP Trunks, and server administration."
+      ],
+      "tech": [
+        "Asterisk",
+        "VoIP",
+        "SIP",
+        "PHP",
+        "MySQL",
+        "Linux",
+        "Shell Script"
+      ]
+    },
+    {
+      "company": "NITSNETS",
+      "domain": "nitsnets.com",
+      "color": "#14B8A6",
+      "roleEs": "Junior Web Developer",
+      "roleEn": "Junior Web Developer",
+      "periodEs": "Mar 2011 — Jun 2011",
+      "periodEn": "Mar 2011 — Jun 2011",
+      "current": false,
+      "descriptionEs": [
+        "Desarrollo web con PHP, MySQL y JavaScript."
+      ],
+      "descriptionEn": [
+        "Web development with PHP, MySQL and JavaScript."
+      ],
+      "tech": [
+        "PHP",
+        "JavaScript",
+        "MySQL"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degreeEs": "Máster en Inteligencia Artificial",
+      "degreeEn": "Master's in Artificial Intelligence",
+      "institution": "Universidad Alfonso X el Sabio",
+      "specialityEs": "Ingeniería Informática",
+      "specialityEn": "Computer Engineering"
+    },
+    {
+      "degreeEs": "Grado en Ingeniería Informática",
+      "degreeEn": "B.Sc. Computer Science",
+      "institution": "Universitat d'Alacant",
+      "specialityEs": "Ingeniería del Software",
+      "specialityEn": "Software Engineering"
+    },
+    {
+      "degreeEs": "Técnico Superior en Desarrollo de Aplicaciones Informáticas (DAI)",
+      "degreeEn": "Higher Technician in Application Development",
+      "institution": "IES Doctor Balmis",
+      "specialityEs": "",
+      "specialityEn": ""
+    },
+    {
+      "degreeEs": "Especialista de Blockchain",
+      "degreeEn": "Blockchain Specialist",
+      "institution": "Blockstellart",
+      "specialityEs": "",
+      "specialityEn": ""
+    }
+  ],
+  "skillGroups": [
+    {
+      "labelEs": "Backend & Lenguajes",
+      "labelEn": "Backend & Languages",
+      "items": [
+        {
+          "name": "Node.js",
+          "level": 92
+        },
+        {
+          "name": "Shell Script",
+          "level": 90
+        },
+        {
+          "name": "PHP",
+          "level": 88
+        },
+        {
+          "name": "Ruby / Rails",
+          "level": 82
+        },
+        {
+          "name": "Python",
+          "level": 76
+        },
+        {
+          "name": "Java",
+          "level": 65
+        }
+      ]
+    },
+    {
+      "labelEs": "IA & Datos",
+      "labelEn": "AI & Data",
+      "items": [
+        {
+          "name": "NLP / LLMs",
+          "level": 85
+        },
+        {
+          "name": "SQL",
+          "level": 90
+        },
+        {
+          "name": "ETL",
+          "level": 78
+        },
+        {
+          "name": "Redis",
+          "level": 80
+        }
+      ]
+    },
+    {
+      "labelEs": "DevOps & Infra",
+      "labelEn": "DevOps & Infra",
+      "items": [
+        {
+          "name": "CI/CD",
+          "level": 90
+        },
+        {
+          "name": "Kubernetes",
+          "level": 85
+        },
+        {
+          "name": "Docker",
+          "level": 88
+        },
+        {
+          "name": "GitLab CI",
+          "level": 85
+        }
+      ]
+    },
+    {
+      "labelEs": "Bases de datos",
+      "labelEn": "Databases",
+      "items": [
+        {
+          "name": "MySQL",
+          "level": 90
+        },
+        {
+          "name": "PostgreSQL",
+          "level": 85
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Curso DevOps con Gitlab"
+    },
+    {
+      "name": "Curso de Swarm"
+    },
+    {
+      "name": "Especialista de Blockchain"
+    },
+    {
+      "name": "Crea tu propio Metaverso: Three.js y Tokens NFT"
+    },
+    {
+      "name": "Introducción a Ciberseguridad: Prevención de Ataques"
+    }
+  ],
+  "publications": [
+    {
+      "title": "Exploración de modelos multimodales para la indexación y clasificación de documentos: Análisis de Estrategias NLP y Visión Computacional",
+      "institution": "Universidad Alfonso X el Sabio — Máster en IA"
+    },
+    {
+      "title": "Centralita virtual sobre VoIP",
+      "institution": "Universitat d'Alacant — Ingeniería Informática"
+    }
+  ],
+  "languages": [
+    {
+      "name": "Español",
+      "levelEs": "Nativo",
+      "levelEn": "Native"
+    },
+    {
+      "name": "Valencià",
+      "levelEs": "Nativo",
+      "levelEn": "Native"
+    },
+    {
+      "name": "English",
+      "levelEs": "B2 — Profesional",
+      "levelEn": "B2 — Professional Working"
+    }
+  ],
+  "preferences": [
+    {
+      "es": "Remoto / Híbrido",
+      "en": "Remote / Hybrid",
+      "icon": "🌍"
+    },
+    {
+      "es": "Metodologías ágiles",
+      "en": "Agile methodologies",
+      "icon": "⚡"
+    },
+    {
+      "es": "Formación continua",
+      "en": "Continuous learning",
+      "icon": "📚"
+    },
+    {
+      "es": "Proyectos con impacto real",
+      "en": "High-impact projects",
+      "icon": "🎯"
+    },
+    {
+      "es": "Horario flexible",
+      "en": "Flexible schedule",
+      "icon": "🕐"
+    },
+    {
+      "es": "Stack moderno",
+      "en": "Modern tech stack",
+      "icon": "🚀"
+    }
+  ],
+  "portfolio": [
+    {
+      "name": "thtechnology",
+      "image": "/portfolio/thtech.png"
+    },
+    {
+      "name": "victorllorca",
+      "image": "/portfolio/vllorca.png"
+    },
+    {
+      "name": "josemanuelsaiz",
+      "image": "/portfolio/jmsaiz.png"
+    },
+    {
+      "name": "gaxcreaciones",
+      "image": "/portfolio/gaxx.png"
+    },
+    {
+      "name": "artesanalbums",
+      "image": "/portfolio/artesanalbums.png"
+    },
+    {
+      "name": "shopadvizor",
+      "image": "/portfolio/trialpanelweb.png"
+    },
+    {
+      "name": "elenagonzalezfotografia",
+      "image": "/portfolio/elenagonzalezfotografia.png"
+    },
+    {
+      "name": "magosalicantinos",
+      "image": "/portfolio/magosalicantinos.png"
+    },
+    {
+      "name": "movvil",
+      "image": "/portfolio/movvil.png"
+    },
+    {
+      "name": "monavislerendgratuit",
+      "image": "/portfolio/monavislerendgratuit.png"
+    },
+    {
+      "name": "AG Ilusionista",
+      "image": "/portfolio/agilusionista.png"
+    },
+    {
+      "name": "Academia Schoola",
+      "image": "/portfolio/schoola.png"
+    }
+  ],
+  "references": [
+    {
+      "name": "Jorge Segovia",
+      "role": "Artesanalbums",
+      "text": "Un gran profesional, muy resolutivo... siempre consigue que el trabajo salga según lo planificado."
+    },
+    {
+      "name": "Roberto Oliver",
+      "role": "VOZ.COM",
+      "text": "Persona responsable, trabajadora y perfeccionista, en cada proyecto siempre da un paso más para satisfacer al cliente."
+    },
+    {
+      "name": "Nestor Galvañ",
+      "role": "VOZ.COM",
+      "text": "Gran profesional, muy inteligente con mucha pasión y sorprendente capacidad de aprendizaje."
+    },
+    {
+      "name": "Sergio Gisbert",
+      "role": "Nitsnets",
+      "text": "Constancia, dedicación y profesionalidad son las cualidades más destacadas de Adrián."
+    },
+    {
+      "name": "Alejandro Such",
+      "role": "Nitsnets",
+      "text": "Demostró ser un profesional con una gran proyección y amplias capacidades para el trabajo en equipo."
+    },
+    {
+      "name": "Florence Etienne",
+      "role": "Trialpanel",
+      "text": "Adrián es un gran profesional con una actitud positiva que facilita mucho el trabajo y la comunicación entre departamentos."
+    },
+    {
+      "name": "Ximo Alarcón",
+      "role": "Gax Creaciones",
+      "text": "Persona implicada en lo que hace y muy efectiva. Gran compañero y mejor profesional."
+    },
+    {
+      "name": "Carmen Ramos",
+      "role": "Freelance",
+      "text": "Agradable, trabajador, inteligente, perfeccionista y meticuloso en su trabajo."
+    },
+    {
+      "name": "Adrián Lillo",
+      "role": "Freelance",
+      "text": "Gran capacidad de aprendizaje dando como resultado un gran control y rápido del proyecto."
+    },
+    {
+      "name": "Elena González",
+      "role": "Freelance",
+      "text": "Muy profesional, da gusto poder contar con alguien que te asesora y facilita todo el proceso."
+    },
+    {
+      "name": "Esteban Platero",
+      "role": "Universidad de Alicante",
+      "text": "Sabe trabajar en equipo y le entusiasma aprender sobre tecnologías web, tanto Frontend como Backend."
+    },
+    {
+      "name": "Luis González",
+      "role": "Mac Iris",
+      "text": "Responsable y profesional. Alto nivel de conocimiento. Gran capacidad de aprendizaje."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+services:
+
+  # ── CV (Astro dev server) ────────────────────────────────────
+  cv:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "4321:4321"
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+
+  # ── Admin backoffice ─────────────────────────────────────────
+  admin:
+    image: node:20-alpine
+    working_dir: /app/admin
+    volumes:
+      - .:/app
+    ports:
+      - "4322:4322"
+    command: sh -c "npm ci && node server.js"
+    depends_on:
+      - cv

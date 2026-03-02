@@ -1,0 +1,368 @@
+---
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import { t, type Lang } from '../../i18n/translations';
+
+const rawData = JSON.parse(readFileSync(join(process.cwd(), 'src/data/cv.json'), 'utf8'));
+const { personal, about, experiences, education, skillGroups, certifications, publications, languages, preferences, portfolio, references } = rawData;
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const otherLang = lang === 'es' ? 'en' : 'es';
+const title = `${personal.name} — ${personal.title}`;
+const location = lang === 'es' ? personal.locationEs : personal.locationEn;
+
+function initials(name: string) {
+  return name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+}
+---
+
+<Layout title={title} lang={lang}>
+  <div class="min-h-screen flex flex-col lg:flex-row bg-slate-100">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="w-full lg:w-80 xl:w-88 shrink-0 bg-slate-900 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+
+      <div class="relative px-8 pt-10 pb-8 bg-gradient-to-b from-blue-950/60 to-transparent">
+        <!-- Foto -->
+        <div class="relative w-28 h-28 mb-5">
+          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 opacity-60 blur-md animate-pulse-slow"></div>
+          <img
+            src="/profile.jpg"
+            alt={personal.name}
+            class="relative w-28 h-28 rounded-full object-cover ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-900"
+            onerror="this.outerHTML='<div class=\'relative w-28 h-28 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-900 flex items-center justify-center\'><span class=\'text-3xl font-bold text-white\'>AG</span></div>'"
+          />
+          <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-slate-900">
+            <span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+          </span>
+        </div>
+
+        <h1 class="text-2xl font-bold text-white leading-tight tracking-tight">{personal.name}</h1>
+        <p class="text-blue-400 font-semibold text-sm mt-1">{personal.title}</p>
+        <p class="text-slate-400 text-xs mt-2 flex items-center gap-1.5">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          {location}
+        </p>
+
+        <!-- Lang switcher -->
+        <div class="flex gap-2 mt-5">
+          <a href="/es" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'es' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>ES</a>
+          <a href="/en" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'en' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>EN</a>
+        </div>
+      </div>
+
+      <div class="px-8 pb-10 space-y-8">
+
+        <!-- Contacto -->
+        <div>
+          <p class="sidebar-label">{t(lang, 'nav.contact')}</p>
+          <ul class="space-y-3">
+            <li>
+              <a href={`mailto:${personal.email}`} class="contact-link group">
+                <span class="contact-icon group-hover:bg-blue-600">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </span>
+                <span class="text-xs truncate">{personal.email}</span>
+              </a>
+            </li>
+            <li>
+              <a href={personal.linkedin} target="_blank" rel="noopener" class="contact-link group">
+                <span class="contact-icon group-hover:bg-[#0077B5]">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </span>
+                <span class="text-xs">LinkedIn</span>
+              </a>
+            </li>
+            <li>
+              <a href={personal.github} target="_blank" rel="noopener" class="contact-link group">
+                <span class="contact-icon group-hover:bg-slate-600">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </span>
+                <span class="text-xs">GitHub</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Skills -->
+        <div>
+          <p class="sidebar-label">{t(lang, 'nav.skills')}</p>
+          <div class="space-y-6">
+            {skillGroups.map((group) => (
+              <div>
+                <p class="text-slate-500 text-xs mb-3 font-medium">{lang === 'es' ? group.labelEs : group.labelEn}</p>
+                <div class="space-y-2.5">
+                  {group.items.map((skill) => (
+                    <div>
+                      <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300 font-mono">{skill.name}</span>
+                        <span class="text-slate-500">{skill.level}%</span>
+                      </div>
+                      <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-1 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 skill-bar"
+                          style={`--w: ${skill.level}%`} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Idiomas -->
+        <div>
+          <p class="sidebar-label">{t(lang, 'section.languages')}</p>
+          <div class="space-y-2">
+            {languages.map((l) => (
+              <div class="flex items-center justify-between">
+                <span class="text-slate-300 text-sm">{l.name}</span>
+                <span class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">
+                  {lang === 'es' ? l.levelEs : l.levelEn}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Premio -->
+        {personal.award && (
+          <div class="flex items-center gap-3 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3">
+            <span class="text-xl">🏆</span>
+            <div>
+              <p class="text-amber-400 text-xs font-semibold">{personal.award}</p>
+              <p class="text-slate-500 text-xs">Reconocimiento profesional</p>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </aside>
+
+    <!-- ══════════ MAIN ══════════ -->
+    <main class="flex-1 min-w-0 px-6 py-10 lg:px-10 lg:py-12 max-w-3xl space-y-8">
+
+      <!-- About -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.about')}</h2>
+        <p class="text-slate-600 leading-relaxed">{lang === 'es' ? about.es : about.en}</p>
+        <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
+          <div class="text-center">
+            <p class="text-2xl font-bold text-blue-600">12+</p>
+            <p class="text-xs text-slate-500 mt-0.5">{lang === 'es' ? 'Años exp.' : 'Years exp.'}</p>
+          </div>
+          <div class="text-center border-x border-slate-100">
+            <p class="text-2xl font-bold text-blue-600">8+</p>
+            <p class="text-xs text-slate-500 mt-0.5">{lang === 'es' ? 'Empresas' : 'Companies'}</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl font-bold text-blue-600">AI</p>
+            <p class="text-xs text-slate-500 mt-0.5">Focus</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.experience')}</h2>
+        <div class="divide-y divide-slate-50">
+          {experiences.map((exp, i) => (
+            <div class={`py-6 ${i === 0 ? 'pt-0' : ''}`}>
+              <div class="flex items-start gap-4">
+                <!-- Logo -->
+                <div class="shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-white flex items-center justify-center">
+                  <img
+                    src={`https://logo.clearbit.com/${exp.domain}`}
+                    alt={exp.company}
+                    class="w-full h-full object-contain p-1"
+                    onerror={`this.style.display='none';this.nextElementSibling.style.display='flex'`}
+                  />
+                  <span
+                    class="w-full h-full items-center justify-center text-white text-xs font-bold rounded-xl"
+                    style={`background-color:${exp.color};display:none`}
+                  >
+                    {initials(exp.company)}
+                  </span>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-0.5">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <h3 class="font-bold text-slate-900">{exp.company}</h3>
+                      {exp.current && (
+                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                          <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse inline-block"></span>
+                          {t(lang, 'badge.current')}
+                        </span>
+                      )}
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg shrink-0">
+                      {lang === 'es' ? exp.periodEs : exp.periodEn}
+                    </span>
+                  </div>
+                  <p class="text-blue-600 text-sm font-semibold mb-3">{lang === 'es' ? exp.roleEs : exp.roleEn}</p>
+                  <ul class="space-y-1.5 mb-3">
+                    {(lang === 'es' ? exp.descriptionEs : exp.descriptionEn).map((line) => (
+                      <li class="text-slate-600 text-sm flex gap-2.5 leading-snug">
+                        <span class="text-blue-300 mt-0.5 shrink-0">▸</span>
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div class="flex flex-wrap gap-1.5">
+                    {exp.tech.map((tag) => (
+                      <span class="bg-blue-50 text-blue-700 border border-blue-100 text-xs px-2.5 py-0.5 rounded-full font-mono">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.education')}</h2>
+        <div class="space-y-5">
+          {education.map((edu) => (
+            <div class="flex gap-4 items-start">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-slate-900 text-sm leading-snug">{lang === 'es' ? edu.degreeEs : edu.degreeEn}</h3>
+                <p class="text-slate-500 text-sm">{edu.institution}</p>
+                {(lang === 'es' ? edu.specialityEs : edu.specialityEn) && (
+                  <p class="text-xs text-blue-500 mt-0.5">{lang === 'es' ? edu.specialityEs : edu.specialityEn}</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Publications -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.publications')}</h2>
+        <div class="space-y-4">
+          {publications.map((pub) => (
+            <div class="flex gap-4 items-start">
+              <div class="w-10 h-10 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-slate-800 text-sm font-medium leading-snug">{pub.title}</p>
+                {pub.institution && <p class="text-xs text-slate-400 mt-1">{pub.institution}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Certifications -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.certifications')}</h2>
+        <div class="flex flex-wrap gap-2">
+          {certifications.map((cert) => (
+            <span class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-full hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-default">
+              <svg class="w-3 h-3 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+              {cert.name}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <!-- Qué busco / Preferences -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.preferences')}</h2>
+        <div class="flex flex-wrap gap-3">
+          {preferences.map((p: {es:string;en:string;icon:string}) => (
+            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 hover:border-blue-200 hover:bg-blue-50 transition-colors">
+              <span class="text-lg">{p.icon}</span>
+              <span class="text-slate-700 text-sm font-medium">{lang === 'es' ? p.es : p.en}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Portfolio -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.portfolio')}</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {portfolio.map((p: {name:string;image:string}) => (
+            <div class="group rounded-xl overflow-hidden border border-slate-200 bg-slate-50 transition-all">
+              <div class="aspect-video overflow-hidden bg-slate-100">
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  class="w-full h-full object-cover transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+              <div class="px-3 py-2">
+                <span class="text-xs text-slate-600 font-mono truncate">{p.name}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Referencias -->
+      <section class="card">
+        <h2 class="section-title">{t(lang, 'section.references')}</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {references.map((r: {name:string;role:string;text:string}) => (
+            <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
+              <p class="text-slate-600 text-sm leading-relaxed italic mb-3">"{r.text}"</p>
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-600 text-xs font-bold shrink-0">
+                  {r.name.split(' ').map((w: string) => w[0]).slice(0,2).join('')}
+                </div>
+                <div>
+                  <p class="text-slate-800 text-xs font-semibold">{r.name}</p>
+                  <p class="text-slate-400 text-xs">{r.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .card { @apply bg-white rounded-2xl shadow-sm border border-slate-200/60 px-8 py-7; }
+  .section-title { @apply text-xs font-bold uppercase tracking-widest text-blue-500 mb-6 flex items-center gap-2; }
+  .section-title::before { content:''; @apply w-4 h-0.5 bg-blue-500 inline-block rounded-full; }
+  .sidebar-label { @apply text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4; }
+  .contact-link { @apply flex items-center gap-3 text-slate-300 hover:text-white transition-colors; }
+  .contact-icon { @apply w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center transition-colors shrink-0; }
+  .skill-bar { width:0; animation: grow 1s ease forwards 0.3s; }
+  @keyframes grow { to { width: var(--w); } }
+  @keyframes pulse-slow { 0%,100%{opacity:.4} 50%{opacity:.7} }
+  .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+</style>
