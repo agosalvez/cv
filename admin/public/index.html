@@ -123,7 +123,7 @@
                   font-weight:700; font-size:12px;">CV</div>
       <div>
         <div style="font-size:13px; font-weight:700; color:#F1F5F9;">CV Admin</div>
-        <div style="font-size:11px; color:#475569;">adriangosalvez.es</div>
+        <div style="font-size:11px; color:#475569;">gosalvez.es</div>
       </div>
     </div>
 
@@ -310,19 +310,47 @@ async function uploadPhoto(input) {
   showToast('Foto actualizada');
 }
 
+async function uploadLogo(input, fieldId, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const name = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
+  const form = new FormData();
+  form.append('logo', file);
+  form.append('name', name.replace(/\.[^.]+$/, '')); // sin extensión
+  const res = await fetch('/api/logo', { method:'POST', body:form }).then(r=>r.json());
+  if (res.path) {
+    document.getElementById(fieldId).value = res.path;
+    const preview = document.getElementById(previewId);
+    if (preview) { preview.src = res.path + '?t=' + Date.now(); preview.style.opacity = 1; }
+    showToast('Logo subido: ' + res.path);
+  }
+}
+
 // ── EXPERIENCIA ───────────────────────────────────────────────
+function moveExp(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= data.experiences.length) return;
+  [data.experiences[i], data.experiences[j]] = [data.experiences[j], data.experiences[i]];
+  experiencia();
+}
+
 function experiencia() {
   const c = document.getElementById('content');
+  const n = data.experiences.length;
   c.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <div style="font-size:13px; color:#64748B;">${data.experiences.length} posiciones</div>
+      <div style="font-size:13px; color:#64748B;">${n} posiciones</div>
       <button onclick="editExp(-1)" class="btn btn-primary btn-sm">+ Añadir posición</button>
     </div>
     <div style="display:flex; flex-direction:column; gap:10px;">
       ${data.experiences.map((e,i) => `
         <div class="card-row" style="display:flex; align-items:flex-start; gap:14px;">
-          <div style="width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;" style="background:${e.color}"
-               style="background-color:${e.color}">
+          <!-- Controles de orden -->
+          <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0; justify-content:center; padding-top:2px;">
+            <button onclick="moveExp(${i},-1)" class="btn btn-ghost btn-sm" style="padding:3px 7px; font-size:11px; ${i===0?'opacity:.25;pointer-events:none':''}" title="Subir">▲</button>
+            <button onclick="moveExp(${i},1)"  class="btn btn-ghost btn-sm" style="padding:3px 7px; font-size:11px; ${i===n-1?'opacity:.25;pointer-events:none':''}" title="Bajar">▼</button>
+          </div>
+          <div style="width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;background-color:${e.color}">
             ${e.company.slice(0,2).toUpperCase()}
           </div>
           <div style="flex:1; min-width:0;">
@@ -346,16 +374,30 @@ function experiencia() {
 
 function editExp(i) {
   const e = i === -1
-    ? {company:'',domain:'',color:'#3B82F6',roleEs:'',roleEn:'',periodEs:'',periodEn:'',current:false,descriptionEs:[],descriptionEn:[],tech:[]}
+    ? {company:'',domain:'',logo:'',color:'#3B82F6',roleEs:'',roleEn:'',periodEs:'',periodEn:'',current:false,descriptionEs:[],descriptionEn:[],tech:[]}
     : {...data.experiences[i], descriptionEs:[...data.experiences[i].descriptionEs], descriptionEn:[...data.experiences[i].descriptionEn], tech:[...data.experiences[i].tech]};
 
   openModal(i === -1 ? '+ Nueva experiencia' : `Editar — ${e.company}`, `
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
       ${mf('company','Empresa',e.company)}
-      ${mf('domain','Dominio (logo)',e.domain||'')}
+      ${mf('domain','Dominio (Clearbit fallback)',e.domain||'')}
+    </div>
+    <!-- Logo -->
+    <div>
+      <label class="label">Logo</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input id="m-logo" class="field" style="flex:1;" value="${esc(e.logo||'')}" placeholder="/logos/nombre.png" oninput="document.getElementById('exp-logo-preview').src=this.value||'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='"/>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:6px;" class="btn btn-ghost btn-sm">
+          📁 Subir
+          <input type="file" accept="image/*" style="display:none" onchange="uploadLogo(this,'m-logo','exp-logo-preview')"/>
+        </label>
+        <div style="width:40px;height:40px;border-radius:8px;border:1px solid #2D3B55;background:#0F1624;overflow:hidden;flex-shrink:0;">
+          <img id="exp-logo-preview" src="${e.logo||''}" style="width:100%;height:100%;object-fit:contain;padding:2px;" onerror="this.style.opacity=0" onload="this.style.opacity=1"/>
+        </div>
+      </div>
     </div>
     <div style="display:grid; grid-template-columns:1fr auto; gap:14px; align-items:end;">
-      ${mf('color','Color',e.color)}
+      ${mf('color','Color fallback',e.color)}
       <div style="width:42px;height:42px;border-radius:9px;border:1px solid #2D3B55;overflow:hidden;">
         <input type="color" id="color-picker" value="${e.color}" style="width:100%;height:100%;border:none;cursor:pointer;padding:0;background:none;"
           oninput="document.getElementById('m-color').value=this.value"/>
@@ -375,7 +417,8 @@ function editExp(i) {
     ${mf('tech','Tecnologías (separadas por coma)',e.tech.join(', '))}
   `, () => {
     const updated = {
-      company:mval('company'), domain:mval('domain'), color:mval('color'),
+      company:mval('company'), domain:mval('domain'), logo:mval('logo')||undefined,
+      color:mval('color'),
       current: document.getElementById('m-current').checked,
       roleEs:mval('roleEs'), roleEn:mval('roleEn'),
       periodEs:mval('periodEs'), periodEn:mval('periodEn'),
@@ -466,17 +509,31 @@ function educacion() {
 }
 
 function editEdu(i) {
-  const e = i===-1 ? {degreeEs:'',degreeEn:'',institution:'',specialityEs:'',specialityEn:''} : {...data.education[i]};
+  const e = i===-1 ? {degreeEs:'',degreeEn:'',institution:'',logo:'',specialityEs:'',specialityEn:''} : {...data.education[i]};
   openModal(i===-1 ? '+ Nueva educación' : 'Editar educación', `
     ${mf('degreeEs','Título (ES)',e.degreeEs)}
     ${mf('degreeEn','Degree (EN)',e.degreeEn)}
     ${mf('institution','Institución',e.institution)}
+    <!-- Logo -->
+    <div>
+      <label class="label">Logo</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input id="m-logo" class="field" style="flex:1;" value="${esc(e.logo||'')}" placeholder="/logos/nombre.png" oninput="document.getElementById('edu-logo-preview').src=this.value"/>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:6px;" class="btn btn-ghost btn-sm">
+          📁 Subir
+          <input type="file" accept="image/*" style="display:none" onchange="uploadLogo(this,'m-logo','edu-logo-preview')"/>
+        </label>
+        <div style="width:40px;height:40px;border-radius:8px;border:1px solid #2D3B55;background:#0F1624;overflow:hidden;flex-shrink:0;">
+          <img id="edu-logo-preview" src="${e.logo||''}" style="width:100%;height:100%;object-fit:contain;padding:2px;" onerror="this.style.opacity=0" onload="this.style.opacity=1"/>
+        </div>
+      </div>
+    </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
       ${mf('specialityEs','Especialidad (ES)',e.specialityEs||'')}
       ${mf('specialityEn','Speciality (EN)',e.specialityEn||'')}
     </div>
   `, () => {
-    const u = {degreeEs:mval('degreeEs'),degreeEn:mval('degreeEn'),institution:mval('institution'),specialityEs:mval('specialityEs'),specialityEn:mval('specialityEn')};
+    const u = {degreeEs:mval('degreeEs'),degreeEn:mval('degreeEn'),institution:mval('institution'),logo:mval('logo')||undefined,specialityEs:mval('specialityEs'),specialityEn:mval('specialityEn')};
     if(i===-1) data.education.push(u); else data.education[i]=u;
     educacion();
   });

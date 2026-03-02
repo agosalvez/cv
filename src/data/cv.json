@@ -4,7 +4,6 @@
     "title": "AI Engineer · Technical Lead",
     "locationEs": "Valencia, España",
     "locationEn": "Valencia, Spain",
-    "email": "adrian.gosalvez@gmail.com",
     "linkedin": "https://www.linkedin.com/in/adriangosalvez",
     "github": "https://github.com/agosalvez",
     "award": "Premio Meninas 2017"
@@ -17,6 +16,7 @@
     {
       "company": "aunoa",
       "domain": "aunoa.ai",
+      "logo": "/logos/aunoa.png",
       "color": "#6366F1",
       "roleEs": "AI Engineer / Technical Lead",
       "roleEn": "AI Engineer / Technical Lead",
@@ -47,6 +47,7 @@
     {
       "company": "EqualComp",
       "domain": "equalcomp.es",
+      "logo": "/logos/equalcomp.png",
       "color": "#10B981",
       "roleEs": "Software Engineer — Backend Lead",
       "roleEn": "Software Engineer — Backend Lead",
@@ -71,6 +72,7 @@
     {
       "company": "ArtesanAlbums",
       "domain": "artesanalbums.com",
+      "logo": "/logos/artesanalbums.jpg",
       "color": "#F59E0B",
       "roleEs": "IT Manager",
       "roleEn": "IT Manager",
@@ -97,6 +99,7 @@
     {
       "company": "Lãberit",
       "domain": "laberit.com",
+      "logo": "/logos/laberit.png",
       "color": "#3B82F6",
       "roleEs": "Tech Lead / Software Engineer",
       "roleEn": "Tech Lead / Software Engineer",
@@ -128,6 +131,7 @@
     {
       "company": "Smart and Fun",
       "domain": "smartandfun.es",
+      "logo": "/logos/smartandfun.png",
       "color": "#EC4899",
       "roleEs": "Software Engineer",
       "roleEn": "Software Engineer",
@@ -153,6 +157,7 @@
     {
       "company": "Shopadvizor",
       "domain": "shopadvizor.com",
+      "logo": "/logos/shopadvizor.png",
       "color": "#F97316",
       "roleEs": "Full Stack Developer",
       "roleEn": "Full Stack Developer",
@@ -176,6 +181,7 @@
     {
       "company": "VOZ.COM",
       "domain": "voz.com",
+      "logo": "/logos/voz.png",
       "color": "#8B5CF6",
       "roleEs": "VoIP Developer / Technical Support",
       "roleEn": "VoIP Developer / Technical Support",
@@ -203,6 +209,7 @@
     {
       "company": "NITSNETS",
       "domain": "nitsnets.com",
+      "logo": "/logos/nitsnets.png",
       "color": "#14B8A6",
       "roleEs": "Junior Web Developer",
       "roleEn": "Junior Web Developer",
@@ -227,6 +234,7 @@
       "degreeEs": "Máster en Inteligencia Artificial",
       "degreeEn": "Master's in Artificial Intelligence",
       "institution": "Universidad Alfonso X el Sabio",
+      "logo": "/logos/uax.svg",
       "specialityEs": "Ingeniería Informática",
       "specialityEn": "Computer Engineering"
     },
@@ -234,6 +242,7 @@
       "degreeEs": "Grado en Ingeniería Informática",
       "degreeEn": "B.Sc. Computer Science",
       "institution": "Universitat d'Alacant",
+      "logo": "/logos/ua.jpg",
       "specialityEs": "Ingeniería del Software",
       "specialityEn": "Software Engineering"
     },
@@ -241,6 +250,7 @@
       "degreeEs": "Técnico Superior en Desarrollo de Aplicaciones Informáticas (DAI)",
       "degreeEn": "Higher Technician in Application Development",
       "institution": "IES Doctor Balmis",
+      "logo": "/logos/balmis.png",
       "specialityEs": "",
       "specialityEn": ""
     },
@@ -362,11 +372,13 @@
   "publications": [
     {
       "title": "Exploración de modelos multimodales para la indexación y clasificación de documentos: Análisis de Estrategias NLP y Visión Computacional",
-      "institution": "Universidad Alfonso X el Sabio — Máster en IA"
+      "institution": "Universidad Alfonso X el Sabio — Máster en IA",
+      "logo": "/logos/uax.svg"
     },
     {
       "title": "Centralita virtual sobre VoIP",
-      "institution": "Universitat d'Alacant — Ingeniería Informática"
+      "institution": "Universitat d'Alacant — Ingeniería Informática",
+      "logo": "/logos/ua.jpg"
     }
   ],
   "languages": [

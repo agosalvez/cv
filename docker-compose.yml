@@ -1,12 +1,22 @@
 services:
+
   cv:
     image: ghcr.io/agosalvez/cv-adriangosalvez:latest
     restart: unless-stopped
     ports:
       - "8082:80"
-    labels:
-      # Ejemplo con Traefik (opcional, borra si no lo usas)
-      - "traefik.enable=true"
-      - "traefik.http.routers.cv.rule=Host(`cv.adriangosalvez.es`)"
-      - "traefik.http.routers.cv.entrypoints=websecure"
-      - "traefik.http.routers.cv.tls.certresolver=letsencrypt"
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "4322:4322"
+    volumes:
+      - ./src/data:/app/src/data          # cv.json compartido
+      - ./public/logos:/app/public/logos  # logos subidos
+      - ./public/profile.jpg:/app/public/profile.jpg
+    environment:
+      - ADMIN_USER=agosalvez
+      - ADMIN_PASS=REDACTED
