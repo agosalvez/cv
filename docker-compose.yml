@@ -18,5 +18,5 @@ services:
       - ./public/logos:/app/public/logos  # logos subidos
       - ./public/profile.jpg:/app/public/profile.jpg
     environment:
-      - ADMIN_USER=agosalvez
-      - ADMIN_PASS=REDACTED
+      - ADMIN_USER=${ADMIN_USER:-agosalvez}
+      - ADMIN_PASS=${ADMIN_PASS}
