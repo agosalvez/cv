@@ -5,11 +5,17 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_PATH   = join(__dirname, '../src/data/cv.json');
-const PHOTO_PATH  = join(__dirname, '../public/profile.jpg');
-const LOGOS_DIR   = join(__dirname, '../public/logos');
+
+// En Docker APP_ROOT=/app; en local dev se infiere desde la ubicación del script
+const ROOT      = process.env.APP_ROOT || join(__dirname, '..');
+const DATA_PATH  = join(ROOT, 'src/data/cv.json');
+const PHOTO_PATH = join(ROOT, 'public/profile.jpg');
+const LOGOS_DIR  = join(ROOT, 'public/logos');
+const DIST_DIR   = join(ROOT, 'dist');
+const UI_DIR     = join(__dirname, 'ui');
 
 mkdirSync(LOGOS_DIR, { recursive: true });
+mkdirSync(join(ROOT, 'src/data'), { recursive: true });
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const ADMIN_PASS = process.env.ADMIN_PASS;
@@ -33,31 +39,34 @@ function basicAuth(req, res, next) {
 }
 
 const app = express();
-app.use(basicAuth);
-app.use(express.json({ limit: '2mb' }));
-app.use(express.static(join(__dirname, 'public')));
-app.use(express.static(join(__dirname, '../public')));
-
 const upload = multer({ dest: '/tmp' });
 
-// ── API ───────────────────────────────────────────────────────
+app.use(express.json({ limit: '2mb' }));
 
-app.get('/api/data', (_req, res) => {
+// ── CV estático — público ───────────────────────────────────
+app.use(express.static(DIST_DIR));
+app.use(express.static(join(ROOT, 'public')));
+
+// ── Admin panel — protegido ─────────────────────────────────
+app.use('/admin', basicAuth, express.static(UI_DIR));
+
+// ── API — protegida ─────────────────────────────────────────
+app.get('/api/data', basicAuth, (_req, res) => {
   res.json(JSON.parse(readFileSync(DATA_PATH, 'utf8')));
 });
 
-app.post('/api/data', (req, res) => {
+app.post('/api/data', basicAuth, (req, res) => {
   writeFileSync(DATA_PATH, JSON.stringify(req.body, null, 2));
   res.json({ ok: true });
 });
 
-app.post('/api/photo', upload.single('photo'), (req, res) => {
+app.post('/api/photo', basicAuth, upload.single('photo'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file' });
   copyFileSync(req.file.path, PHOTO_PATH);
   res.json({ ok: true });
 });
 
-app.post('/api/logo', upload.single('logo'), (req, res) => {
+app.post('/api/logo', basicAuth, upload.single('logo'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file' });
   const ext = extname(req.file.originalname).toLowerCase() || '.png';
   const name = (req.body.name || Date.now()) + ext;
@@ -66,8 +75,9 @@ app.post('/api/logo', upload.single('logo'), (req, res) => {
   res.json({ ok: true, path: `/logos/${name}` });
 });
 
-// ── Arrancar ──────────────────────────────────────────────────
+// ── Arrancar ────────────────────────────────────────────────
 const PORT = process.env.PORT || 4322;
 app.listen(PORT, () => {
-  console.log(`✅ CV Admin corriendo en http://localhost:${PORT}`);
+  console.log(`✅ CV en http://localhost:${PORT}/es`);
+  console.log(`🔐 Admin en http://localhost:${PORT}/admin`);
 });

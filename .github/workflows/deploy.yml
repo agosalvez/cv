@@ -5,8 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  # ── Build CV (nginx estático) ──────────────────────────────
-  build-cv:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,36 +20,14 @@ jobs:
           context: .
           push: true
           tags: |
-            agosalvez/cv:latest
-            agosalvez/cv:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/cv:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/cv:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ── Build Admin (Express) ──────────────────────────────────
-  build-admin:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - uses: docker/build-push-action@v5
-        with:
-          context: ./admin
-          push: true
-          tags: |
-            agosalvez/cv-admin:latest
-            agosalvez/cv-admin:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  # ── Deploy en Portainer via webhook ───────────────────────
   deploy:
     runs-on: ubuntu-latest
-    needs: [build-cv, build-admin]
+    needs: [build]
     steps:
       - name: Trigger Portainer webhook
         run: |
