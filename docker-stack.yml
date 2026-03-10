@@ -1,17 +1,33 @@
+version: '3.3'
+
 services:
 
   cv:
     image: ${DOCKERHUB_USERNAME}/cv:latest
     restart: unless-stopped
-    ports:
-      - "8082:4322"
     volumes:
       - cv-data:/app/src/data
       - cv-public:/app/public
     environment:
       - ADMIN_USER=${ADMIN_USER}
       - ADMIN_PASS=${ADMIN_PASS}
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.middleware-secure.redirectscheme.scheme=https"
+      - "traefik.http.routers.adrian-cv-gosalvez.entrypoints=web"
+      - "traefik.http.routers.adrian-cv-gosalvez.middlewares=middleware-secure"
+      - "traefik.http.routers.adrian-cv-gosalvez.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
+      - "traefik.http.routers.adrian-cv-gosalvez-secure.tls=true"
+      - "traefik.http.routers.adrian-cv-gosalvez-secure.tls.certresolver=myresolver"
+      - "traefik.http.routers.adrian-cv-gosalvez-secure.entrypoints=websecure"
+      - "traefik.http.routers.adrian-cv-gosalvez-secure.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
 
 volumes:
   cv-data:    # cv.json
   cv-public:  # profile.jpg y logos/
+
+networks:
+  traefik:
+    external: true
