@@ -5,7 +5,7 @@ import Layout from '../../layouts/Layout.astro';
 import { t, type Lang } from '../../i18n/translations';
 
 const rawData = JSON.parse(readFileSync(join(process.cwd(), 'src/data/cv.json'), 'utf8'));
-const { personal, about, experiences, education, skillGroups, certifications, publications, languages, preferences, portfolio, references } = rawData;
+const { personal, about, experiences, education, skillGroups, publications, languages, preferences, portfolio, references } = rawData;
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
@@ -19,32 +19,142 @@ const location = lang === 'es' ? personal.locationEs : personal.locationEn;
 function initials(name: string) {
   return name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
 }
+
+function totalExpYears(exps: any[]): number {
+  const intervals = exps
+    .filter(e => e.startDate)
+    .map(e => ({
+      start: new Date(e.startDate + '-01').getTime(),
+      end: e.endDate ? new Date(e.endDate + '-01').getTime() : Date.now()
+    }))
+    .sort((a, b) => a.start - b.start);
+
+  const merged: {start: number, end: number}[] = [];
+  for (const iv of intervals) {
+    if (!merged.length || iv.start > merged[merged.length - 1].end) {
+      merged.push({ ...iv });
+    } else {
+      merged[merged.length - 1].end = Math.max(merged[merged.length - 1].end, iv.end);
+    }
+  }
+
+  const totalMs = merged.reduce((acc, iv) => acc + (iv.end - iv.start), 0);
+  return Math.floor(totalMs / (1000 * 60 * 60 * 24 * 365.25));
+}
+
+const expYears = totalExpYears(experiences);
+
+function duration(startDate: string, endDate?: string, lang: string = 'es'): string {
+  const s = new Date(startDate + '-01');
+  const e = endDate ? new Date(endDate + '-01') : new Date();
+  const months = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth());
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  if (lang === 'es') {
+    if (years > 0 && rem > 0) return `${years}a ${rem}m`;
+    if (years > 0) return `${years} ${years === 1 ? 'año' : 'años'}`;
+    return `${months} meses`;
+  } else {
+    if (years > 0 && rem > 0) return `${years}y ${rem}m`;
+    if (years > 0) return `${years} ${years === 1 ? 'year' : 'years'}`;
+    return `${months} months`;
+  }
+}
 ---
 
 <Layout title={title} lang={lang}>
-  <div class="min-h-screen flex flex-col lg:flex-row bg-slate-100">
+
+  <!-- ══════════ STICKY NAVBAR ══════════ -->
+  <nav id="topnav" class="no-print fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 h-16">
+    <div class="flex items-center justify-between h-full px-4 lg:px-8 max-w-screen-2xl mx-auto">
+
+      <!-- Nombre -->
+      <a href="#about" class="text-white font-bold text-sm tracking-tight hover:text-blue-400 transition-colors">
+        {personal.name}
+      </a>
+
+      <!-- Links secciones (desktop) -->
+      <ul class="hidden md:flex items-center gap-0.5 text-sm font-medium">
+        {[
+          { id: 'about',           labelEs: 'Sobre mí',       labelEn: 'About' },
+          { id: 'experience',      labelEs: 'Experiencia',    labelEn: 'Experience' },
+          { id: 'education',       labelEs: 'Educación',      labelEn: 'Education' },
+          { id: 'publications',    labelEs: 'Publicaciones',  labelEn: 'Publications' },
+          { id: 'references',      labelEs: 'Referencias',    labelEn: 'References' },
+        ].map(item => (
+          <li>
+            <a
+              href={`#${item.id}`}
+              data-section={item.id}
+              class="nav-link px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 transition-all border-b-2 border-transparent"
+            >
+              {lang === 'es' ? item.labelEs : item.labelEn}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- PDF + móvil -->
+      <div class="flex items-center gap-2">
+        <button onclick="window.print()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          </svg>
+          PDF
+        </button>
+        <!-- Móvil hamburger -->
+        <button id="menu-btn" class="md:hidden p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-all" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú móvil -->
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800 px-4 py-2">
+      {[
+        { id: 'about',          labelEs: 'Sobre mí',      labelEn: 'About' },
+        { id: 'experience',     labelEs: 'Experiencia',   labelEn: 'Experience' },
+        { id: 'education',      labelEs: 'Educación',     labelEn: 'Education' },
+        { id: 'publications',   labelEs: 'Publicaciones', labelEn: 'Publications' },
+        { id: 'references',     labelEs: 'Referencias',   labelEn: 'References' },
+      ].map(item => (
+        <a
+          href={`#${item.id}`}
+          class="block py-2 text-sm text-slate-400 hover:text-white transition-colors"
+          onclick="document.getElementById('mobile-menu').classList.add('hidden')"
+        >
+          {lang === 'es' ? item.labelEs : item.labelEn}
+        </a>
+      ))}
+    </div>
+  </nav>
+
+  <div class="min-h-screen bg-slate-100 pt-16">
+  <div class="flex flex-col lg:flex-row min-h-[calc(100vh-3rem)]">
 
     <!-- ══════════ SIDEBAR ══════════ -->
-    <aside class="w-full lg:w-80 xl:w-88 shrink-0 bg-slate-900 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+    <aside class="w-full lg:w-96 xl:w-[30rem] shrink-0 bg-slate-900 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto">
 
-      <div class="relative px-8 pt-10 pb-8 bg-gradient-to-b from-blue-950/60 to-transparent">
+      <div class="relative px-8 pt-10 pb-8 bg-gradient-to-b from-blue-950/60 to-transparent flex flex-col items-center text-center">
         <!-- Foto -->
-        <div class="relative w-28 h-28 mb-5">
+        <a href={personal.website} target="_blank" rel="noopener" class="relative w-44 h-44 mb-5 block group cursor-pointer">
           <div class="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 opacity-60 blur-md animate-pulse-slow"></div>
           <img
             src="/profile.jpg"
             alt={personal.name}
-            class="relative w-28 h-28 rounded-full object-cover ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-900"
-            onerror="this.outerHTML='<div class=\'relative w-28 h-28 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-900 flex items-center justify-center\'><span class=\'text-3xl font-bold text-white\'>AG</span></div>'"
+            class="relative w-44 h-44 rounded-full object-cover ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-900 transition-transform duration-300 group-hover:scale-105"
+            onerror="this.outerHTML='<div class=\'relative w-44 h-44 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-900 flex items-center justify-center\'><span class=\'text-5xl font-bold text-white\'>AG</span></div>'"
           />
-          <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-slate-900">
+          <span class="absolute bottom-2 right-2 w-4 h-4 bg-emerald-400 rounded-full border-2 border-slate-900">
             <span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
           </span>
-        </div>
+        </a>
 
         <h1 class="text-2xl font-bold text-white leading-tight tracking-tight">{personal.name}</h1>
         <p class="text-blue-400 font-semibold text-sm mt-1">{personal.title}</p>
-        <p class="text-slate-400 text-xs mt-2 flex items-center gap-1.5">
+        <p class="text-slate-400 text-xs mt-2 flex items-center justify-center gap-1.5">
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -52,16 +162,10 @@ function initials(name: string) {
           {location}
         </p>
 
-        <!-- Lang switcher + PDF -->
-        <div class="flex gap-2 mt-5 flex-wrap no-print">
+        <!-- Lang switcher -->
+        <div class="flex gap-2 mt-5 no-print">
           <a href="/es" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'es' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>ES</a>
           <a href="/en" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'en' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>EN</a>
-          <button onclick="window.print()" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5">
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-            </svg>
-            PDF
-          </button>
         </div>
       </div>
 
@@ -97,22 +201,15 @@ function initials(name: string) {
         <!-- Skills -->
         <div>
           <p class="sidebar-label">{t(lang, 'nav.skills')}</p>
-          <div class="space-y-6">
+          <div class="space-y-5">
             {skillGroups.map((group) => (
               <div>
-                <p class="text-slate-500 text-xs mb-3 font-medium">{lang === 'es' ? group.labelEs : group.labelEn}</p>
-                <div class="space-y-2.5">
-                  {group.items.map((skill) => (
-                    <div>
-                      <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-300 font-mono">{skill.name}</span>
-                        <span class="text-slate-500">{skill.level}%</span>
-                      </div>
-                      <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
-                        <div class="h-1 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 skill-bar"
-                          style={`--w: ${skill.level}%`} />
-                      </div>
-                    </div>
+                <p class="text-slate-500 text-xs mb-2.5 font-semibold uppercase tracking-wider">{lang === 'es' ? group.labelEs : group.labelEn}</p>
+                <div class="flex flex-wrap gap-1.5">
+                  {group.items.map((skill: {name: string}) => (
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-colors cursor-default font-mono">
+                      {skill.name}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -135,52 +232,52 @@ function initials(name: string) {
           </div>
         </div>
 
-        <!-- Premio -->
-        {personal.award && (
-          <div class="flex items-center gap-3 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3">
-            <span class="text-xl">🏆</span>
-            <div>
-              <p class="text-amber-400 text-xs font-semibold">{personal.award}</p>
-              <p class="text-slate-500 text-xs">Reconocimiento profesional</p>
-            </div>
-          </div>
-        )}
 
       </div>
     </aside>
 
     <!-- ══════════ MAIN ══════════ -->
-    <main class="flex-1 min-w-0 px-6 py-10 lg:px-10 lg:py-12 max-w-3xl space-y-8">
+    <main class="flex-1 min-w-0 px-6 py-10 lg:px-12 lg:py-12 space-y-8">
 
       <!-- About -->
-      <section class="card">
+      <section id="about" class="card scroll-mt-24">
         <h2 class="section-title">{t(lang, 'section.about')}</h2>
-        <p class="text-slate-600 leading-relaxed">{lang === 'es' ? about.es : about.en}</p>
+        {(lang === 'es' ? about.es : about.en).split('\n\n').map((para: string) => (
+          <p class="text-slate-600 leading-relaxed mb-4 last:mb-0">{para}</p>
+        ))}
         <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
           <div class="text-center">
-            <p class="text-2xl font-bold text-blue-600">12+</p>
+            <p class="text-2xl font-bold text-blue-600">{expYears}+</p>
             <p class="text-xs text-slate-500 mt-0.5">{lang === 'es' ? 'Años exp.' : 'Years exp.'}</p>
           </div>
           <div class="text-center border-x border-slate-100">
-            <p class="text-2xl font-bold text-blue-600">8+</p>
+            <p class="text-2xl font-bold text-blue-600">{experiences.length}</p>
             <p class="text-xs text-slate-500 mt-0.5">{lang === 'es' ? 'Empresas' : 'Companies'}</p>
           </div>
           <div class="text-center">
-            <p class="text-2xl font-bold text-blue-600">AI</p>
-            <p class="text-xs text-slate-500 mt-0.5">Focus</p>
+            <p class="text-2xl font-bold text-blue-600">360°</p>
+            <p class="text-xs text-slate-500 mt-0.5">{lang === 'es' ? 'Ciclo completo' : 'Full cycle'}</p>
           </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-6 pt-6 border-t border-slate-100">
+          {preferences.map((p: {es:string;en:string;icon:string}) => (
+            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 hover:border-blue-200 hover:bg-blue-50 transition-colors">
+              <span class="text-base">{p.icon}</span>
+              <span class="text-slate-700 text-sm font-medium">{lang === 'es' ? p.es : p.en}</span>
+            </div>
+          ))}
         </div>
       </section>
 
       <!-- Experience -->
-      <section class="card">
+      <section id="experience" class="card scroll-mt-24">
         <h2 class="section-title">{t(lang, 'section.experience')}</h2>
         <div class="divide-y divide-slate-50">
           {experiences.map((exp, i) => (
             <div class={`py-6 ${i === 0 ? 'pt-0' : ''}`}>
               <div class="flex items-start gap-4">
                 <!-- Logo -->
-                <div class="shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-white flex items-center justify-center">
+                <a href={`https://${exp.domain}`} target="_blank" rel="noopener" class="shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-white flex items-center justify-center transition-transform duration-200 hover:scale-110 hover:shadow-md">
                   <img
                     src={exp.logo || `https://logo.clearbit.com/${exp.domain}`}
                     alt={exp.company}
@@ -193,12 +290,13 @@ function initials(name: string) {
                   >
                     {initials(exp.company)}
                   </span>
-                </div>
+                </a>
 
                 <div class="flex-1 min-w-0">
-                  <div class="flex flex-wrap items-center justify-between gap-2 mb-0.5">
+                  <!-- Puesto primero: es lo que escanea el recruiter en el F-pattern -->
+                  <div class="flex flex-wrap items-start justify-between gap-2 mb-0.5">
                     <div class="flex items-center gap-2 flex-wrap">
-                      <h3 class="font-bold text-slate-900">{exp.company}</h3>
+                      <h3 class="font-bold text-slate-900 text-base leading-snug">{lang === 'es' ? exp.roleEs : exp.roleEn}</h3>
                       {exp.current && (
                         <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                           <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse inline-block"></span>
@@ -206,11 +304,18 @@ function initials(name: string) {
                         </span>
                       )}
                     </div>
-                    <span class="text-xs text-slate-400 font-mono bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg shrink-0">
-                      {lang === 'es' ? exp.periodEs : exp.periodEn}
-                    </span>
+                    <div class="flex flex-col items-end gap-0.5 shrink-0">
+                      <span class="text-xs text-slate-400 font-mono bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
+                        {lang === 'es' ? exp.periodEs : exp.periodEn}
+                      </span>
+                      {exp.startDate && (
+                        <span class="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-lg">
+                          {duration(exp.startDate, exp.endDate, lang)}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <p class="text-blue-600 text-sm font-semibold mb-3">{lang === 'es' ? exp.roleEs : exp.roleEn}</p>
+                  <p class="text-slate-500 text-sm font-medium mb-3">{exp.company}</p>
                   <ul class="space-y-1.5 mb-3">
                     {(lang === 'es' ? exp.descriptionEs : exp.descriptionEn).map((line) => (
                       <li class="text-slate-600 text-sm flex gap-2.5 leading-snug">
@@ -232,12 +337,12 @@ function initials(name: string) {
       </section>
 
       <!-- Education -->
-      <section class="card">
+      <section id="education" class="card scroll-mt-24">
         <h2 class="section-title">{t(lang, 'section.education')}</h2>
         <div class="space-y-5">
           {education.map((edu) => (
             <div class="flex gap-4 items-start">
-              <div class="w-10 h-10 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+              <a href={edu.url} target="_blank" rel="noopener" class={`w-10 h-10 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-200 ${edu.url ? 'hover:scale-110 hover:shadow-md cursor-pointer' : 'cursor-default'}`}>
                 {edu.logo ? (
                   <img src={edu.logo} alt={edu.institution} class="w-full h-full object-contain p-0.5" />
                 ) : (
@@ -246,7 +351,7 @@ function initials(name: string) {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                   </svg>
                 )}
-              </div>
+              </a>
               <div>
                 <h3 class="font-semibold text-slate-900 text-sm leading-snug">{lang === 'es' ? edu.degreeEs : edu.degreeEn}</h3>
                 <p class="text-slate-500 text-sm">{edu.institution}</p>
@@ -260,7 +365,7 @@ function initials(name: string) {
       </section>
 
       <!-- Publications -->
-      <section class="card">
+      <section id="publications" class="card scroll-mt-24">
         <h2 class="section-title">{t(lang, 'section.publications')}</h2>
         <div class="space-y-4">
           {publications.map((pub) => (
@@ -283,90 +388,66 @@ function initials(name: string) {
         </div>
       </section>
 
-      <!-- Certifications -->
-      <section class="card">
-        <h2 class="section-title">{t(lang, 'section.certifications')}</h2>
-        <div class="flex flex-wrap gap-2">
-          {certifications.map((cert) => (
-            <span class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-full hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-default">
-              <svg class="w-3 h-3 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-              </svg>
-              {cert.name}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      <!-- Qué busco / Preferences -->
-      <section class="card">
-        <h2 class="section-title">{t(lang, 'section.preferences')}</h2>
-        <div class="flex flex-wrap gap-3">
-          {preferences.map((p: {es:string;en:string;icon:string}) => (
-            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 hover:border-blue-200 hover:bg-blue-50 transition-colors">
-              <span class="text-lg">{p.icon}</span>
-              <span class="text-slate-700 text-sm font-medium">{lang === 'es' ? p.es : p.en}</span>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <!-- Portfolio -->
-      <section class="card no-print">
-        <h2 class="section-title">{t(lang, 'section.portfolio')}</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {portfolio.map((p: {name:string;image:string}) => (
-            <div class="group rounded-xl overflow-hidden border border-slate-200 bg-slate-50 transition-all">
-              <div class="aspect-video overflow-hidden bg-slate-100">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  class="w-full h-full object-cover transition-transform duration-300"
-                  loading="lazy"
-                />
-              </div>
-              <div class="px-3 py-2">
-                <span class="text-xs text-slate-600 font-mono truncate">{p.name}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <!-- Portfolio — datos en cv.json, ocultos intencionalmente -->
 
-      <!-- Referencias -->
-      <section class="card">
+      <!-- Referencias — datos en cv.json, ocultos intencionalmente -->
+      <section id="references" class="card scroll-mt-24">
         <h2 class="section-title">{t(lang, 'section.references')}</h2>
-        <div class="grid sm:grid-cols-2 gap-4">
-          {references.map((r: {name:string;role:string;text:string}) => (
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
-              <p class="text-slate-600 text-sm leading-relaxed italic mb-3">"{r.text}"</p>
-              <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-600 text-xs font-bold shrink-0">
-                  {r.name.split(' ').map((w: string) => w[0]).slice(0,2).join('')}
-                </div>
-                <div>
-                  <p class="text-slate-800 text-xs font-semibold">{r.name}</p>
-                  <p class="text-slate-400 text-xs">{r.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <p class="text-slate-500 text-sm italic">
+          {lang === 'es' ? 'Referencias disponibles bajo petición.' : 'References available upon request.'}
+        </p>
       </section>
 
     </main>
   </div>
+  </div>
 </Layout>
 
+<script>
+  // Smooth scroll para los links del navbar
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const id = link.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Resaltar sección activa en el navbar
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          const active = link.dataset.section === entry.target.id;
+          link.classList.toggle('text-white', active);
+          link.classList.toggle('bg-blue-600', active);
+          link.classList.toggle('border-blue-400', active);
+          link.classList.toggle('font-semibold', active);
+          link.classList.toggle('text-slate-400', !active);
+          link.classList.toggle('border-transparent', !active);
+        });
+      }
+    });
+  }, { rootMargin: '-64px 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
 <style>
-  .card { @apply bg-white rounded-2xl shadow-sm border border-slate-200/60 px-8 py-7; }
+  .card { @apply bg-white rounded-2xl shadow-sm border border-slate-200/60 px-8 py-7 text-[15px]; }
   .section-title { @apply text-xs font-bold uppercase tracking-widest text-blue-500 mb-6 flex items-center gap-2; }
   .section-title::before { content:''; @apply w-4 h-0.5 bg-blue-500 inline-block rounded-full; }
   .sidebar-label { @apply text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4; }
   .contact-link { @apply flex items-center gap-3 text-slate-300 hover:text-white transition-colors; }
   .contact-icon { @apply w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center transition-colors shrink-0; }
-  .skill-bar { width:0; animation: grow 1s ease forwards 0.3s; }
-  @keyframes grow { to { width: var(--w); } }
   @keyframes pulse-slow { 0%,100%{opacity:.4} 50%{opacity:.7} }
   .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
 
@@ -385,8 +466,8 @@ function initials(name: string) {
 
     /* Sidebar */
     aside {
-      width: 200px !important;
-      min-width: 200px !important;
+      width: 220px !important;
+      min-width: 220px !important;
       position: relative !important;
       height: auto !important;
       overflow: visible !important;
@@ -419,8 +500,6 @@ function initials(name: string) {
     /* Saltos de página */
     section { break-inside: avoid; }
 
-    /* Skill bars: mostrar ancho directamente sin animación */
-    .skill-bar { width: var(--w) !important; animation: none !important; }
 
     /* Portfolio oculto vía clase no-print */
   }

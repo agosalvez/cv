@@ -6,11 +6,11 @@
     "locationEn": "Valencia, Spain",
     "linkedin": "https://www.linkedin.com/in/adriangosalvez",
     "github": "https://github.com/agosalvez",
-    "award": "Premio Meninas 2017"
+    "website": "https://gosalvez.es"
   },
   "about": {
-    "es": "Empecé a programar con 8 años, publiqué mi primera web con 12 y a los 15 entendí el potencial real de internet. Más de 12 años después, sigo con la misma pasión. Ingeniero en Inteligencia Artificial especializado en arquitectura IT, liderazgo técnico y automatización de procesos. He liderado equipos en procesos de transformación digital para el sector público y privado, con foco en Node.js, DevOps e IA conversacional. Mi enfoque combina eficiencia operativa e innovación para diseñar soluciones escalables y alineadas con el negocio.",
-    "en": "I started programming at 8, published my first website at 12, and by 15 I understood the real potential of the internet. 12+ years later, I'm still driven by the same passion. AI Engineer specializing in IT architecture, technical leadership, and process automation. I've led teams through digital transformation in both public and private sectors, focusing on Node.js, DevOps, and conversational AI. My approach combines operational efficiency with innovation to build scalable, business-aligned solutions."
+    "es": "Empecé a programar con 8 años, publiqué mi primera web con 12 y a los 15 entendí el potencial real de internet. Después de más de 20 años con la programación y más de 12 en el sector profesional, sigo con la misma pasión. Soy un perfil end-to-end: puedo sentarme con el cliente a analizar su negocio, diseñar la arquitectura, liderar el equipo, escribir el código y dejarlo corriendo en producción. He participado en todas las fases del ciclo de vida del software — análisis, diseño, desarrollo, QA, DevOps y mantenimiento — en proyectos de transformación digital para sector público y privado.\n\nHoy programo menos y pienso más en sistemas. Años trabajando y estudiando Inteligencia Artificial me han dado una comprensión real de cómo funciona desde dentro, lo que me permite aplicarla con criterio en cada fase del proyecto. La tecnología nunca ha sido una limitación para mí — con la IA, simplemente va más rápido.",
+    "en": "I started programming at 8, published my first website at 12, and by 15 I understood the real potential of the internet. After more than 20 years with programming and 12+ in the professional world, I'm still driven by the same passion. I'm an end-to-end engineer: I can sit with the client to analyze their business, design the architecture, lead the team, write the code and take it all the way to production. I've been involved in every phase of the software lifecycle — analysis, design, development, QA, DevOps and maintenance — across digital transformation projects for both public and private sectors.\n\nToday I code less and think more in systems. Years of working with and studying Artificial Intelligence have given me a real understanding of how it works from the inside, which allows me to apply it with judgment at every phase of a project. Technology has never been a limitation for me — with AI, things simply move faster."
   },
   "experiences": [
     {
@@ -22,26 +22,32 @@
       "roleEn": "AI Engineer / Technical Lead",
       "periodEs": "Ene 2022 — Presente",
       "periodEn": "Jan 2022 — Present",
+      "startDate": "2022-01",
       "current": true,
       "descriptionEs": [
-        "Desarrollo de soluciones conversacionales basadas en inteligencia artificial.",
-        "Responsable de plataforma: análisis y diseño de arquitecturas, infra Kubernetes.",
-        "Liderazgo de iniciativas estratégicas y definición técnica de nuevos productos.",
-        "Participación en procesos de selección técnica y crecimiento del equipo."
+        "Responsable de plataforma: planificación de producto y arquitectura de solución omnicanal de atención al cliente con IA.",
+        "Integración de APIs de IA generativa (OpenAI, HuggingFace, modelos custom) en flujos conversacionales de producción.",
+        "Diseño e implementación de un adapter sobre LLM con RAG, validado en entorno productivo con resultados destacados.",
+        "Proyectos I+D: licitación de atención al cliente en el metaverso con Decentraland, exploración de modelos multimodales.",
+        "MLOps, CI/CD con Jenkins y Kubernetes. Stack: Node.js, Python, PHP, Angular — arquitectura distribuida y microservicios."
       ],
       "descriptionEn": [
-        "Development of AI-powered conversational solutions.",
-        "Platform owner: architecture design and analysis, Kubernetes infrastructure.",
-        "Leadership of strategic initiatives and technical definition of new products.",
-        "Involvement in technical hiring processes and team growth."
+        "Platform owner: product planning and architecture of an omnichannel AI-powered customer service solution.",
+        "Integration of generative AI APIs (OpenAI, HuggingFace, custom models) into production conversational flows.",
+        "Design and implementation of an LLM adapter with RAG, validated in production with outstanding results.",
+        "R&D projects: customer service in the metaverse with Decentraland, multimodal model exploration.",
+        "MLOps, CI/CD with Jenkins and Kubernetes. Stack: Node.js, Python, PHP, Angular — distributed and microservices architecture."
       ],
       "tech": [
         "Node.js",
-        "AI / NLP",
+        "Python",
+        "GenAI APIs",
         "LLMs",
+        "HuggingFace",
         "Kubernetes",
-        "Docker",
-        "CI/CD"
+        "Jenkins",
+        "MLOps",
+        "Omnichannel"
       ]
     },
     {
@@ -53,47 +59,24 @@
       "roleEn": "Software Engineer — Backend Lead",
       "periodEs": "Feb 2022 — Oct 2022",
       "periodEn": "Feb 2022 — Oct 2022",
+      "startDate": "2022-02",
+      "endDate": "2022-10",
       "current": false,
       "descriptionEs": [
-        "Arranque y puesta en marcha del proyecto desde cero.",
-        "Diseño y modelado del backend, infraestructura y pipeline CI/CD."
+        "Arranque del proyecto desde cero en equipo de dos: diseño de arquitectura completa, modelado de base de datos y desarrollo íntegro del backend.",
+        "Definición de la infraestructura, pipeline CI/CD con GitLab y Docker."
       ],
       "descriptionEn": [
-        "Project kickoff and launch from scratch.",
-        "Backend design and modelling, infrastructure and CI/CD pipeline setup."
+        "Project kickoff from scratch in a two-person team: full architecture design, database modelling and complete backend development.",
+        "Infrastructure setup, CI/CD pipeline with GitLab and Docker."
       ],
       "tech": [
-        "Node.js",
+        "NestJS",
+        "Angular",
+        "PostgreSQL",
         "Docker",
-        "CI/CD",
-        "DevOps"
-      ]
-    },
-    {
-      "company": "ArtesanAlbums",
-      "domain": "artesanalbums.com",
-      "logo": "/logos/artesanalbums.jpg",
-      "color": "#F59E0B",
-      "roleEs": "IT Manager",
-      "roleEn": "IT Manager",
-      "periodEs": "Sep 2016 — Presente",
-      "periodEn": "Sep 2016 — Present",
-      "current": true,
-      "descriptionEs": [
-        "Responsable de la gestión tecnológica integral de la empresa.",
-        "Administración de sistemas y redes. Desarrollo de software a medida.",
-        "Consultoría tecnológica y soporte técnico a equipo y clientes."
-      ],
-      "descriptionEn": [
-        "Responsible for the full technology management of the company.",
-        "Systems and network administration. Custom software development.",
-        "Tech consulting and technical support for team and clients."
-      ],
-      "tech": [
-        "PHP",
-        "MySQL",
-        "Linux",
-        "Networking"
+        "GitLab CI",
+        "CI/CD"
       ]
     },
     {
@@ -105,18 +88,20 @@
       "roleEn": "Tech Lead / Software Engineer",
       "periodEs": "Abr 2019 — Dic 2021",
       "periodEn": "Apr 2019 — Dec 2021",
+      "startDate": "2019-04",
+      "endDate": "2021-12",
       "current": false,
       "descriptionEs": [
-        "Tech Lead y Release Manager para proyectos de eAdministración (Generalitat Valenciana, Ayuntamiento de Valencia).",
-        "Arquitectura IT de soluciones de transformación digital para la Administración Pública.",
-        "DevOps y automatización. Implantación CI/CD con Kubernetes y Swarm.",
-        "Liderazgo técnico de equipos Angular, Ruby on Rails y Java Spring Boot."
+        "Responsable técnico del proyecto Decidim para el Ayuntamiento de Valencia: trato directo con cliente, toma de requisitos, implantación y despliegue de la plataforma.",
+        "Tech Lead de un equipo de hasta 10 personas (juniors, seniors y becarios): organización de tareas, reporte a PM y coordinación técnica.",
+        "Release Manager del departamento: responsable de todos los despliegues, gestión de CI/CD con Kubernetes y Swarm junto al equipo DevOps.",
+        "Proyectos de transformación digital para Administración Pública: Generalitat Valenciana y Ayuntamiento de Valencia."
       ],
       "descriptionEn": [
-        "Tech Lead and Release Manager for e-Government projects (Generalitat Valenciana, Valencia City Hall).",
-        "IT architecture for digital transformation solutions in the Public Administration.",
-        "DevOps and automation. CI/CD with Kubernetes and Swarm.",
-        "Technical leadership of Angular, Ruby on Rails, and Java Spring Boot teams."
+        "Technical lead on the Decidim project for Valencia City Hall: direct client contact, requirements gathering, platform setup and deployment.",
+        "Tech Lead of a team of up to 10 people (juniors, seniors and interns): task organisation, reporting to PM and technical coordination.",
+        "Department Release Manager: responsible for all deployments, CI/CD management with Kubernetes and Swarm alongside the DevOps team.",
+        "Digital transformation projects for Public Administration: Generalitat Valenciana and Valencia City Hall."
       ],
       "tech": [
         "Java",
@@ -137,45 +122,88 @@
       "roleEn": "Software Engineer",
       "periodEs": "Jul 2018 — Abr 2019",
       "periodEn": "Jul 2018 — Apr 2019",
+      "startDate": "2018-07",
+      "endDate": "2019-04",
       "current": false,
       "descriptionEs": [
-        "Start-up de software a medida para pymes. ERP a medida.",
-        "Backend con Python / Django y funciones fullstack."
+        "Desarrollo senior en Ruby on Rails con PostgreSQL en proyectos de software a medida para pymes.",
+        "Backend con Django/Python en un proyecto de mayor envergadura, con dominio completo del framework y su ecosistema.",
+        "Rotación a frontend con Vue.js y análisis de arquitectura junto al Tech Lead."
       ],
       "descriptionEn": [
-        "Custom software startup for SMEs. Bespoke ERP.",
-        "Backend with Python / Django and fullstack responsibilities."
+        "Senior Ruby on Rails development with PostgreSQL on custom software projects for SMEs.",
+        "Django/Python backend on a larger-scale project, with full command of the framework and its ecosystem.",
+        "Frontend rotation with Vue.js and architecture analysis alongside the Tech Lead."
       ],
       "tech": [
-        "Python",
-        "Django",
         "Ruby on Rails",
+        "Django",
+        "Python",
+        "Vue.js",
         "PostgreSQL",
-        "REST API"
+        "GitLab CI",
+        "JavaScript"
+      ]
+    },
+    {
+      "company": "ArtesanAlbums",
+      "domain": "artesanalbums.es",
+      "logo": "/logos/artesanalbums.jpg",
+      "color": "#F59E0B",
+      "roleEs": "IT Manager",
+      "roleEn": "IT Manager",
+      "periodEs": "Oct 2016 — Presente",
+      "periodEn": "Oct 2016 — Present",
+      "startDate": "2016-10",
+      "current": true,
+      "descriptionEs": [
+        "Asesoría tecnológica integral y soporte técnico continuo: sistemas, redes, hardware y software.",
+        "Desarrollo de aplicación web a medida para recepción de pedidos de clientes con notificación e impresión automática del albarán.",
+        "Desarrollo y mantenimiento de la web corporativa."
+      ],
+      "descriptionEn": [
+        "Full technology advisory and ongoing technical support: systems, networks, hardware and software.",
+        "Development of a custom web application for client order intake with automatic notification and order sheet printing.",
+        "Corporate website development and maintenance."
+      ],
+      "tech": [
+        "PHP",
+        "MySQL",
+        "Linux",
+        "Networking"
       ]
     },
     {
       "company": "Shopadvizor",
-      "domain": "shopadvizor.com",
+      "domain": "shopadvizor.io",
       "logo": "/logos/shopadvizor.png",
       "color": "#F97316",
       "roleEs": "Full Stack Developer",
       "roleEn": "Full Stack Developer",
       "periodEs": "Oct 2014 — Oct 2016",
       "periodEn": "Oct 2014 — Oct 2016",
+      "startDate": "2014-10",
+      "endDate": "2016-10",
       "current": false,
       "descriptionEs": [
-        "Programación embebida para Carrefour France sobre plataformas internacionales de comercialización retail."
+        "Desarrollo fullstack sobre plataforma retail internacional basada en Joomla: backend en PHP y MySQL, frontend con HTML, CSS, JavaScript y jQuery.",
+        "Integraciones embebidas en plataformas de comercialización internacionales como Carrefour France.",
+        "Co-diseño e implementación de un motor de búsqueda de artículos basado en sistema de pesos propio."
       ],
       "descriptionEn": [
-        "Embedded programming for Carrefour France on international retail commercialization platforms."
+        "Fullstack development on an international retail platform built on Joomla: PHP and MySQL backend, frontend with HTML, CSS, JavaScript and jQuery.",
+        "Embedded integrations on international retail platforms such as Carrefour France.",
+        "Co-design and implementation of an article search engine based on a custom weighting system."
       ],
       "tech": [
         "PHP",
         "JavaScript",
-        "MySQL",
+        "jQuery",
         "HTML5",
-        "CSS3"
+        "CSS3",
+        "Joomla",
+        "MySQL",
+        "Subversion"
       ]
     },
     {
@@ -187,14 +215,20 @@
       "roleEn": "VoIP Developer / Technical Support",
       "periodEs": "Jul 2013 — Oct 2014",
       "periodEn": "Jul 2013 — Oct 2014",
+      "startDate": "2013-07",
+      "endDate": "2014-10",
       "current": false,
       "descriptionEs": [
-        "Desarrollo y gestión técnica de centralitas VoIP y TrunkSIP con Asterisk.",
-        "Especialista en configuración de centralitas VoIP, Trunks SIP y administración de servidores."
+        "Configuración y soporte técnico de centralitas Asterisk físicas y virtuales para clientes, incluyendo conexiones complejas de Trunk SIP.",
+        "Evolución a desarrollo: nuevas funcionalidades e integraciones en PHP, Bash, MySQL, HTML, CSS y JavaScript sobre plataformas de telefonía.",
+        "Participación en el rediseño y renovación del core del sistema de telefonía propio de la empresa.",
+        "Consolidación de habilidades en administración de servidores Linux: SSH, SCP, SFTP, entornos jailed y línea de comandos avanzada."
       ],
       "descriptionEn": [
-        "Technical development and management of VoIP switchboards and TrunkSIP with Asterisk.",
-        "Specialist in VoIP switchboard configuration, SIP Trunks, and server administration."
+        "Configuration and technical support of physical and virtual Asterisk PBX systems for clients, including complex SIP Trunk connections.",
+        "Evolution into development: new features and integrations in PHP, Bash, MySQL, HTML, CSS and JavaScript on telephony platforms.",
+        "Involvement in the redesign and renewal of the company's own telephony system core.",
+        "Solid grounding in Linux server administration: SSH, SCP, SFTP, jailed environments and advanced command line."
       ],
       "tech": [
         "Asterisk",
@@ -202,30 +236,8 @@
         "SIP",
         "PHP",
         "MySQL",
-        "Linux",
-        "Shell Script"
-      ]
-    },
-    {
-      "company": "NITSNETS",
-      "domain": "nitsnets.com",
-      "logo": "/logos/nitsnets.png",
-      "color": "#14B8A6",
-      "roleEs": "Junior Web Developer",
-      "roleEn": "Junior Web Developer",
-      "periodEs": "Mar 2011 — Jun 2011",
-      "periodEn": "Mar 2011 — Jun 2011",
-      "current": false,
-      "descriptionEs": [
-        "Desarrollo web con PHP, MySQL y JavaScript."
-      ],
-      "descriptionEn": [
-        "Web development with PHP, MySQL and JavaScript."
-      ],
-      "tech": [
-        "PHP",
-        "JavaScript",
-        "MySQL"
+        "Bash",
+        "Linux"
       ]
     }
   ],
@@ -234,6 +246,7 @@
       "degreeEs": "Máster en Inteligencia Artificial",
       "degreeEn": "Master's in Artificial Intelligence",
       "institution": "Universidad Alfonso X el Sabio",
+      "url": "https://www.uax.com",
       "logo": "/logos/uax.svg",
       "specialityEs": "Ingeniería Informática",
       "specialityEn": "Computer Engineering"
@@ -242,131 +255,61 @@
       "degreeEs": "Grado en Ingeniería Informática",
       "degreeEn": "B.Sc. Computer Science",
       "institution": "Universitat d'Alacant",
+      "url": "https://www.ua.es",
       "logo": "/logos/ua.jpg",
       "specialityEs": "Ingeniería del Software",
       "specialityEn": "Software Engineering"
-    },
-    {
-      "degreeEs": "Técnico Superior en Desarrollo de Aplicaciones Informáticas (DAI)",
-      "degreeEn": "Higher Technician in Application Development",
-      "institution": "IES Doctor Balmis",
-      "logo": "/logos/balmis.png",
-      "specialityEs": "",
-      "specialityEn": ""
-    },
-    {
-      "degreeEs": "Especialista de Blockchain",
-      "degreeEn": "Blockchain Specialist",
-      "institution": "Blockstellart",
-      "specialityEs": "",
-      "specialityEn": ""
     }
   ],
   "skillGroups": [
     {
-      "labelEs": "Backend & Lenguajes",
-      "labelEn": "Backend & Languages",
+      "labelEs": "AI & LLMs",
+      "labelEn": "AI & LLMs",
       "items": [
-        {
-          "name": "Node.js",
-          "level": 92
-        },
-        {
-          "name": "Shell Script",
-          "level": 90
-        },
-        {
-          "name": "PHP",
-          "level": 88
-        },
-        {
-          "name": "Ruby / Rails",
-          "level": 82
-        },
-        {
-          "name": "Python",
-          "level": 76
-        },
-        {
-          "name": "Java",
-          "level": 65
-        }
+        { "name": "LLMs" },
+        { "name": "RAG" },
+        { "name": "AI Agents" },
+        { "name": "LLM Adapters" },
+        { "name": "Ollama" },
+        { "name": "Prompt Engineering" },
+        { "name": "Embeddings" },
+        { "name": "Vector DBs" },
+        { "name": "Fine-tuning" }
       ]
     },
     {
-      "labelEs": "IA & Datos",
-      "labelEn": "AI & Data",
+      "labelEs": "APIs & Modelos",
+      "labelEn": "APIs & Models",
       "items": [
-        {
-          "name": "NLP / LLMs",
-          "level": 85
-        },
-        {
-          "name": "SQL",
-          "level": 90
-        },
-        {
-          "name": "ETL",
-          "level": 78
-        },
-        {
-          "name": "Redis",
-          "level": 80
-        }
+        { "name": "OpenAI API" },
+        { "name": "Anthropic API" },
+        { "name": "Gemini API" },
+        { "name": "HuggingFace" },
+        { "name": "LLaMA" },
+        { "name": "Mistral" }
       ]
     },
     {
-      "labelEs": "DevOps & Infra",
-      "labelEn": "DevOps & Infra",
+      "labelEs": "Backend & Infra",
+      "labelEn": "Backend & Infra",
       "items": [
-        {
-          "name": "CI/CD",
-          "level": 90
-        },
-        {
-          "name": "Kubernetes",
-          "level": 85
-        },
-        {
-          "name": "Docker",
-          "level": 88
-        },
-        {
-          "name": "GitLab CI",
-          "level": 85
-        }
+        { "name": "Node.js" },
+        { "name": "Python" },
+        { "name": "Docker" },
+        { "name": "Kubernetes" },
+        { "name": "CI/CD" },
+        { "name": "SQL" }
       ]
     },
     {
-      "labelEs": "Bases de datos",
-      "labelEn": "Databases",
+      "labelEs": "Liderazgo",
+      "labelEn": "Leadership",
       "items": [
-        {
-          "name": "MySQL",
-          "level": 90
-        },
-        {
-          "name": "PostgreSQL",
-          "level": 85
-        }
+        { "name": "Technical Leadership" },
+        { "name": "Mentoring" },
+        { "name": "Code Review" },
+        { "name": "Team Building" }
       ]
-    }
-  ],
-  "certifications": [
-    {
-      "name": "Curso DevOps con Gitlab"
-    },
-    {
-      "name": "Curso de Swarm"
-    },
-    {
-      "name": "Especialista de Blockchain"
-    },
-    {
-      "name": "Crea tu propio Metaverso: Three.js y Tokens NFT"
-    },
-    {
-      "name": "Introducción a Ciberseguridad: Prevención de Ataques"
     }
   ],
   "publications": [
@@ -374,11 +317,6 @@
       "title": "Exploración de modelos multimodales para la indexación y clasificación de documentos: Análisis de Estrategias NLP y Visión Computacional",
       "institution": "Universidad Alfonso X el Sabio — Máster en IA",
       "logo": "/logos/uax.svg"
-    },
-    {
-      "title": "Centralita virtual sobre VoIP",
-      "institution": "Universitat d'Alacant — Ingeniería Informática",
-      "logo": "/logos/ua.jpg"
     }
   ],
   "languages": [
@@ -400,19 +338,9 @@
   ],
   "preferences": [
     {
-      "es": "Remoto / Híbrido",
-      "en": "Remote / Hybrid",
-      "icon": "🌍"
-    },
-    {
-      "es": "Metodologías ágiles",
-      "en": "Agile methodologies",
-      "icon": "⚡"
-    },
-    {
-      "es": "Formación continua",
-      "en": "Continuous learning",
-      "icon": "📚"
+      "es": "AI First",
+      "en": "AI First",
+      "icon": "🤖"
     },
     {
       "es": "Proyectos con impacto real",
@@ -420,14 +348,14 @@
       "icon": "🎯"
     },
     {
-      "es": "Horario flexible",
-      "en": "Flexible schedule",
-      "icon": "🕐"
+      "es": "Remoto / Híbrido",
+      "en": "Remote / Hybrid",
+      "icon": "🌍"
     },
     {
-      "es": "Stack moderno",
-      "en": "Modern tech stack",
-      "icon": "🚀"
+      "es": "Conciliación",
+      "en": "Work-life balance",
+      "icon": "⚖️"
     }
   ],
   "portfolio": [
