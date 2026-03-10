@@ -1,0 +1,27 @@
+services:
+
+  # ── CV estático (nginx) ─────────────────────────────────────
+  cv:
+    image: agosalvez/cv:latest
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+
+  # ── Admin backoffice (Express) ──────────────────────────────
+  admin:
+    image: agosalvez/cv-admin:latest
+    restart: unless-stopped
+    ports:
+      - "4322:4322"
+    volumes:
+      - cv-data:/app/src/data
+      - cv-logos:/app/public/logos
+      - cv-photo:/app/public
+    environment:
+      - ADMIN_USER=${ADMIN_USER:-agosalvez}
+      - ADMIN_PASS=${ADMIN_PASS}
+
+volumes:
+  cv-data:    # cv.json
+  cv-logos:   # logos de empresas
+  cv-photo:   # profile.jpg
