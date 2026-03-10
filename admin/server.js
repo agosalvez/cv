@@ -11,8 +11,12 @@ const LOGOS_DIR   = join(__dirname, '../public/logos');
 
 mkdirSync(LOGOS_DIR, { recursive: true });
 
-const ADMIN_USER = process.env.ADMIN_USER || 'agosalvez';
-const ADMIN_PASS = process.env.ADMIN_PASS || 'Agosalvez#314';
+const ADMIN_USER = process.env.ADMIN_USER;
+const ADMIN_PASS = process.env.ADMIN_PASS;
+if (!ADMIN_USER || !ADMIN_PASS) {
+  console.error('❌ Faltan ADMIN_USER y/o ADMIN_PASS en las variables de entorno');
+  process.exit(1);
+}
 
 function basicAuth(req, res, next) {
   const auth = req.headers['authorization'];
@@ -32,6 +36,7 @@ const app = express();
 app.use(basicAuth);
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(join(__dirname, '../public')));
 
 const upload = multer({ dest: '/tmp' });
 

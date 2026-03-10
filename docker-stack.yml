@@ -18,8 +18,9 @@ services:
       - cv-logos:/app/public/logos
       - cv-photo:/app/public
     environment:
-      - ADMIN_USER=${ADMIN_USER:-agosalvez}
+      - ADMIN_USER=${ADMIN_USER}
       - ADMIN_PASS=${ADMIN_PASS}
+      - PORT=4322
 
 volumes:
   cv-data:    # cv.json

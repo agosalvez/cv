@@ -144,9 +144,6 @@
       <div class="nav-item" onclick="switchTab('publicaciones')" data-tab="publicaciones">
         <span class="icon">📄</span> Publicaciones
       </div>
-      <div class="nav-item" onclick="switchTab('certificaciones')" data-tab="certificaciones">
-        <span class="icon">🏅</span> Certificaciones
-      </div>
       <div class="nav-item" onclick="switchTab('idiomas')" data-tab="idiomas">
         <span class="icon">🌐</span> Idiomas
       </div>
@@ -350,8 +347,8 @@ function experiencia() {
             <button onclick="moveExp(${i},-1)" class="btn btn-ghost btn-sm" style="padding:3px 7px; font-size:11px; ${i===0?'opacity:.25;pointer-events:none':''}" title="Subir">▲</button>
             <button onclick="moveExp(${i},1)"  class="btn btn-ghost btn-sm" style="padding:3px 7px; font-size:11px; ${i===n-1?'opacity:.25;pointer-events:none':''}" title="Bajar">▼</button>
           </div>
-          <div style="width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;background-color:${e.color}">
-            ${e.company.slice(0,2).toUpperCase()}
+          <div style="width:40px;height:40px;border-radius:9px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;background-color:${e.logo ? '#fff' : e.color};border:1px solid #2D3B55;">
+            ${e.logo ? `<img src="${e.logo}?t=${Date.now()}" style="width:100%;height:100%;object-fit:contain;padding:3px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;">${e.company.slice(0,2).toUpperCase()}</span>` : `<span>${e.company.slice(0,2).toUpperCase()}</span>`}
           </div>
           <div style="flex:1; min-width:0;">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
@@ -391,7 +388,7 @@ function editExp(i) {
           📁 Subir
           <input type="file" accept="image/*" style="display:none" onchange="uploadLogo(this,'m-logo','exp-logo-preview')"/>
         </label>
-        <div style="width:40px;height:40px;border-radius:8px;border:1px solid #2D3B55;background:#0F1624;overflow:hidden;flex-shrink:0;">
+        <div style="width:40px;height:40px;border-radius:8px;border:1px solid #2D3B55;background:#fff;overflow:hidden;flex-shrink:0;">
           <img id="exp-logo-preview" src="${e.logo||''}" style="width:100%;height:100%;object-fit:contain;padding:2px;" onerror="this.style.opacity=0" onload="this.style.opacity=1"/>
         </div>
       </div>
@@ -452,11 +449,9 @@ function skills() {
       ${data.skillGroups.map((g,gi) => `
         <div class="card">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
-            <input class="field" style="width:160px;font-weight:600;" value="${esc(g.labelEs)}"
-              oninput="data.skillGroups[${gi}].labelEs=this.value" placeholder="Nombre ES"/>
-            <span style="color:#475569; font-size:12px;">/</span>
-            <input class="field" style="width:160px;" value="${esc(g.labelEn)}"
-              oninput="data.skillGroups[${gi}].labelEn=this.value" placeholder="Name EN"/>
+            <input class="field" style="width:220px;font-weight:600;" value="${esc(g.labelEs)}"
+              oninput="data.skillGroups[${gi}].labelEs=this.value;data.skillGroups[${gi}].labelEn=this.value" placeholder="Nombre del grupo"/>
+            <span style="font-size:11px;color:#475569;white-space:nowrap;">ES + EN</span>
             <div style="margin-left:auto; display:flex; gap:6px;">
               <button onclick="addSkill(${gi})" class="btn btn-ghost btn-sm">+ Skill</button>
               <button onclick="deleteItem('skillGroups',${gi},skills)" class="btn btn-danger btn-sm">🗑</button>
@@ -464,14 +459,9 @@ function skills() {
           </div>
           <div style="display:flex; flex-direction:column; gap:10px;">
             ${g.items.map((s,si) => `
-              <div style="display:grid; grid-template-columns:1fr 180px auto auto; align-items:center; gap:10px;">
+              <div style="display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px;">
                 <input class="field" style="font-size:13px; font-family:monospace;" value="${esc(s.name)}"
                   oninput="data.skillGroups[${gi}].items[${si}].name=this.value" placeholder="Nombre"/>
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <input type="range" min="0" max="100" value="${s.level}" style="flex:1;"
-                    oninput="data.skillGroups[${gi}].items[${si}].level=+this.value;this.nextElementSibling.textContent=this.value+'%'"/>
-                  <span style="font-size:12px; color:#64748B; width:35px; text-align:right; font-variant-numeric:tabular-nums;">${s.level}%</span>
-                </div>
                 <button onclick="deleteSkill(${gi},${si})" class="btn btn-danger btn-sm" style="padding:5px 8px;">✕</button>
               </div>`).join('')}
           </div>
@@ -480,7 +470,7 @@ function skills() {
 }
 
 function addSkillGroup() { data.skillGroups.push({labelEs:'Nuevo grupo',labelEn:'New group',items:[]}); skills(); }
-function addSkill(gi) { data.skillGroups[gi].items.push({name:'',level:80}); skills(); }
+function addSkill(gi) { data.skillGroups[gi].items.push({name:''}); skills(); }
 function deleteSkill(gi,si) { data.skillGroups[gi].items.splice(si,1); skills(); }
 
 // ── EDUCACIÓN ─────────────────────────────────────────────────
@@ -494,7 +484,9 @@ function educacion() {
     <div style="display:flex; flex-direction:column; gap:10px;">
       ${data.education.map((e,i) => `
         <div class="card-row" style="display:flex; align-items:flex-start; gap:14px;">
-          <div style="width:40px;height:40px;background:#162032;border:1px solid #1E3A5F;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;">🎓</div>
+          <div style="width:40px;height:40px;background:${e.logo ? '#fff' : '#162032'};border:1px solid #1E3A5F;border-radius:9px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;">
+            ${e.logo ? `<img src="${e.logo}?t=${Date.now()}" style="width:100%;height:100%;object-fit:contain;padding:4px;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span style="display:none;">🎓</span>` : `🎓`}
+          </div>
           <div style="flex:1;">
             <div style="font-weight:600; font-size:14px; margin-bottom:3px;">${esc(e.degreeEs)}</div>
             <div style="font-size:13px; color:#60A5FA;">${esc(e.institution)}</div>
@@ -523,7 +515,7 @@ function editEdu(i) {
           📁 Subir
           <input type="file" accept="image/*" style="display:none" onchange="uploadLogo(this,'m-logo','edu-logo-preview')"/>
         </label>
-        <div style="width:40px;height:40px;border-radius:8px;border:1px solid #2D3B55;background:#0F1624;overflow:hidden;flex-shrink:0;">
+        <div style="width:40px;height:40px;border-radius:8px;border:1px solid #2D3B55;background:#fff;overflow:hidden;flex-shrink:0;">
           <img id="edu-logo-preview" src="${e.logo||''}" style="width:100%;height:100%;object-fit:contain;padding:2px;" onerror="this.style.opacity=0" onload="this.style.opacity=1"/>
         </div>
       </div>

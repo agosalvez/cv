@@ -266,49 +266,99 @@
       "labelEs": "AI & LLMs",
       "labelEn": "AI & LLMs",
       "items": [
-        { "name": "LLMs" },
-        { "name": "RAG" },
-        { "name": "AI Agents" },
-        { "name": "LLM Adapters" },
-        { "name": "Ollama" },
-        { "name": "Prompt Engineering" },
-        { "name": "Embeddings" },
-        { "name": "Vector DBs" },
-        { "name": "Fine-tuning" }
+        {
+          "name": "LLMs"
+        },
+        {
+          "name": "RAG"
+        },
+        {
+          "name": "AI Agents"
+        },
+        {
+          "name": "LLM Adapters"
+        },
+        {
+          "name": "Ollama"
+        },
+        {
+          "name": "Prompt Engineering"
+        },
+        {
+          "name": "Embeddings"
+        },
+        {
+          "name": "Vector DBs"
+        },
+        {
+          "name": "Fine-tuning"
+        }
       ]
     },
     {
       "labelEs": "APIs & Modelos",
       "labelEn": "APIs & Models",
       "items": [
-        { "name": "OpenAI API" },
-        { "name": "Anthropic API" },
-        { "name": "Gemini API" },
-        { "name": "HuggingFace" },
-        { "name": "LLaMA" },
-        { "name": "Mistral" }
+        {
+          "name": "OpenAI API"
+        },
+        {
+          "name": "Anthropic API"
+        },
+        {
+          "name": "Gemini API"
+        },
+        {
+          "name": "HuggingFace"
+        },
+        {
+          "name": "LLaMA"
+        },
+        {
+          "name": "Mistral"
+        }
       ]
     },
     {
       "labelEs": "Backend & Infra",
       "labelEn": "Backend & Infra",
       "items": [
-        { "name": "Node.js" },
-        { "name": "Python" },
-        { "name": "Docker" },
-        { "name": "Kubernetes" },
-        { "name": "CI/CD" },
-        { "name": "SQL" }
+        {
+          "name": "Node.js"
+        },
+        {
+          "name": "Python"
+        },
+        {
+          "name": "Docker"
+        },
+        {
+          "name": "Kubernetes"
+        },
+        {
+          "name": "CI/CD"
+        },
+        {
+          "name": "SQL"
+        }
       ]
     },
     {
       "labelEs": "Liderazgo",
       "labelEn": "Leadership",
       "items": [
-        { "name": "Technical Leadership" },
-        { "name": "Mentoring" },
-        { "name": "Code Review" },
-        { "name": "Team Building" }
+        {
+          "name": "Technical Leadership"
+        },
+        {
+          "name": "Mentoring"
+        },
+        {
+          "name": "Code Review"
+        },
+        {
+          "name": "Team Building"
+        }
       ]
     }
   ],
