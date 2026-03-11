@@ -23,7 +23,6 @@ services:
       - "traefik.http.routers.adrian-cv-gosalvez-secure.tls.certresolver=myresolver"
       - "traefik.http.routers.adrian-cv-gosalvez-secure.entrypoints=websecure"
       - "traefik.http.routers.adrian-cv-gosalvez-secure.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
-      - "traefik.http.services.adrian-cv-gosalvez.loadbalancer.server.port=4322"
 
 volumes:
   cv-data:    # cv.json

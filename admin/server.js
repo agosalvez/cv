@@ -78,7 +78,7 @@ app.post('/api/logo', basicAuth, upload.single('logo'), (req, res) => {
 });
 
 // ── Arrancar ────────────────────────────────────────────────
-const PORT = process.env.PORT || 4322;
+const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
   console.log(`✅ CV en http://localhost:${PORT}/es`);
   console.log(`🔐 Admin en http://localhost:${PORT}/admin`);

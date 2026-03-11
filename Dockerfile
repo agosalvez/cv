@@ -30,5 +30,5 @@ COPY --from=builder /build/src/data/cv.json ./src/data/cv.json
 # Directorios que se montarán como volúmenes
 RUN mkdir -p src/data public/logos
 
-EXPOSE 4322
+EXPOSE 80
 CMD ["node", "server.js"]
