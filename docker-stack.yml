@@ -15,14 +15,13 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.middleware-secure.redirectscheme.scheme=https"
-      - "traefik.http.routers.adrian-cv-gosalvez.entrypoints=web"
-      - "traefik.http.routers.adrian-cv-gosalvez.middlewares=middleware-secure"
-      - "traefik.http.routers.adrian-cv-gosalvez.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
-      - "traefik.http.routers.adrian-cv-gosalvez-secure.tls=true"
-      - "traefik.http.routers.adrian-cv-gosalvez-secure.tls.certresolver=myresolver"
-      - "traefik.http.routers.adrian-cv-gosalvez-secure.entrypoints=websecure"
-      - "traefik.http.routers.adrian-cv-gosalvez-secure.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
+      - "traefik.http.routers.cv-v3.entrypoints=web"
+      - "traefik.http.routers.cv-v3.middlewares=middleware-secure"
+      - "traefik.http.routers.cv-v3.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
+      - "traefik.http.routers.cv-v3-secure.tls=true"
+      - "traefik.http.routers.cv-v3-secure.tls.certresolver=myresolver"
+      - "traefik.http.routers.cv-v3-secure.entrypoints=websecure"
+      - "traefik.http.routers.cv-v3-secure.rule=Host(`adrian.gosalvez.es`) || Host(`gosalvez.es`)"
 
 volumes:
   cv-data:    # cv.json
