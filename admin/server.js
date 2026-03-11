@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, copyFileSync, mkdirSync } from 'fs';
 import { join, dirname, extname } from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import rateLimit from 'express-rate-limit';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -41,6 +42,15 @@ function basicAuth(req, res, next) {
 const app = express();
 const upload = multer({ dest: '/tmp' });
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // ventana de 15 minutos
+  max: 10,                   // máximo 10 intentos por IP
+  skipSuccessfulRequests: true, // solo cuenta los fallidos (401/403)
+  message: 'Demasiados intentos fallidos. Espera 15 minutos.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use(express.json({ limit: '2mb' }));
 
 // ── Version — público ───────────────────────────────────────
@@ -58,25 +68,25 @@ app.use(express.static(DIST_DIR));
 app.use(express.static(join(ROOT, 'public')));
 
 // ── Admin panel — protegido ─────────────────────────────────
-app.use('/admin', basicAuth, express.static(UI_DIR));
+app.use('/admin', authLimiter, basicAuth, express.static(UI_DIR));
 
 // ── API — protegida ─────────────────────────────────────────
-app.get('/api/data', basicAuth, (_req, res) => {
+app.get('/api/data', authLimiter, basicAuth, (_req, res) => {
   res.json(JSON.parse(readFileSync(DATA_PATH, 'utf8')));
 });
 
-app.post('/api/data', basicAuth, (req, res) => {
+app.post('/api/data', authLimiter, basicAuth, (req, res) => {
   writeFileSync(DATA_PATH, JSON.stringify(req.body, null, 2));
   res.json({ ok: true });
 });
 
-app.post('/api/photo', basicAuth, upload.single('photo'), (req, res) => {
+app.post('/api/photo', authLimiter, basicAuth, upload.single('photo'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file' });
   copyFileSync(req.file.path, PHOTO_PATH);
   res.json({ ok: true });
 });
 
-app.post('/api/logo', basicAuth, upload.single('logo'), (req, res) => {
+app.post('/api/logo', authLimiter, basicAuth, upload.single('logo'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file' });
   const ext = extname(req.file.originalname).toLowerCase() || '.png';
   const name = (req.body.name || Date.now()) + ext;
