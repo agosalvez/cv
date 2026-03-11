@@ -11,6 +11,11 @@ FROM node:20-alpine
 WORKDIR /app
 ENV APP_ROOT=/app
 
+ARG BUILD_SHA=dev
+ARG BUILD_DATE=unknown
+ENV BUILD_SHA=${BUILD_SHA}
+ENV BUILD_DATE=${BUILD_DATE}
+
 # Dependencias del servidor admin
 COPY admin/package*.json ./
 RUN npm ci --omit=dev

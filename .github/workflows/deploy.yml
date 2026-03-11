@@ -24,6 +24,9 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/cv:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/cv:${{ github.sha }}
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

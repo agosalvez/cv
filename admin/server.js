@@ -43,6 +43,15 @@ const upload = multer({ dest: '/tmp' });
 
 app.use(express.json({ limit: '2mb' }));
 
+// ── Version — público ───────────────────────────────────────
+app.get('/api/version', (_req, res) => {
+  res.json({
+    sha: process.env.BUILD_SHA || 'dev',
+    date: process.env.BUILD_DATE || 'unknown',
+    url: `https://github.com/agosalvez/cv/commit/${process.env.BUILD_SHA || ''}`,
+  });
+});
+
 // ── CV estático — público ───────────────────────────────────
 app.get('/', (_req, res) => res.redirect(301, '/es'));
 app.use(express.static(DIST_DIR));
