@@ -16,6 +16,22 @@ const otherLang = lang === 'es' ? 'en' : 'es';
 const title = `${personal.name} — ${personal.title}`;
 const location = lang === 'es' ? personal.locationEs : personal.locationEn;
 
+const description = lang === 'es'
+  ? `${personal.name} — AI Engineer & Tech Lead con más de 20 años de experiencia end-to-end. Especializado en LLMs, RAG y liderazgo técnico.`
+  : `${personal.name} — AI Engineer & Tech Lead with 20+ years of end-to-end experience. Specialized in LLMs, RAG and technical leadership.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: personal.name,
+  jobTitle: personal.title,
+  url: 'https://gosalvez.es',
+  image: 'https://gosalvez.es/profile.jpg',
+  sameAs: [personal.linkedin, personal.github],
+  address: { '@type': 'PostalAddress', addressLocality: 'Alicante', addressCountry: 'ES' },
+  knowsAbout: ['AI Engineering', 'LLMs', 'RAG', 'Technical Leadership', 'Node.js', 'Python'],
+};
+
 function initials(name: string) {
   return name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
 }
@@ -62,7 +78,7 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
 }
 ---
 
-<Layout title={title} lang={lang}>
+<Layout title={title} lang={lang} description={description} canonical={`https://gosalvez.es/${lang}`} jsonLd={jsonLd}>
 
   <!-- ══════════ STICKY NAVBAR ══════════ -->
   <nav id="topnav" class="no-print fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 h-16">

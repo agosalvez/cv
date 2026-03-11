@@ -2,8 +2,21 @@
 interface Props {
   title: string;
   lang: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  jsonLd?: object;
 }
-const { title, lang } = Astro.props;
+const {
+  title,
+  lang,
+  description = 'Adrián Gosálvez — AI Engineer & Tech Lead con más de 20 años de experiencia end-to-end. Especializado en LLMs, RAG y liderazgo técnico.',
+  canonical = `https://gosalvez.es/${lang}`,
+  ogImage = 'https://gosalvez.es/profile.jpg',
+  jsonLd,
+} = Astro.props;
+
+const altLang = lang === 'es' ? 'en' : 'es';
 ---
 
 <!doctype html>
@@ -11,8 +24,38 @@ const { title, lang } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Adrián Gosálvez Maciá — Software Engineer & Tech Lead" />
+
+    <!-- SEO básico -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Hreflang i18n -->
+    <link rel="alternate" hreflang={lang} href={canonical} />
+    <link rel="alternate" hreflang={altLang} href={`https://gosalvez.es/${altLang}`} />
+    <link rel="alternate" hreflang="x-default" href="https://gosalvez.es/es" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_GB'} />
+    <meta property="og:site_name" content="Adrián Gosálvez — CV" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- JSON-LD -->
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
