@@ -44,10 +44,9 @@ const upload = multer({ dest: '/tmp' });
 app.use(express.json({ limit: '2mb' }));
 
 // ── CV estático — público ───────────────────────────────────
+app.get('/', (_req, res) => res.redirect(301, '/es'));
 app.use(express.static(DIST_DIR));
 app.use(express.static(join(ROOT, 'public')));
-
-app.get('/', (_req, res) => res.redirect(301, '/es'));
 
 // ── Admin panel — protegido ─────────────────────────────────
 app.use('/admin', basicAuth, express.static(UI_DIR));
