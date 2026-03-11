@@ -154,6 +154,9 @@
       <a href="/es" target="_blank" class="nav-item" style="text-decoration:none;">
         <span class="icon">🔗</span> Ver CV
       </a>
+      <div id="version-info" style="padding:10px 12px; font-size:11px; color:#475569; line-height:1.6;">
+        Cargando versión…
+      </div>
     </div>
   </aside>
 
@@ -666,6 +669,24 @@ function showToast(msg) {
 }
 
 init();
+
+fetch('/api/version')
+  .then(r => r.json())
+  .then(v => {
+    const sha = v.sha === 'dev' ? 'dev' : v.sha.slice(0, 7);
+    const date = v.date === 'unknown' ? '' : new Date(v.date).toLocaleString('es-ES', {
+      day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'
+    });
+    const el = document.getElementById('version-info');
+    el.innerHTML = sha === 'dev'
+      ? '<span style="color:#374151">dev · local</span>'
+      : `<a href="${v.url}" target="_blank" style="color:#374151;text-decoration:none;" title="Ver commit en GitHub">
+           🚀 ${sha}<br>${date}
+         </a>`;
+  })
+  .catch(() => {
+    document.getElementById('version-info').textContent = '';
+  });
 </script>
 </body>
 </html>
