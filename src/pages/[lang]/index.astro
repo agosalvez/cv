@@ -239,6 +239,25 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
     <!-- ══════════ MAIN ══════════ -->
     <main class="flex-1 min-w-0 px-6 py-10 lg:px-12 lg:py-12 space-y-8">
 
+      <!-- PRINT HEADER — solo visible al imprimir -->
+      <div class="print-header" style="display:none">
+        <div class="print-header-inner">
+          <img src="/profile.jpg" alt={personal.name} class="print-photo"/>
+          <div class="print-header-info">
+            <h1>{personal.name}</h1>
+            <p class="print-title">{personal.title}</p>
+            <div class="print-contacts">
+              <span>{location}</span>
+              <span>·</span>
+              <a href={personal.linkedin}>LinkedIn</a>
+              <span>·</span>
+              <a href={personal.github}>GitHub</a>
+            </div>
+          </div>
+        </div>
+        <hr class="print-divider"/>
+      </div>
+
       <!-- About -->
       <section id="about" class="card scroll-mt-24">
         <h2 class="section-title">{t(lang, 'section.about')}</h2>
@@ -400,6 +419,25 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
         </p>
       </section>
 
+      <!-- PRINT SKILLS — solo visible al imprimir -->
+      <div class="print-skills" style="display:none">
+        <hr class="print-divider"/>
+        <div class="print-skills-grid">
+          {skillGroups.map((group) => (
+            <div>
+              <p class="print-skills-label">{lang === 'es' ? group.labelEs : group.labelEn}</p>
+              <p class="print-skills-items">{group.items.map((s: {name: string}) => s.name).join(' · ')}</p>
+            </div>
+          ))}
+          <div>
+            <p class="print-skills-label">{t(lang, 'section.languages')}</p>
+            <p class="print-skills-items">
+              {languages.map((l) => `${l.name} (${lang === 'es' ? l.levelEs : l.levelEn})`).join(' · ')}
+            </p>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
   </div>
@@ -455,52 +493,61 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
   @media print {
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
+    @page { margin: 14mm 16mm; size: A4; }
+
+    /* Ocultar todo lo que no es print */
     .no-print { display: none !important; }
+    aside { display: none !important; }
+    .min-h-screen { padding-top: 0 !important; background: white !important; }
+    .flex.flex-col { display: block !important; }
 
-    @page { margin: 12mm 14mm; size: A4; }
+    body { background: white !important; font-size: 13px; }
 
-    body { background: white !important; }
-
-    /* Layout: sidebar + main en dos columnas */
-    .min-h-screen { display: flex !important; flex-direction: row !important; min-height: unset !important; }
-
-    /* Sidebar */
-    aside {
-      width: 220px !important;
-      min-width: 220px !important;
-      position: relative !important;
-      height: auto !important;
-      overflow: visible !important;
-      background: #0f172a !important;
-      padding: 16px 14px !important;
-    }
-    aside h1 { font-size: 15px !important; }
-    aside p  { font-size: 10px !important; }
-    .contact-link { color: #cbd5e1 !important; font-size: 10px !important; }
-    .contact-icon { background: #1e293b !important; }
-    .sidebar-label { font-size: 9px !important; }
-
-    /* Ocultar animación del punto verde */
-    .animate-ping { display: none !important; }
-    /* Ocultar el glow de la foto */
-    .animate-pulse-slow { display: none !important; }
-
-    /* Main */
+    /* Main a ancho completo */
     main {
-      flex: 1 !important;
-      padding: 16px 20px !important;
-      overflow: visible !important;
-      max-width: none !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+      display: block !important;
     }
 
-    /* Cards más compactas */
-    .card { padding: 14px 16px !important; margin-bottom: 10px !important; break-inside: avoid; }
-    .section-title { margin-bottom: 10px !important; font-size: 8px !important; }
+    /* Mostrar elementos solo para print */
+    .print-header { display: block !important; margin-bottom: 16px; }
+    .print-skills { display: block !important; margin-top: 16px; }
 
-    /* Saltos de página */
+    /* Header de print */
+    .print-header-inner {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+    .print-photo {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #3b82f6;
+      flex-shrink: 0;
+    }
+    .print-header-info h1 { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 2px; }
+    .print-title { font-size: 13px; color: #3b82f6; font-weight: 600; margin: 0 0 4px; }
+    .print-contacts { font-size: 11px; color: #475569; display: flex; gap: 6px; align-items: center; }
+    .print-contacts a { color: #1d4ed8; text-decoration: none; }
+    .print-divider { border: none; border-top: 1px solid #e2e8f0; margin: 10px 0; }
+
+    /* Skills de print */
+    .print-skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+    .print-skills-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #3b82f6; margin: 0 0 2px; }
+    .print-skills-items { font-size: 11px; color: #334155; margin: 0; }
+
+    /* Cards compactas */
+    .card {
+      padding: 12px 14px !important;
+      margin-bottom: 8px !important;
+      break-inside: avoid;
+      box-shadow: none !important;
+      border: 1px solid #e2e8f0 !important;
+    }
+    .section-title { margin-bottom: 8px !important; font-size: 8px !important; }
     section { break-inside: avoid; }
-
-
-    /* Portfolio oculto vía clase no-print */
   }
 </style>
