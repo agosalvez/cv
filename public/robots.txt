@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://gosalvez.es/sitemap-index.xml
+Sitemap: https://gosalvez.es/sitemap.xml
