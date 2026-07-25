@@ -108,6 +108,14 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
             </a>
           </li>
         ))}
+        <li class="ml-1 border-l border-slate-700 pl-2">
+          <a
+            href={`/${lang}/setup`}
+            class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+          >
+            Setup
+          </a>
+        </li>
       </ul>
 
       <!-- PDF + móvil -->
@@ -119,7 +127,7 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
           PDF
         </button>
         <!-- Móvil hamburger -->
-        <button id="menu-btn" class="md:hidden p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-all" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+        <button id="menu-btn" aria-label={lang === 'es' ? 'Abrir menú' : 'Open menu'} aria-expanded="false" aria-controls="mobile-menu" class="md:hidden p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-all" onclick="const m=document.getElementById('mobile-menu');const open=m.classList.toggle('hidden')===false;this.setAttribute('aria-expanded',String(open))">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -144,6 +152,12 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
           {lang === 'es' ? item.labelEs : item.labelEn}
         </a>
       ))}
+      <a
+        href={`/${lang}/setup`}
+        class="block border-t border-slate-800 mt-2 pt-3 pb-2 text-sm text-slate-400 hover:text-white transition-colors"
+      >
+        Setup
+      </a>
     </div>
   </nav>
 
@@ -180,8 +194,8 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
 
         <!-- Lang switcher -->
         <div class="flex gap-2 mt-5 no-print">
-          <a href="/es" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'es' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>ES</a>
-          <a href="/en" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'en' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>EN</a>
+          <a href="/es" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'es' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>ES</a>
+          <a href="/en" class={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${lang === 'en' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>EN</a>
         </div>
       </div>
 
@@ -220,7 +234,7 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
           <div class="space-y-5">
             {skillGroups.map((group) => (
               <div>
-                <p class="text-slate-500 text-xs mb-2.5 font-semibold uppercase tracking-wider">{lang === 'es' ? group.labelEs : group.labelEn}</p>
+                <p class="text-slate-400 text-xs mb-2.5 font-semibold uppercase tracking-wider">{lang === 'es' ? group.labelEs : group.labelEn}</p>
                 <div class="flex flex-wrap gap-1.5">
                   {group.items.map((skill: {name: string}) => (
                     <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-colors cursor-default font-mono">
@@ -499,7 +513,7 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
   .card { @apply bg-white rounded-2xl shadow-sm border border-slate-200/60 px-8 py-7 text-[15px]; }
   .section-title { @apply text-xs font-bold uppercase tracking-widest text-blue-500 mb-6 flex items-center gap-2; }
   .section-title::before { content:''; @apply w-4 h-0.5 bg-blue-500 inline-block rounded-full; }
-  .sidebar-label { @apply text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4; }
+  .sidebar-label { @apply text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4; }
   .contact-link { @apply flex items-center gap-3 text-slate-300 hover:text-white transition-colors; }
   .contact-icon { @apply w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center transition-colors shrink-0; }
   @keyframes pulse-slow { 0%,100%{opacity:.4} 50%{opacity:.7} }
