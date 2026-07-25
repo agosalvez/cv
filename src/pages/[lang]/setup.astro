@@ -1,0 +1,311 @@
+---
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import AssessmentList from '../../components/setup/AssessmentList.astro';
+import DisplayDiagram from '../../components/setup/DisplayDiagram.astro';
+import GearList from '../../components/setup/GearList.astro';
+import SetupHero from '../../components/setup/SetupHero.astro';
+import SetupNav from '../../components/setup/SetupNav.astro';
+import SetupSection from '../../components/setup/SetupSection.astro';
+import SetupToc from '../../components/setup/SetupToc.astro';
+import {
+  localize,
+  setupAssessment,
+  setupClosing,
+  setupOverview,
+  setupPlay,
+  setupSections,
+  setupSeo,
+  setupUi,
+  type SetupLang,
+} from '../../data/setup';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { personal } = JSON.parse(
+  readFileSync(join(process.cwd(), 'src/data/cv.json'), 'utf8'),
+);
+
+const { lang } = Astro.params as { lang: SetupLang };
+
+const canonical = `https://gosalvez.es/${lang}/setup`;
+const alternateUrls = {
+  es: 'https://gosalvez.es/es/setup',
+  en: 'https://gosalvez.es/en/setup',
+};
+
+/** Cada sección declara su contenido en `src/data/setup.ts`; aquí solo se compone. */
+const section = (id: string) => {
+  const match = setupSections.find((item) => item.id === id);
+  if (!match) throw new Error(`Falta la sección "${id}" en src/data/setup.ts`);
+  return match;
+};
+
+const machines = section('equipos');
+const displays = section('pantallas');
+const peripherals = section('perifericos');
+const audioVideo = section('audio-video');
+const furniture = section('mobiliario');
+const connections = section('conexiones');
+const software = section('software');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: localize(setupSeo.title, lang),
+  description: localize(setupSeo.description, lang),
+  url: canonical,
+  inLanguage: lang === 'es' ? 'es-ES' : 'en-GB',
+  about: { '@type': 'Person', name: personal.name, url: 'https://gosalvez.es' },
+};
+---
+
+<Layout
+  title={localize(setupSeo.title, lang)}
+  lang={lang}
+  description={localize(setupSeo.description, lang)}
+  canonical={canonical}
+  alternateUrls={alternateUrls}
+  ogType="website"
+  jsonLd={jsonLd}
+>
+  <a
+    href="#contenido"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900 focus:shadow-lg focus:outline focus:outline-2 focus:outline-blue-600"
+  >
+    {localize(setupUi.skipToContent, lang)}
+  </a>
+
+  <SetupNav lang={lang} name={personal.name} />
+
+  <main id="contenido">
+    <SetupHero lang={lang} />
+
+    <SetupToc lang={lang} />
+
+    <!-- ══════════ VISTA GENERAL ══════════ -->
+    <section id="vista-general" aria-labelledby="vista-general-title" class="scroll-mt-28 bg-white py-14 lg:py-20">
+      <div class="mx-auto max-w-screen-xl px-6 lg:px-10">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-blue-600">
+          {localize(setupOverview.eyebrow, lang)}
+        </p>
+        <h2
+          id="vista-general-title"
+          class="mt-3 max-w-3xl text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+        >
+          {localize(setupOverview.title, lang)}
+        </h2>
+
+        <div class="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-14">
+          <div class="space-y-5 lg:col-span-7">
+            {
+              setupOverview.paragraphs.map((paragraph) => (
+                <p class="max-w-2xl text-[15px] leading-relaxed text-slate-600">
+                  {localize(paragraph, lang)}
+                </p>
+              ))
+            }
+          </div>
+
+          <dl class="grid grid-cols-3 gap-6 self-start border-t border-slate-200 pt-6 lg:col-span-5 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+            {
+              setupOverview.facts.map((fact) => (
+                <div>
+                  <dt class="font-mono text-2xl font-semibold tracking-tight text-slate-900">
+                    {fact.value}
+                  </dt>
+                  <dd class="mt-1 text-xs leading-snug text-slate-500">
+                    {localize(fact.label, lang)}
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ EQUIPOS PRINCIPALES ══════════ -->
+    <SetupSection
+      id={machines.id}
+      lang={lang}
+      eyebrow={machines.eyebrow}
+      title={machines.title}
+      intro={machines.intro}
+      image={machines.image}
+      tone="muted"
+    >
+      <GearList groups={machines.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ DISTRIBUCIÓN DE PANTALLAS ══════════ -->
+    <SetupSection
+      id={displays.id}
+      lang={lang}
+      eyebrow={displays.eyebrow}
+      title={displays.title}
+      intro={displays.intro}
+      image={displays.image}
+    >
+      <DisplayDiagram slot="aside" lang={lang} class="mt-8" />
+      <GearList groups={displays.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ PERIFÉRICOS ══════════ -->
+    <SetupSection
+      id={peripherals.id}
+      lang={lang}
+      eyebrow={peripherals.eyebrow}
+      title={peripherals.title}
+      intro={peripherals.intro}
+      image={peripherals.image}
+      imageAspect="aspect-[3/4]"
+      tone="muted"
+    >
+      <GearList groups={peripherals.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ AUDIO, VÍDEO E ILUMINACIÓN ══════════ -->
+    <SetupSection
+      id={audioVideo.id}
+      lang={lang}
+      eyebrow={audioVideo.eyebrow}
+      title={audioVideo.title}
+      intro={audioVideo.intro}
+      image={audioVideo.image}
+    >
+      <GearList groups={audioVideo.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ MOBILIARIO Y COMODIDAD ══════════ -->
+    <SetupSection
+      id={furniture.id}
+      lang={lang}
+      eyebrow={furniture.eyebrow}
+      title={furniture.title}
+      intro={furniture.intro}
+      image={furniture.image}
+      imageAspect="aspect-[3/4]"
+      tone="muted"
+    >
+      <GearList groups={furniture.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ CONEXIONES Y ALIMENTACIÓN ══════════ -->
+    <SetupSection
+      id={connections.id}
+      lang={lang}
+      eyebrow={connections.eyebrow}
+      title={connections.title}
+      intro={connections.intro}
+      image={connections.image}
+    >
+      <GearList groups={connections.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ SOFTWARE PRINCIPAL ══════════ -->
+    <SetupSection
+      id={software.id}
+      lang={lang}
+      eyebrow={software.eyebrow}
+      title={software.title}
+      intro={software.intro}
+      image={software.image}
+      tone="muted"
+    >
+      <GearList groups={software.groups ?? []} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ GAMING Y SIMRACING ══════════ -->
+    <SetupSection
+      id="gaming"
+      lang={lang}
+      eyebrow={setupPlay.eyebrow}
+      title={setupPlay.title}
+      intro={setupPlay.intro}
+      image={setupPlay.image}
+    >
+      <blockquote slot="aside" class="mt-8 border-l-2 border-blue-500 pl-5">
+        <p class="text-lg font-medium leading-snug text-slate-800">
+          {localize(setupPlay.quote, lang)}
+        </p>
+      </blockquote>
+      <GearList groups={[{ entries: setupPlay.entries }]} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ LO QUE FUNCIONA BIEN ══════════ -->
+    <SetupSection
+      id="funciona"
+      lang={lang}
+      eyebrow={setupAssessment.works.eyebrow}
+      title={setupAssessment.works.title}
+      intro={setupAssessment.works.intro}
+      tone="muted"
+    >
+      <AssessmentList items={setupAssessment.works.items} lang={lang} />
+    </SetupSection>
+
+    <!-- ══════════ LO QUE CAMBIARÍA ══════════ -->
+    <SetupSection
+      id="cambiaria"
+      lang={lang}
+      eyebrow={setupAssessment.changes.eyebrow}
+      title={setupAssessment.changes.title}
+      intro={setupAssessment.changes.intro}
+    >
+      <AssessmentList items={setupAssessment.changes.items} lang={lang} numbered />
+    </SetupSection>
+
+    <!-- ══════════ CIERRE ══════════ -->
+    <section aria-labelledby="cierre-title" class="bg-slate-900 py-20 lg:py-28">
+      <div class="mx-auto max-w-screen-xl px-6 lg:px-10">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">
+          {localize(setupClosing.eyebrow, lang)}
+        </p>
+        <div class="mt-5 grid gap-10 border-t border-slate-800 pt-8 lg:grid-cols-12 lg:items-end lg:gap-14">
+          <div class="lg:col-span-8">
+            <h2
+              id="cierre-title"
+              class="max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            >
+              {localize(setupClosing.title, lang)}
+            </h2>
+            <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-300">
+              {localize(setupClosing.text, lang)}
+            </p>
+          </div>
+          <div class="lg:col-span-4 lg:text-right">
+            <a
+              href={`/${lang}`}
+              class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            >
+              {localize(setupClosing.cta, lang)}
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style is:global>
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import SetupFigure from './SetupFigure.astro';
+import { localize, type Localized, type SetupImage, type SetupLang } from '../../data/setup';
+
+interface Props {
+  id: string;
+  lang: SetupLang;
+  eyebrow: Localized;
+  title: Localized;
+  intro: Localized;
+  /** Fondo alterno para separar visualmente bloques contiguos. */
+  tone?: 'white' | 'muted';
+  /** Si la sección declara imagen en los datos, se muestra junto al encabezado. */
+  image?: SetupImage;
+  /** Recorte de la imagen; el valor por defecto sirve para tomas horizontales. */
+  imageAspect?: string;
+}
+
+const {
+  id,
+  lang,
+  eyebrow,
+  title,
+  intro,
+  tone = 'white',
+  image,
+  imageAspect = 'aspect-[3/2]',
+} = Astro.props;
+
+const headingId = `${id}-title`;
+---
+
+<section
+  id={id}
+  aria-labelledby={headingId}
+  class:list={[
+    'scroll-mt-28 border-t border-slate-200 py-14 lg:py-20',
+    tone === 'muted' ? 'bg-slate-50' : 'bg-white',
+  ]}
+>
+  <div class="mx-auto max-w-screen-xl px-6 lg:px-10">
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+      <div class="lg:col-span-4">
+        <div class="lg:sticky lg:top-24">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-blue-600">
+            {localize(eyebrow, lang)}
+          </p>
+          <h2
+            id={headingId}
+            class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-[1.75rem]"
+          >
+            {localize(title, lang)}
+          </h2>
+          <p class="mt-4 text-[15px] leading-relaxed text-slate-600">{localize(intro, lang)}</p>
+          <slot name="aside" />
+          {
+            /* Hasta `lg` la sección es de una columna: sin límite de ancho, las
+               tomas verticales se comerían la pantalla. */
+            image && (
+              <SetupFigure
+                image={image}
+                lang={lang}
+                aspect={imageAspect}
+                class="mt-8 max-w-xs sm:max-w-sm lg:max-w-none"
+              />
+            )
+          }
+        </div>
+      </div>
+
+      <div class="lg:col-span-8">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>

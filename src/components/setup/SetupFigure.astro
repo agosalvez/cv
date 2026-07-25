@@ -1,0 +1,27 @@
+---
+import { localize, type SetupImage, type SetupLang } from '../../data/setup';
+
+interface Props {
+  image: SetupImage;
+  lang: SetupLang;
+  /** Clase de proporción para recortar la imagen en su contexto. */
+  aspect?: string;
+  /** El hero se carga de forma prioritaria; el resto, en diferido. */
+  priority?: boolean;
+  class?: string;
+}
+
+const { image, lang, aspect = 'aspect-[3/2]', priority = false, class: className = '' } = Astro.props;
+---
+
+<figure class={className}>
+  <img
+    src={image.src}
+    width={image.width}
+    height={image.height}
+    alt={localize(image.alt, lang)}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    class:list={['w-full rounded-lg border border-slate-200/70 object-cover', aspect]}
+  />
+</figure>

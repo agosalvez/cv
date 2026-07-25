@@ -1,0 +1,70 @@
+---
+import { localize, setupUi, type SetupLang } from '../../data/setup';
+
+interface Props {
+  lang: SetupLang;
+  name: string;
+}
+
+const { lang, name } = Astro.props;
+const otherLang: SetupLang = lang === 'es' ? 'en' : 'es';
+
+const links = [
+  { href: `/${lang}`, label: localize(setupUi.navCv, lang), current: false },
+  { href: `/${lang}/setup`, label: localize(setupUi.navSetup, lang), current: true },
+];
+
+const langLink = 'px-2.5 py-1 rounded-full text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400';
+---
+
+<nav
+  class="fixed inset-x-0 top-0 z-50 h-16 border-b border-slate-800 bg-slate-900/95 backdrop-blur"
+  aria-label={localize(setupUi.navLabel, lang)}
+>
+  <div class="mx-auto flex h-full max-w-screen-2xl items-center justify-between gap-4 px-6 lg:px-10">
+    <a
+      href={`/${lang}`}
+      class="text-sm font-bold tracking-tight text-white transition-colors hover:text-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+    >
+      {name}
+    </a>
+
+    <div class="flex items-center gap-4">
+      <ul class="flex items-center gap-1 text-sm font-medium">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={link.current ? 'page' : undefined}
+                class:list={[
+                  'rounded-md px-3 py-1.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400',
+                  link.current
+                    ? 'bg-slate-800 text-white'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white',
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="flex items-center gap-1.5 border-l border-slate-800 pl-4">
+        <span class="sr-only" id="setup-lang-label">{localize(setupUi.languageLabel, lang)}</span>
+        <span
+          class={`${langLink} bg-blue-600 text-white`}
+          aria-current="true"
+          aria-describedby="setup-lang-label">{lang.toUpperCase()}</span
+        >
+        <a
+          href={`/${otherLang}/setup`}
+          hreflang={otherLang}
+          class={`${langLink} bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white`}
+          aria-describedby="setup-lang-label">{otherLang.toUpperCase()}</a
+        >
+      </div>
+    </div>
+  </div>
+</nav>

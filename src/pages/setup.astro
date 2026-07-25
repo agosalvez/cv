@@ -1,0 +1,12 @@
+---
+/**
+ * Redirección de `/setup` al idioma por defecto.
+ *
+ * En `astro dev` y en cualquier salida con servidor, esta página resuelve la
+ * redirección. En la salida estática, el enrutado i18n con
+ * `prefixDefaultLocale: true` descarta las rutas sin prefijo de idioma, así que
+ * el archivo `/setup/index.html` lo emite la entrada `redirects` de
+ * `astro.config.mjs`. Ambas apuntan al mismo destino.
+ */
+return Astro.redirect('/es/setup');
+---

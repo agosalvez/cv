@@ -4,6 +4,11 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   site: 'https://gosalvez.es',
   integrations: [tailwind()],
+  // El enrutado i18n con `prefixDefaultLocale` no emite rutas sin prefijo de
+  // idioma en la salida estática: la redirección de `/setup` se declara aquí.
+  redirects: {
+    '/setup': '/es/setup',
+  },
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
