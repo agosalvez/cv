@@ -6,6 +6,10 @@ interface Props {
   canonical?: string;
   ogImage?: string;
   jsonLd?: object;
+  /** `profile` en el CV; las páginas internas usan `website`. */
+  ogType?: string;
+  /** URL equivalente en cada idioma; por defecto, la portada del CV. */
+  alternateUrls?: Record<'es' | 'en', string>;
 }
 const {
   title,
@@ -14,9 +18,12 @@ const {
   canonical = `https://gosalvez.es/${lang}`,
   ogImage = 'https://gosalvez.es/profile.jpg',
   jsonLd,
+  ogType = 'profile',
+  alternateUrls = { es: 'https://gosalvez.es/es', en: 'https://gosalvez.es/en' },
 } = Astro.props;
 
 const altLang = lang === 'es' ? 'en' : 'es';
+const ogLocale = (value: string) => (value === 'es' ? 'es_ES' : 'en_GB');
 ---
 
 <!doctype html>
@@ -36,19 +43,20 @@ const altLang = lang === 'es' ? 'en' : 'es';
     <link rel="canonical" href={canonical} />
 
     <!-- Hreflang i18n -->
-    <link rel="alternate" hreflang={lang} href={canonical} />
-    <link rel="alternate" hreflang={altLang} href={`https://gosalvez.es/${altLang}`} />
-    <link rel="alternate" hreflang="x-default" href="https://gosalvez.es/es" />
+    <link rel="alternate" hreflang="es" href={alternateUrls.es} />
+    <link rel="alternate" hreflang="en" href={alternateUrls.en} />
+    <link rel="alternate" hreflang="x-default" href={alternateUrls.es} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="profile" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="400" />
     <meta property="og:image:height" content="400" />
-    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_GB'} />
+    <meta property="og:locale" content={ogLocale(lang)} />
+    <meta property="og:locale:alternate" content={ogLocale(altLang)} />
     <meta property="og:site_name" content="Adrián Gosálvez — CV" />
 
     <!-- Twitter Card -->
