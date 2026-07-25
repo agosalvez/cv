@@ -3,11 +3,12 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "concurrently -n CV,ADMIN -c blue,magenta \"astro dev --port 4321\" \"cd admin && npm install --silent && node server.js\"",
+    "dev": "concurrently -n CV,ADMIN -c blue,magenta \"astro dev --port 4321\" \"npm --prefix admin start\"",
     "cv": "astro dev --port 4321",
-    "admin": "cd admin && node server.js",
+    "admin": "npm --prefix admin start",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test": "node --test \"tests/**/*.test.mjs\""
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.1",
