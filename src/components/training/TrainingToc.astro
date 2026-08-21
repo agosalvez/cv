@@ -1,0 +1,92 @@
+---
+/**
+ * Índice de secciones de la landing de formación.
+ *
+ * La página es larga y se visita sobre todo desde el móvil, tras escanear un
+ * QR: sin un índice, llegar al precio o a las preguntas frecuentes exige
+ * recorrerla entera. Resalta la sección visible, sin animación.
+ *
+ * Provisional por diseño: cuando la formación se separe a su propio
+ * subdominio, este índice pasará a ser la navegación principal del sitio.
+ */
+import { localize, type Localized, type TrainingLang } from '../../data/training';
+
+interface Props {
+  lang: TrainingLang;
+  items: { id: string; label: Localized }[];
+}
+
+const { lang, items } = Astro.props;
+---
+
+<nav
+  aria-label={lang === 'es' ? 'Secciones de la página' : 'Page sections'}
+  class="sticky top-16 z-40 border-b border-slate-200 bg-white/95 backdrop-blur"
+>
+  <div class="mx-auto max-w-screen-xl px-6 lg:px-10">
+    <ul class="flex gap-1 overflow-x-auto py-2.5 text-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {
+        items.map((item) => (
+          <li>
+            <a
+              href={`#${item.id}`}
+              data-toc={item.id}
+              class="toc-link whitespace-nowrap rounded-md px-3 py-1.5 font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              {localize(item.label, lang)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+  const scroller = links[0]?.closest('ul') ?? null;
+
+  // Desplaza el índice en horizontal para dejar a la vista el enlace activo,
+  // sin tocar nunca el scroll vertical de la página.
+  const keepInStrip = (link: HTMLAnchorElement) => {
+    if (!scroller) return;
+    const linkRect = link.getBoundingClientRect();
+    const stripRect = scroller.getBoundingClientRect();
+    if (linkRect.left < stripRect.left) {
+      scroller.scrollLeft += linkRect.left - stripRect.left - 12;
+    } else if (linkRect.right > stripRect.right) {
+      scroller.scrollLeft += linkRect.right - stripRect.right + 12;
+    }
+  };
+
+  const setActive = (id: string | undefined) => {
+    for (const link of links) {
+      const active = link.dataset.toc === id;
+      link.classList.toggle('bg-blue-50', active);
+      link.classList.toggle('text-blue-700', active);
+      link.classList.toggle('text-slate-500', !active);
+      if (active) {
+        link.setAttribute('aria-current', 'true');
+        keepInStrip(link);
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    }
+  };
+
+  const sections = links
+    .map((link) => document.getElementById(link.dataset.toc ?? ''))
+    .filter((el): el is HTMLElement => el !== null);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (visible) setActive(visible.target.id);
+    },
+    { rootMargin: '-30% 0px -60% 0px', threshold: 0 },
+  );
+
+  sections.forEach((section) => observer.observe(section));
+</script>

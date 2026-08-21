@@ -1,12 +1,22 @@
 ---
 /**
- * Tarjeta de una de las dos modalidades.
+ * Tarjeta de una modalidad.
  *
- * El CTA no abre el correo directamente: lleva al formulario y deja
- * preseleccionada la modalidad, para que la solicitud llegue ya cualificada.
- * Sin JavaScript el enlace sigue funcionando como ancla.
+ * Con tres tarjetas en fila, el temario completo las haría inabarcables: el
+ * contenido detallado vive en un desplegable nativo y arriba queda lo que se
+ * compara de un vistazo —público, duración, precio y resultados—.
+ *
+ * El CTA no abre el correo: lleva al formulario con la modalidad ya
+ * seleccionada, para que la solicitud llegue cualificada. Sin JavaScript el
+ * enlace sigue funcionando como ancla.
  */
-import { localize, type Localized, type TrainingLang, type TrainingProgram } from '../../data/training';
+import {
+  localize,
+  trainingPricing,
+  type Localized,
+  type TrainingLang,
+  type TrainingProgram,
+} from '../../data/training';
 
 interface Props {
   program: TrainingProgram;
@@ -18,34 +28,50 @@ const { program, lang, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
 
 const list = (items: readonly Localized[]) => items.map((item) => localize(item, lang));
+
+/** Importes con el separador de miles de cada idioma. */
+const money = (amount: number) => amount.toLocaleString(lang === 'es' ? 'es-ES' : 'en-GB');
+
+const label = dark ? 'text-slate-500' : 'text-slate-400';
+const body = dark ? 'text-slate-300' : 'text-slate-600';
 ---
 
 <article
   class:list={[
-    'flex h-full flex-col rounded-2xl border p-7 lg:p-9',
+    'flex h-full flex-col rounded-2xl border p-7 lg:p-8',
     dark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white',
   ]}
 >
-  <p class:list={['font-mono text-xs uppercase tracking-[0.2em]', dark ? 'text-blue-400' : 'text-blue-600']}>
-    {localize(program.eyebrow, lang)}
-  </p>
+  <div class="flex items-start justify-between gap-3">
+    <p class:list={['font-mono text-xs uppercase tracking-[0.2em]', dark ? 'text-blue-400' : 'text-blue-600']}>
+      {localize(program.eyebrow, lang)}
+    </p>
+    {
+      /* Una sola marca, y sin estridencias: es una sugerencia, no un reclamo. */
+      program.recommended && (
+        <span
+          class:list={[
+            'shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold',
+            dark ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700',
+          ]}
+        >
+          {localize(trainingPricing.recommended, lang)}
+        </span>
+      )
+    }
+  </div>
 
   <h3
-    class:list={[
-      'mt-3 text-xl font-bold tracking-tight sm:text-2xl',
-      dark ? 'text-white' : 'text-slate-900',
-    ]}
+    class:list={['mt-3 text-xl font-bold tracking-tight', dark ? 'text-white' : 'text-slate-900']}
   >
     {localize(program.title, lang)}
   </h3>
 
-  <p class:list={['mt-4 text-[15px] leading-relaxed', dark ? 'text-slate-300' : 'text-slate-600']}>
-    {localize(program.summary, lang)}
-  </p>
+  <p class:list={['mt-3 text-sm leading-relaxed', body]}>{localize(program.summary, lang)}</p>
 
   <p
     class:list={[
-      'mt-6 inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs',
+      'mt-5 inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs',
       dark ? 'border-slate-700 text-slate-300' : 'border-slate-300 text-slate-600',
     ]}
   >
@@ -56,14 +82,48 @@ const list = (items: readonly Localized[]) => items.map((item) => localize(item,
     {localize(program.duration, lang)}
   </p>
 
-  <div class="mt-7 space-y-6">
+  {
+    /* Sin importe decidido no se muestra nada: la página nunca enseña un
+       precio provisional. */
+    program.priceFrom !== null && (
+      <div class:list={['mt-6 border-t pt-5', dark ? 'border-slate-800' : 'border-slate-200']}>
+        <p class="flex flex-wrap items-baseline gap-x-2">
+          <span class:list={['text-xs uppercase tracking-wide', label]}>
+            {localize(trainingPricing.from, lang)}
+          </span>
+          <span
+            class:list={[
+              'font-mono text-3xl font-semibold tracking-tight',
+              dark ? 'text-white' : 'text-slate-900',
+            ]}
+          >
+            {money(program.priceFrom)} €
+          </span>
+          <span class:list={['text-xs', label]}>{localize(trainingPricing.vat, lang)}</span>
+        </p>
+
+        {program.priceIncludes && (
+          <p class:list={['mt-1 text-xs', dark ? 'text-slate-400' : 'text-slate-500']}>
+            {localize(program.priceIncludes, lang)}
+          </p>
+        )}
+
+        {program.priceNotes && (
+          <ul class="mt-3 space-y-1">
+            {list(program.priceNotes).map((note) => (
+              <li class:list={['font-mono text-xs', dark ? 'text-slate-400' : 'text-slate-500']}>
+                {note}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    )
+  }
+
+  <div class="mt-6 space-y-5">
     <div>
-      <p
-        class:list={[
-          'font-mono text-[11px] uppercase tracking-[0.18em]',
-          dark ? 'text-slate-500' : 'text-slate-400',
-        ]}
-      >
+      <p class:list={['font-mono text-[11px] uppercase tracking-[0.18em]', label]}>
         {localize(program.audienceLabel, lang)}
       </p>
       <ul class="mt-2.5 flex flex-wrap gap-1.5">
@@ -83,36 +143,7 @@ const list = (items: readonly Localized[]) => items.map((item) => localize(item,
     </div>
 
     <div>
-      <p
-        class:list={[
-          'font-mono text-[11px] uppercase tracking-[0.18em]',
-          dark ? 'text-slate-500' : 'text-slate-400',
-        ]}
-      >
-        {localize(program.focusLabel, lang)}
-      </p>
-      <ul class="mt-2.5 space-y-2">
-        {
-          list(program.focus).map((item) => (
-            <li class:list={['flex gap-2.5 text-sm leading-relaxed', dark ? 'text-slate-300' : 'text-slate-600']}>
-              <span
-                class:list={['mt-2 h-1 w-1 shrink-0 rounded-full', dark ? 'bg-blue-400' : 'bg-blue-600']}
-                aria-hidden="true"
-              />
-              {item}
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-
-    <div class:list={['border-t pt-6', dark ? 'border-slate-800' : 'border-slate-200']}>
-      <p
-        class:list={[
-          'font-mono text-[11px] uppercase tracking-[0.18em]',
-          dark ? 'text-slate-500' : 'text-slate-400',
-        ]}
-      >
+      <p class:list={['font-mono text-[11px] uppercase tracking-[0.18em]', label]}>
         {localize(program.outcomesLabel, lang)}
       </p>
       <ul class="mt-2.5 space-y-2.5">
@@ -139,9 +170,48 @@ const list = (items: readonly Localized[]) => items.map((item) => localize(item,
         }
       </ul>
     </div>
+
+    <details class="group">
+      <summary
+        class:list={[
+          'flex cursor-pointer list-none items-center gap-1.5 text-sm font-semibold marker:content-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden',
+          dark
+            ? 'text-blue-400 hover:text-blue-300 focus-visible:outline-blue-400'
+            : 'text-blue-700 hover:text-blue-800 focus-visible:outline-blue-600',
+        ]}
+      >
+        {localize(trainingPricing.contentsLabel, lang)}
+        <svg
+          class="h-4 w-4 transition-transform group-open:rotate-180"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </summary>
+
+      <p class:list={['mt-3 font-mono text-[11px] uppercase tracking-[0.18em]', label]}>
+        {localize(program.focusLabel, lang)}
+      </p>
+      <ul class="mt-2.5 space-y-2">
+        {
+          list(program.focus).map((item) => (
+            <li class:list={['flex gap-2.5 text-sm leading-relaxed', body]}>
+              <span
+                class:list={['mt-2 h-1 w-1 shrink-0 rounded-full', dark ? 'bg-blue-400' : 'bg-blue-600']}
+                aria-hidden="true"
+              />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </details>
   </div>
 
-  <div class="mt-8 flex flex-col gap-3 pt-1 lg:mt-auto">
+  <div class="mt-8 flex flex-col gap-3 lg:mt-auto lg:pt-6">
     {
       program.note && (
         <p class:list={['text-xs leading-relaxed', dark ? 'text-slate-400' : 'text-slate-500']}>
@@ -153,7 +223,7 @@ const list = (items: readonly Localized[]) => items.map((item) => localize(item,
       href="#solicitar"
       data-program={program.id}
       class:list={[
-        'inline-flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto',
+        'inline-flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
         dark
           ? 'bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline-blue-400'
           : 'bg-slate-900 text-white hover:bg-slate-800 focus-visible:outline-slate-900',

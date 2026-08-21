@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -122,7 +122,8 @@ test('the copy avoids infomercial devices', async () => {
   const page = await read('src/components/training/TrainingPage.astro');
   const content = `${data}\n${page}`;
 
-  // Nada de urgencia falsa, testimonios inventados, logos prestados ni precios.
+  // El precio sí se muestra: es una decisión tomada. Lo vetado es la urgencia
+  // fabricada, los testimonios inventados y las promesas que no se sostienen.
   const banned = [
     /plazas limitadas/i,
     /últimas plazas/i,
@@ -131,12 +132,58 @@ test('the copy avoids infomercial devices', async () => {
     /garantizad[oa]/i,
     /revoluciona/i,
     /testimoni/i,
-    /€|EUR\b|\$\d/,
     /cuenta atrás|countdown/i,
   ];
 
   for (const pattern of banned) {
     assert.doesNotMatch(content, pattern, String(pattern));
+  }
+});
+
+test('no provisional price ever reaches the page', async () => {
+  const card = await read('src/components/training/ProgramCard.astro');
+  const data = await read('src/data/training.ts');
+
+  // Mientras el importe no esté decidido vale `null`, y el bloque no se renderiza.
+  assert.match(card, /program\.priceFrom !== null/);
+  assert.match(data, /priceFrom: (null|\d+)/);
+});
+
+test('the page carries the sales blocks the referral channel needs', async () => {
+  const page = await read('src/components/training/TrainingPage.astro');
+  const data = await read('src/data/training.ts');
+
+  // La página se abre tras haber hablado conmigo y se reenvía dentro de la
+  // empresa: el argumento en horas, las objeciones y los límites deben estar.
+  for (const id of ['argumento', 'preguntas', 'no-es', 'sesion']) {
+    assert.match(page, new RegExp(`id="${id}"`), id);
+  }
+
+  assert.match(data, /export const trainingImpact/);
+  assert.match(data, /export const trainingFaq/);
+  assert.match(data, /export const trainingNotFor/);
+});
+
+test('every declared photograph exists under public/', async () => {
+  const data = await read('src/data/training.ts');
+  const block = data.slice(data.indexOf('export const trainingImages'));
+  const sources = [...block.matchAll(/src: '(\/[^']+)'/g)].map((match) => match[1]);
+
+  assert.equal(sources.length, 3, 'expected three declared photographs');
+
+  for (const source of sources) {
+    const file = await readFile(new URL(`../public${source}`, import.meta.url));
+    assert.ok(file.length > 0, source);
+  }
+});
+
+test('training components never hardcode image paths', async () => {
+  const directory = new URL('../src/components/training/', import.meta.url);
+  const files = await readdir(directory);
+
+  for (const file of files) {
+    const source = await readFile(new URL(file, directory), 'utf8');
+    assert.doesNotMatch(source, /\/[\w-/]+\.(jpg|jpeg|png|webp|avif|svg)/, file);
   }
 });
 
@@ -165,4 +212,38 @@ test('training adds no dependencies', async () => {
 
   assert.deepEqual(Object.keys(manifest.dependencies).sort(), before.sort());
   assert.equal(manifest.devDependencies, undefined);
+});
+
+test('photo placeholders never reach the published site', async () => {
+  const page = await read('src/components/training/TrainingPage.astro');
+  const data = await read('src/data/training.ts');
+
+  // Los marcadores llevan impresas las instrucciones de la sesión de fotos:
+  // en producción quedarían a la vista de cualquier visitante.
+  assert.match(page, /import\.meta\.env\.DEV \|\| !image\.temporary/);
+
+  // Y toda imagen declarada pasa por esa comprobación. Se cuenta dentro del
+  // bloque de datos: la palabra también aparece en los comentarios de la guía.
+  const bloque = data.slice(data.indexOf('export const trainingImages'));
+  const declaradas = (bloque.match(/temporary: (true|false)/g) ?? []).length;
+  const usos = new Set(page.match(/showPhoto\(trainingImages\.\w+\)/g) ?? []);
+
+  assert.equal(declaradas, 3, 'expected three declared photographs');
+  assert.equal(usos.size, declaradas, 'every declared photo must be guarded');
+});
+
+test('prices are declared once, in the data layer', async () => {
+  const data = await read('src/data/training.ts');
+  const card = await read('src/components/training/ProgramCard.astro');
+  const page = await read('src/components/training/TrainingPage.astro');
+
+  // Los importes acordados, y ninguno escrito a mano en el marcado.
+  for (const amount of [450, 750, 1050, 950, 1500, 150]) {
+    assert.match(data, new RegExp(`priceFrom: ${amount}`), String(amount));
+  }
+
+  assert.doesNotMatch(card, /\d{3,4} ?€/);
+  assert.doesNotMatch(page, /\d{3,4} ?€/);
+  // El IVA se dice una vez y se reutiliza.
+  assert.match(data, /vat: \{ es: '\+ IVA'/);
 });

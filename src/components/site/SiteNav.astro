@@ -29,6 +29,14 @@ const labels = {
 const t = labels[lang];
 
 /**
+ * En la landing comercial el enlace al CV se rotula "Trayectoria".
+ *
+ * Quien llega ahí es un cliente potencial, y un enlace que pone "CV" se lee
+ * como "busca trabajo": resta autoridad justo donde hace falta.
+ */
+const cvLabel = current === 'training' ? (lang === 'es' ? 'Trayectoria' : 'Background') : t.cv;
+
+/**
  * En móvil la barra lleva las iniciales en lugar del nombre completo: con tres
  * enlaces y el conmutador de idioma, el nombre entero deja el selector fuera de
  * pantalla por debajo de 640 px.
@@ -41,7 +49,7 @@ const initials = name
   .toUpperCase();
 
 const links = [
-  { key: 'cv', href: `/${lang}`, label: t.cv },
+  { key: 'cv', href: `/${lang}`, label: cvLabel },
   { key: 'training', href: lang === 'es' ? '/es/formacion' : '/en/training', label: t.training },
   { key: 'setup', href: `/${lang}/setup`, label: t.setup },
 ] as const;

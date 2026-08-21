@@ -9,6 +9,8 @@ export default defineConfig({
   redirects: {
     '/setup': '/es/setup',
     '/formacion': '/es/formacion',
+    // URL corta para tarjetas de visita y códigos QR.
+    '/ia': '/es/formacion',
     '/training': '/en/training',
   },
   i18n: {

@@ -1,0 +1,41 @@
+---
+/**
+ * Preguntas frecuentes.
+ *
+ * Son las objeciones que aparecen en la conversación interna de la empresa,
+ * cuando yo ya no estoy delante para responderlas.
+ *
+ * Usa `<details>` nativo: funciona sin JavaScript, es accesible por teclado y
+ * el navegador lo encuentra con Ctrl+F aunque esté plegado.
+ */
+import { localize, trainingFaq, type TrainingLang } from '../../data/training';
+
+interface Props {
+  lang: TrainingLang;
+}
+
+const { lang } = Astro.props;
+---
+
+<div class="mt-8 divide-y divide-slate-200 border-y border-slate-200">
+  {
+    trainingFaq.items.map((item) => (
+      <details class="group">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 py-5 text-[15px] font-semibold tracking-tight text-slate-900 marker:content-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 [&::-webkit-details-marker]:hidden">
+          {localize(item.question, lang)}
+          <span
+            class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center text-slate-400 transition-transform group-open:rotate-45"
+            aria-hidden="true"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14" />
+            </svg>
+          </span>
+        </summary>
+        <p class="max-w-3xl pb-5 text-[15px] leading-relaxed text-slate-600">
+          {localize(item.answer, lang)}
+        </p>
+      </details>
+    ))
+  }
+</div>

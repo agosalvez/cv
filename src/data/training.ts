@@ -58,6 +58,62 @@ export const trainingSeo = {
   },
 } satisfies Record<string, Localized>;
 
+/* ─────────────────────── Fotografías ──────────────────────── */
+
+/**
+ * Fotografías de la landing.
+ *
+ * `temporary: true` marca los marcadores que todavía no son fotos reales. La
+ * marca es interna —para el inventario del repositorio y para
+ * `docs/formacion-photo-guide.md`— y nunca se muestra al visitante.
+ *
+ * Para sustituir una foto: dejar el archivo en `public/images/formacion/`,
+ * actualizar `src`, `width`, `height` y `alt`, y poner `temporary: false`.
+ */
+export interface TrainingImage {
+  src: string;
+  width: number;
+  height: number;
+  alt: Localized;
+  temporary: boolean;
+}
+
+export const trainingImages = {
+  /** Retrato principal, en la cabecera. Es la que más pesa en la credibilidad. */
+  portrait: {
+    src: '/images/formacion/retrato-hero.svg',
+    width: 1000,
+    height: 1250,
+    alt: {
+      es: 'Adrián Gosálvez, ingeniero de software especializado en inteligencia artificial',
+      en: 'Adrián Gosálvez, software engineer specialised in artificial intelligence',
+    },
+    temporary: true,
+  },
+  /** Impartiendo: demuestra que la formación es una actividad real, no una idea. */
+  teaching: {
+    src: '/images/formacion/impartiendo.svg',
+    width: 1600,
+    height: 1067,
+    alt: {
+      es: 'Adrián Gosálvez impartiendo una sesión de formación ante una pantalla',
+      en: 'Adrián Gosálvez running a training session in front of a screen',
+    },
+    temporary: true,
+  },
+  /** Trabajando: respalda el perfil técnico en la sección de quién imparte. */
+  working: {
+    src: '/images/formacion/trabajando.svg',
+    width: 1600,
+    height: 1067,
+    alt: {
+      es: 'Adrián Gosálvez trabajando en su escritorio',
+      en: 'Adrián Gosálvez working at his desk',
+    },
+    temporary: true,
+  },
+} satisfies Record<string, TrainingImage>;
+
 /* ─────────────────────────── Hero ─────────────────────────── */
 
 export const trainingHero = {
@@ -169,6 +225,19 @@ export interface TrainingProgram {
   outcomes: Localized[];
   cta: Localized;
   note?: Localized;
+  /**
+   * Importe de entrada, en euros.
+   *
+   * `null` mientras no esté decidido: el bloque de precio no se renderiza,
+   * así que la página nunca muestra un importe provisional.
+   */
+  priceFrom: number | null;
+  /** Aforo orientativo que cubre ese importe de entrada. */
+  priceIncludes?: Localized;
+  /** Tramos y suplementos por encima del aforo incluido. */
+  priceNotes?: Localized[];
+  /** Se marca una sola opción, y con discreción: es una sugerencia, no un reclamo. */
+  recommended?: boolean;
 }
 
 export const trainingPrograms: TrainingProgram[] = [
@@ -218,6 +287,8 @@ export const trainingPrograms: TrainingProgram[] = [
       },
     ],
     cta: { es: 'Quiero esta formación', en: 'I want this session' },
+    priceFrom: 450,
+    priceIncludes: { es: 'adaptación básica incluida', en: 'basic tailoring included' },
   },
   {
     id: 'equipos',
@@ -266,10 +337,57 @@ export const trainingPrograms: TrainingProgram[] = [
       },
     ],
     cta: { es: 'Quiero este workshop', en: 'I want this workshop' },
+    priceFrom: 750,
+    priceIncludes: { es: 'hasta 10 asistentes', en: 'up to 10 attendees' },
+    priceNotes: [
+      { es: 'De 11 a 20 asistentes: +150 €', en: '11 to 20 attendees: +150 €' },
+      { es: 'Más de 20: presupuesto personalizado', en: 'Over 20: custom quote' },
+    ],
     note: {
       es: 'Los casos y ejemplos se adaptan parcialmente a la actividad de la empresa.',
       en: 'Cases and examples are partly adapted to the company’s activity.',
     },
+  },
+  {
+    id: 'pack',
+    eyebrow: { es: 'Pack completo', en: 'Full package' },
+    title: { es: 'Dirección + workshop', en: 'Management + workshop' },
+    summary: {
+      es:
+        'Las dos sesiones, normalmente en la misma semana: primero la dirección decide dónde ' +
+        'aplicarlo y después el equipo aprende a hacerlo. Es la combinación que mejor funciona.',
+      en:
+        'Both sessions, usually in the same week: management decides where to apply it first, then ' +
+        'the team learns how. It is the combination that works best.',
+    },
+    duration: { es: '1,5 – 2 h + 3 h', en: '1.5 – 2 h + 3 h' },
+    audienceLabel: { es: 'Para quién', en: 'Who it is for' },
+    audience: [
+      { es: 'Dirección y responsables', en: 'Management and team leads' },
+      { es: 'Todo el equipo', en: 'The whole team' },
+    ],
+    focusLabel: { es: 'Qué incluye', en: 'What it includes' },
+    focus: [
+      { es: 'La sesión ejecutiva completa', en: 'The full executive session' },
+      { es: 'El workshop práctico completo', en: 'The full hands-on workshop' },
+      { es: 'Los casos del workshop alineados con lo decidido en la sesión de dirección', en: 'Workshop cases aligned with what was decided in the management session' },
+      { es: 'Material de apoyo para los dos grupos', en: 'Support material for both groups' },
+    ],
+    outcomesLabel: { es: 'Con qué se sale', en: 'What you leave with' },
+    outcomes: [
+      {
+        es: 'Una decisión tomada arriba y la capacidad de ejecutarla abajo',
+        en: 'A decision made at the top and the ability to carry it out below',
+      },
+      {
+        es: 'Todo el mundo con el mismo criterio sobre qué usar y qué no',
+        en: 'Everyone with the same judgement about what to use and what not to',
+      },
+    ],
+    cta: { es: 'Quiero el pack completo', en: 'I want the full package' },
+    priceFrom: 1050,
+    priceIncludes: { es: 'las dos sesiones', en: 'both sessions' },
+    recommended: true,
   },
 ];
 
@@ -360,30 +478,6 @@ export const trainingUseCases = {
       },
     },
     {
-      icon: 'search',
-      title: { es: 'Investigación', en: 'Research' },
-      text: {
-        es: 'Reunir información sobre un mercado, un proveedor o una normativa, y contrastarla.',
-        en: 'Gathering information on a market, a supplier or a regulation, and cross-checking it.',
-      },
-      example: {
-        es: 'Preparar una ficha de un cliente antes de una reunión',
-        en: 'Prepare a client briefing before a meeting',
-      },
-    },
-    {
-      icon: 'support',
-      title: { es: 'Atención al cliente', en: 'Customer service' },
-      text: {
-        es: 'Respuestas consistentes a las preguntas que se repiten cada semana.',
-        en: 'Consistent answers to the questions that repeat every week.',
-      },
-      example: {
-        es: 'Unificar las respuestas a las 20 dudas más frecuentes',
-        en: 'Unify the answers to the 20 most frequent questions',
-      },
-    },
-    {
       icon: 'sales',
       title: { es: 'Comercial', en: 'Sales' },
       text: {
@@ -393,18 +487,6 @@ export const trainingUseCases = {
       example: {
         es: 'Adaptar una propuesta base a un cliente concreto',
         en: 'Adapt a base proposal to a specific client',
-      },
-    },
-    {
-      icon: 'slides',
-      title: { es: 'Presentaciones', en: 'Presentations' },
-      text: {
-        es: 'Estructurar el guion y los contenidos antes de abrir la herramienta de diapositivas.',
-        en: 'Structuring the script and content before opening the slide tool.',
-      },
-      example: {
-        es: 'Montar el guion de una presentación a partir de un informe',
-        en: 'Build a talk outline from an existing report',
       },
     },
     {
@@ -419,22 +501,330 @@ export const trainingUseCases = {
         en: 'Sort and prepare the orders that arrive by email',
       },
     },
-    {
-      icon: 'knowledge',
-      title: { es: 'Gestión del conocimiento', en: 'Knowledge management' },
-      text: {
-        es: 'Que lo que sabe la empresa deje de estar solo en la cabeza de dos personas.',
-        en: 'So what the company knows stops living only in two people’s heads.',
-      },
-      example: {
-        es: 'Documentar un procedimiento interno a partir de una grabación',
-        en: 'Document an internal procedure from a recording',
-      },
-    },
   ] satisfies TrainingUseCase[],
 } as const;
 
-/* ────────────────────── Cómo funciona ─────────────────────── */
+/* ────────────────── Contacto directo ─────────────────── */
+
+/**
+ * Vías de contacto inmediato.
+ *
+ * La página se visita casi siempre después de haber hablado conmigo (referido,
+ * tarjeta con QR), y en ese contexto casi nadie rellena un formulario: escribe
+ * o llama. `whatsapp` va en formato internacional sin signos, por ejemplo
+ * '34600112233'. Con `null` el botón no se renderiza.
+ */
+export const trainingContact = {
+  whatsapp: '34651042877' as string | null,
+  whatsappLabel: { es: 'Escríbeme por WhatsApp', en: 'Message me on WhatsApp' },
+  whatsappMessage: {
+    es: 'Hola Adrián, te escribo por la formación en IA para empresas.',
+    en: 'Hi Adrián, I am writing about the AI training for companies.',
+  },
+  formLabel: { es: 'Prefiero escribir los detalles', en: 'I would rather write the details' },
+  /** Rótulo del botón cuando todavía no hay WhatsApp configurado. */
+  requestLabel: { es: 'Solicitar información', en: 'Request information' },
+} as const;
+
+/* ──────────────── Precio de referencia ──────────────── */
+
+export const trainingPricing = {
+  eyebrow: { es: 'Presupuesto', en: 'Pricing' },
+  title: { es: 'Qué cuesta', en: 'What it costs' },
+  intro: {
+    es:
+      'Presupuesto cerrado por sesión, no por hora. El importe depende del número de ' +
+      'asistentes, de la modalidad y de si es presencial u online.',
+    en:
+      'A closed price per session, not per hour. The amount depends on the number of ' +
+      'attendees, the format and whether it is on-site or online.',
+  },
+  from: { es: 'desde', en: 'from' },
+  vat: { es: '+ IVA', en: '+ VAT' },
+  recommended: { es: 'Recomendado', en: 'Recommended' },
+  contentsLabel: { es: 'Ver contenidos', en: 'See contents' },
+
+  /** Formatos menos habituales. Se listan aparte y con menos peso visual. */
+  otherLabel: { es: 'Otras modalidades', en: 'Other formats' },
+  other: [
+    {
+      title: { es: 'Media jornada', en: 'Half day' },
+      duration: { es: '4 h', en: '4 h' },
+      priceFrom: 950,
+    },
+    {
+      title: { es: 'Jornada completa', en: 'Full day' },
+      duration: { es: '6 – 7 h', en: '6 – 7 h' },
+      priceFrom: 1500,
+    },
+    {
+      title: { es: 'Sesión de seguimiento', en: 'Follow-up session' },
+      duration: { es: '60 min', en: '60 min' },
+      priceFrom: 150,
+      exact: true,
+    },
+  ],
+
+  conditionsLabel: { es: 'Condiciones', en: 'Terms' },
+  conditions: [
+    { es: 'Personalización básica de los ejemplos incluida.', en: 'Basic tailoring of the examples included.' },
+    {
+      es: 'Personalización avanzada o análisis previo específico: desde +200 €.',
+      en: 'Advanced tailoring or a specific prior analysis: from +200 € extra.',
+    },
+    {
+      es: 'Los desplazamientos largos, dietas y alojamiento se presupuestan aparte.',
+      en: 'Long journeys, meals and accommodation are quoted separately.',
+    },
+    {
+      es: 'Grupos grandes o necesidades especiales: presupuesto personalizado.',
+      en: 'Large groups or special requirements: custom quote.',
+    },
+    {
+      es: 'Los precios son orientativos y pueden variar según la personalización.',
+      en: 'Prices are indicative and may vary depending on tailoring.',
+    },
+  ],
+
+  note: {
+    es: 'Incluye preparar los casos con documentos de vuestra actividad y el material de apoyo.',
+    en: 'Includes preparing the cases with documents from your own activity, and the support material.',
+  },
+} as const;
+
+/* ───────────── El argumento: horas de trabajo ───────────── */
+
+/**
+ * El bloque que el interlocutor necesita para defender la propuesta
+ * internamente, cuando yo ya no estoy delante.
+ *
+ * Los tiempos no son una promesa comercial: son tareas que se resuelven
+ * durante la propia sesión, con documentos de la empresa. Se comprueban ahí
+ * mismo.
+ */
+export const trainingImpact = {
+  eyebrow: { es: 'El argumento', en: 'The case for it' },
+  title: {
+    es: 'Lo que se ahorra, medido en horas de trabajo',
+    en: 'What it saves, measured in working hours',
+  },
+  intro: {
+    es:
+      'Son tareas que se resuelven durante la propia sesión, con documentos reales de la ' +
+      'empresa. No hay que creerse nada: se comprueba en el momento.',
+    en:
+      'These are tasks solved during the session itself, with the company’s own documents. ' +
+      'Nothing to take on faith: it is checked on the spot.',
+  },
+  tasks: [
+    {
+      task: {
+        es: 'Resumir un pliego de 60 páginas y extraer plazos y requisitos',
+        en: 'Summarise a 60-page tender and pull out deadlines and requirements',
+      },
+      before: { es: '45 min', en: '45 min' },
+      after: { es: '6 min', en: '6 min' },
+    },
+    {
+      task: {
+        es: 'Convertir las notas de una visita en un informe presentable',
+        en: 'Turn visit notes into a presentable report',
+      },
+      before: { es: '30 min', en: '30 min' },
+      after: { es: '5 min', en: '5 min' },
+    },
+    {
+      task: {
+        es: 'Adaptar una propuesta base a un cliente concreto',
+        en: 'Adapt a base proposal to a specific client',
+      },
+      before: { es: '40 min', en: '40 min' },
+      after: { es: '8 min', en: '8 min' },
+    },
+    {
+      task: {
+        es: 'Redactar la respuesta a una reclamación con el tono adecuado',
+        en: 'Draft the reply to a complaint with the right tone',
+      },
+      before: { es: '20 min', en: '20 min' },
+      after: { es: '4 min', en: '4 min' },
+    },
+  ],
+  beforeLabel: { es: 'Antes', en: 'Before' },
+  afterLabel: { es: 'Después', en: 'After' },
+  /** La aritmética queda a la vista para que cada cual ponga sus números. */
+  math: {
+    title: { es: 'Haced el cálculo con vuestros números', en: 'Run the numbers for your team' },
+    text: {
+      es:
+        'Si diez personas dedican dos horas a la semana a tareas de este tipo y pasan a ' +
+        'resolverlas en una fracción del tiempo, la cuenta sale sola. Ese es el criterio para ' +
+        'decidir si la formación se paga o no.',
+      en:
+        'If ten people spend two hours a week on tasks like these and start solving them in a ' +
+        'fraction of the time, the maths speaks for itself. That is the yardstick for deciding ' +
+        'whether the training pays for itself.',
+    },
+  },
+} as const;
+
+/* ───────────── Qué hace falta el día de la sesión ────────── */
+
+export const trainingSessionDay = {
+  eyebrow: { es: 'El día de la sesión', en: 'On the day' },
+  title: { es: 'Qué hace falta', en: 'What you need' },
+  intro: {
+    es: 'Nada especial, pero conviene tenerlo previsto para no perder tiempo.',
+    en: 'Nothing unusual, but worth arranging in advance so no time is lost.',
+  },
+  items: [
+    {
+      title: { es: 'Una sala con pantalla o proyector', en: 'A room with a screen or projector' },
+      text: {
+        es: 'También se puede hacer online, por videollamada.',
+        en: 'It can also run online, over a video call.',
+      },
+    },
+    {
+      title: { es: 'Un portátil por asistente', en: 'One laptop per attendee' },
+      text: {
+        es: 'En el workshop cada persona trabaja con sus manos; nadie mira.',
+        en: 'In the workshop everyone works hands-on; nobody just watches.',
+      },
+    },
+    {
+      title: { es: 'Conexión a internet', en: 'An internet connection' },
+      text: {
+        es: 'Las herramientas funcionan en el navegador. No hay que instalar nada.',
+        en: 'The tools run in the browser. Nothing to install.',
+      },
+    },
+    {
+      title: { es: 'Documentos reales, si es posible', en: 'Real documents, if possible' },
+      text: {
+        es: 'Trabajar con vuestros propios documentos es lo que hace que la sesión sirva al día siguiente.',
+        en: 'Working with your own documents is what makes the session useful the next day.',
+      },
+    },
+  ],
+} as const;
+
+/* ────────────────── Para quién no es ──────────────────── */
+
+export const trainingNotFor = {
+  eyebrow: { es: 'Con franqueza', en: 'Plainly' },
+  title: { es: 'Para quién no es esta formación', en: 'Who this training is not for' },
+  intro: {
+    es: 'Prefiero decirlo antes que después. Si estáis en alguno de estos casos, no os hago perder el tiempo.',
+    en: 'Better said now than later. If you are in any of these cases, I will not waste your time.',
+  },
+  items: [
+    {
+      es: 'Equipos técnicos que ya usan estas herramientas a diario. Se aburrirían.',
+      en: 'Technical teams already using these tools daily. They would be bored.',
+    },
+    {
+      es: 'Quien busca una charla de tendencias o una sesión motivacional. Esto es trabajo con las manos.',
+      en: 'Anyone after a trends talk or a motivational session. This is hands-on work.',
+    },
+    {
+      es: 'Quien necesita desarrollar un producto de IA a medida. Eso es otro servicio: también lo hago, pero no es esto.',
+      en: 'Anyone who needs a custom AI product built. That is a different service — I do it too, but this is not it.',
+    },
+    {
+      es: 'Quien espera que la IA arregle un proceso que ya está roto sin cambiar nada más.',
+      en: 'Anyone expecting AI to fix an already broken process without changing anything else.',
+    },
+  ],
+} as const;
+
+/* ──────────────── Preguntas frecuentes ──────────────── */
+
+/** Las objeciones que salen en la conversación interna, cuando yo no estoy. */
+export const trainingFaq = {
+  eyebrow: { es: 'Preguntas frecuentes', en: 'Frequently asked' },
+  title: { es: 'Lo que suelen preguntarme', en: 'What people usually ask' },
+  items: [
+    {
+      question: { es: '¿Y si el equipo no tiene nivel técnico?', en: 'What if the team is not technical?' },
+      answer: {
+        es:
+          'Es justo el público al que va dirigida. No se programa ni se configura nada: se escribe ' +
+          'en un cuadro de texto. Quien maneja el correo y el Word puede seguir la sesión.',
+        en:
+          'That is exactly who it is for. Nothing is programmed or configured: you type into a text ' +
+          'box. Anyone who handles email and Word can follow the session.',
+      },
+    },
+    {
+      question: {
+        es: '¿Esto pone en riesgo los datos de nuestros clientes?',
+        en: 'Does this put our client data at risk?',
+      },
+      answer: {
+        es:
+          'Es una parte del temario, no una nota al pie. Se explica qué información no debe salir de ' +
+          'la empresa, qué diferencia hay entre una cuenta personal y una de empresa, y cómo trabajar ' +
+          'con documentos sensibles sin exponerlos.',
+        en:
+          'It is part of the syllabus, not a footnote. We cover what information must not leave the ' +
+          'company, the difference between a personal and a business account, and how to work with ' +
+          'sensitive documents without exposing them.',
+      },
+    },
+    {
+      question: {
+        es: '¿Hay que comprar licencias o herramientas?',
+        en: 'Do we need to buy licences or tools?',
+      },
+      answer: {
+        es:
+          'Para la sesión no: se trabaja con las versiones gratuitas. Al terminar sabréis qué merece ' +
+          'la pena pagar en vuestro caso y qué no, que es una decisión distinta en cada empresa.',
+        en:
+          'Not for the session: we work with the free versions. By the end you will know what is worth ' +
+          'paying for in your case and what is not — a different decision for every company.',
+      },
+    },
+    {
+      question: { es: '¿Y si después nadie lo usa?', en: 'What if nobody uses it afterwards?' },
+      answer: {
+        es:
+          'Es el riesgo real de cualquier formación, y por eso la sesión se hace sobre tareas que el ' +
+          'equipo tiene encima de la mesa esa misma semana. Salir con trabajo real ya resuelto es lo ' +
+          'que hace que al día siguiente se vuelva a abrir la herramienta.',
+        en:
+          'It is the real risk with any training, which is why the session works on tasks the team has ' +
+          'on their desk that same week. Leaving with real work already done is what makes people open ' +
+          'the tool again the next day.',
+      },
+    },
+    {
+      question: { es: '¿Presencial u online?', en: 'On-site or online?' },
+      answer: {
+        es:
+          'Las dos cosas. Presencial funciona mejor para el workshop, porque puedo pasar por los puestos ' +
+          'cuando alguien se atasca. La sesión de dirección va bien en cualquiera de los dos formatos.',
+        en:
+          'Both. On-site works better for the workshop, since I can step in when someone gets stuck. The ' +
+          'management session works well either way.',
+      },
+    },
+    {
+      question: { es: '¿Cuánta gente puede asistir?', en: 'How many people can attend?' },
+      answer: {
+        es:
+          'El workshop rinde con grupos de hasta doce personas; por encima deja de dar tiempo a atender ' +
+          'a cada uno. La sesión de dirección suele ser de dos a ocho.',
+        en:
+          'The workshop works with groups of up to twelve; beyond that there is no time to attend to ' +
+          'everyone. The management session is usually two to eight people.',
+      },
+    },
+  ],
+} as const;
+
+/* ──────────────────── Cómo funciona ───────────────────── */
 
 export const trainingProcess = {
   eyebrow: { es: 'Cómo funciona', en: 'How it works' },
