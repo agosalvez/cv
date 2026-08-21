@@ -25,13 +25,19 @@ services:
       - ADMIN_USER=${ADMIN_USER}
       - ADMIN_PASS=${ADMIN_PASS}
 
-      # ── Solicitudes de /formacion (SendGrid) ─────────────
+      # ── Solicitudes de /formacion ────────────────────────
       # El correo lo envía el servidor: CONTACT_TO no llega
       # nunca al navegador ni aparece en el repositorio.
+      #
+      # Basta con definir UNA de las dos claves. Si están las
+      # dos, se usa Brevo. Las variables que no se usen pueden
+      # quedarse vacías.
+      - CONTACT_TO=${CONTACT_TO}
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - BREVO_EMAIL_FROM=${BREVO_EMAIL_FROM}
+      - BREVO_EMAIL_FROM_NAME=${BREVO_EMAIL_FROM_NAME}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - SENDGRID_EMAIL_FROM=${SENDGRID_EMAIL_FROM}
-      - SENDGRID_EMAIL_FROM_NAME=${SENDGRID_EMAIL_FROM_NAME}
-      - CONTACT_TO=${CONTACT_TO}
     networks:
       - traefik
     labels:

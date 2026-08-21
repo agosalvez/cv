@@ -6,15 +6,18 @@
  * cliente. Vive en `CONTACT_TO` y no aparece en el HTML, en el JavaScript ni
  * en las peticiones de red.
  *
- * El transporte es la API de SendGrid por HTTP, sin dependencias: Node 20 ya
- * trae `fetch`.
+ * Admite Brevo y SendGrid, y elige según la clave que esté definida. Si una
+ * cuenta se queda sin crédito basta con cambiar la variable de entorno: no hay
+ * que tocar el código ni desplegar una versión distinta.
  *
- * El proveedor está aislado en `sendViaSendgrid()` y en `contactConfig()`:
- * cambiarlo no toca la validación, el límite de peticiones ni el formulario.
+ * Sin dependencias para el envío: Node 20 ya trae `fetch`.
  */
 import rateLimit from 'express-rate-limit';
 
-const SENDGRID_ENDPOINT = 'https://api.sendgrid.com/v3/mail/send';
+const ENDPOINTS = {
+  brevo: 'https://api.brevo.com/v3/smtp/email',
+  sendgrid: 'https://api.sendgrid.com/v3/mail/send',
+};
 
 /** Límites de tamaño por campo. Recortan el abuso y el correo basura. */
 const LIMITS = {
@@ -28,19 +31,28 @@ const LIMITS = {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/** Configuración leída al arrancar; si falta algo, el endpoint responde 503. */
+/**
+ * Configuración leída al arrancar; si falta algo, el endpoint responde 503.
+ *
+ * El proveedor se deduce de la clave presente. Con las dos definidas gana
+ * Brevo, que es la que tiene plan gratuito con envíos reales.
+ */
 export function contactConfig(env = process.env) {
-  const apiKey = env.SENDGRID_API_KEY;
-  const from = env.SENDGRID_EMAIL_FROM;
+  const provider = env.BREVO_API_KEY ? 'brevo' : env.SENDGRID_API_KEY ? 'sendgrid' : null;
+
+  const apiKey = provider === 'brevo' ? env.BREVO_API_KEY : env.SENDGRID_API_KEY;
+  const from = env.BREVO_EMAIL_FROM || env.SENDGRID_EMAIL_FROM || env.CONTACT_FROM;
+  const fromName = env.BREVO_EMAIL_FROM_NAME || env.SENDGRID_EMAIL_FROM_NAME || 'Adrián Gosálvez';
 
   return {
+    provider,
     apiKey,
     from,
-    fromName: env.SENDGRID_EMAIL_FROM_NAME || 'Adrián Gosálvez',
-    // El destino es lo único que no se comparte con los demás proyectos:
-    // es la dirección que se mantiene fuera del navegador.
+    fromName,
+    // El destino es lo único que no se comparte con los demás proyectos: es la
+    // dirección que se mantiene fuera del navegador.
     to: env.CONTACT_TO,
-    ready: Boolean(apiKey && from && env.CONTACT_TO),
+    ready: Boolean(provider && apiKey && from && env.CONTACT_TO),
   };
 }
 
@@ -93,29 +105,63 @@ export function composeEmail(data) {
   };
 }
 
-/** Envío real por la API de SendGrid. Exportada para poder verificar el payload. */
-export async function sendViaSendgrid(config, data) {
+/**
+ * Petición que espera cada proveedor.
+ *
+ * Es lo único que cambia entre ellos: mismo destinatario, mismo asunto y mismo
+ * `reply-to`, con dos formatos distintos.
+ */
+export function buildRequest(config, data) {
   const { subject, text } = composeEmail(data);
 
-  const response = await fetch(SENDGRID_ENDPOINT, {
-    method: 'POST',
+  if (config.provider === 'brevo') {
+    return {
+      url: ENDPOINTS.brevo,
+      headers: {
+        accept: 'application/json',
+        'api-key': config.apiKey,
+        'content-type': 'application/json',
+      },
+      body: {
+        sender: { email: config.from, name: config.fromName },
+        to: [{ email: config.to }],
+        // Responder al correo contesta directamente a quien lo envió.
+        replyTo: { email: data.email, name: data.name },
+        subject,
+        textContent: text,
+      },
+    };
+  }
+
+  return {
+    url: ENDPOINTS.sendgrid,
     headers: {
       Authorization: `Bearer ${config.apiKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
+    body: {
       personalizations: [{ to: [{ email: config.to }] }],
       from: { email: config.from, name: config.fromName },
-      // Responder al correo contesta directamente a quien lo envió.
       reply_to: { email: data.email, name: data.name },
       subject,
       content: [{ type: 'text/plain', value: text }],
-    }),
+    },
+  };
+}
+
+/** Envío real. Exportada para poder verificar la petición en los tests. */
+export async function sendEmail(config, data) {
+  const request = buildRequest(config, data);
+
+  const response = await fetch(request.url, {
+    method: 'POST',
+    headers: request.headers,
+    body: JSON.stringify(request.body),
   });
 
-  // Un envío aceptado responde 202, sin cuerpo.
+  // Brevo responde 201 y SendGrid 202; ninguno devuelve un cuerpo útil.
   if (!response.ok) {
-    throw new Error(`sendgrid ${response.status}: ${await response.text()}`);
+    throw new Error(`${config.provider} ${response.status}: ${await response.text()}`);
   }
 }
 
@@ -131,11 +177,13 @@ export const contactLimiter = rateLimit({
 /** Manejador del endpoint. `deps.send` se sustituye en los tests. */
 export function contactHandler(deps = {}) {
   const config = deps.config ?? contactConfig();
-  const deliver = deps.send ?? sendViaSendgrid;
+  const deliver = deps.send ?? sendEmail;
 
   return async (req, res) => {
     if (!config.ready) {
-      console.error('❌ /api/contacto sin configurar: faltan SENDGRID_API_KEY, SENDGRID_EMAIL_FROM o CONTACT_TO');
+      console.error(
+        '❌ /api/contacto sin configurar: hacen falta CONTACT_TO, un remitente y una clave (BREVO_API_KEY o SENDGRID_API_KEY)',
+      );
       return res.status(503).json({ error: 'unavailable' });
     }
 

@@ -242,11 +242,15 @@ ADMIN_PASS=tu_contraseña_segura
 PORT=80          # opcional, por defecto 80
 APP_ROOT=/app    # opcional, solo en Docker
 
-# Solicitudes de /formacion — SendGrid
+# Solicitudes de /formacion — basta con UNA de las dos claves
+CONTACT_TO=direccion_real@ejemplo.com     # a dónde llegan las solicitudes
+
+BREVO_API_KEY=xkeysib-xxxxxxxxxxxxxxxxxxxx
+BREVO_EMAIL_FROM=web@gosalvez.es          # remitente verificado en Brevo
+BREVO_EMAIL_FROM_NAME=Adrián Gosálvez     # opcional
+
 SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxx
 SENDGRID_EMAIL_FROM=web@gosalvez.es       # remitente verificado en SendGrid
-SENDGRID_EMAIL_FROM_NAME=Adrián Gosálvez  # opcional
-CONTACT_TO=direccion_real@ejemplo.com     # a dónde llegan las solicitudes
 ```
 
 En producción se definen en el stack de Portainer, junto a `ADMIN_USER` y `ADMIN_PASS`.
@@ -255,9 +259,11 @@ En producción se definen en el stack de Portainer, junto a `ADMIN_USER` y `ADMI
 
 `CONTACT_TO` nunca llega al navegador. El formulario publica en `POST /api/contacto` y es `admin/contact.js` quien envía el correo: la dirección de destino no aparece en el HTML, ni en el JavaScript, ni en las peticiones de red. Un `mailto:` la habría dejado a la vista de cualquiera.
 
-El endpoint valida los campos, limita a 5 solicitudes por IP y hora, y descarta los bots con un campo señuelo. Si falta `SENDGRID_API_KEY`, `SENDGRID_EMAIL_FROM` o `CONTACT_TO` responde `503` sin tumbar el servidor, y el formulario muestra el error correspondiente.
+El endpoint valida los campos, limita a 5 solicitudes por IP y hora, y descarta los bots con un campo señuelo. Si falta el destino, el remitente o la clave responde `503` sin tumbar el servidor, y el formulario muestra el error correspondiente.
 
-El envío usa la API de SendGrid (`POST /v3/mail/send`) con `fetch` nativo, sin SDK. El correo lleva `reply_to` con la dirección de quien escribe, así que responder desde el buzón contesta directamente a la empresa. El proveedor está aislado en `sendViaSendgrid()` y `contactConfig()`: cambiarlo no toca la validación, el límite de peticiones ni el formulario.
+**El proveedor se elige solo, según la clave que esté definida:** con `BREVO_API_KEY` envía por Brevo (`POST /v3/smtp/email`) y con `SENDGRID_API_KEY` por SendGrid (`POST /v3/mail/send`). Si están las dos, gana Brevo. Así, cuando una cuenta se queda sin crédito basta con cambiar la variable de entorno: no hay que tocar el código.
+
+Todo con `fetch` nativo, sin SDK. El correo lleva `reply-to` con la dirección de quien escribe, así que responder desde el buzón contesta directamente a la empresa. Lo específico de cada proveedor vive en `buildRequest()`; la validación, el límite de peticiones y el formulario son comunes.
 
 ---
 
