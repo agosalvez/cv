@@ -4,6 +4,7 @@ import { join, dirname, extname } from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import rateLimit from 'express-rate-limit';
+import { contactHandler, contactLimiter } from './contact.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -61,6 +62,12 @@ app.get('/api/version', (_req, res) => {
     url: `https://github.com/agosalvez/cv/commit/${process.env.BUILD_SHA || ''}`,
   });
 });
+
+// ── Solicitudes de formación — público ──────────────────────
+// El correo lo envía el servidor: la dirección de destino vive en CONTACT_TO
+// y nunca llega al navegador. Se declara antes de los estáticos para que la
+// ruta no dependa del contenido de `dist/`.
+app.post('/api/contacto', contactLimiter, contactHandler());
 
 // ── CV estático — público ───────────────────────────────────
 app.get('/', (_req, res) => res.redirect(301, '/es'));

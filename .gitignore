@@ -28,3 +28,6 @@ Thumbs.db
 
 # Docker
 .dockerignore
+
+# Stubs locales para probar sin credenciales
+*.local.mjs

@@ -26,6 +26,7 @@ Mantener el CV en un PDF significa reeditarlo y volver a exportarlo cada vez que
 
 - **Bilingüe** — Español e inglés, rutas `/es` y `/en`, con hreflang y x-default.
 - **Página de setup** — `/es/setup` y `/en/setup`, con el espacio de trabajo documentado desde datos.
+- **Landing de formación** — `/es/formacion` y `/en/training`, con formulario de solicitud.
 - **Panel de administración** — Edición del contenido del CV desde el navegador.
 - **Un solo `cv.json`** — El admin lo escribe, la web lo lee.
 - **SEO** — Open Graph, Twitter Card, JSON-LD, sitemap y robots.txt.
@@ -102,8 +103,14 @@ cv-adriangosalvez/
 | `/es`, `/en` | CV en español e inglés |
 | `/setup` | Redirige a `/es/setup` |
 | `/es/setup`, `/en/setup` | Página de setup en español e inglés |
+| `/formacion` | Redirige a `/es/formacion` |
+| `/training` | Redirige a `/en/training` |
+| `/es/formacion`, `/en/training` | Landing de formación en IA para empresas |
+| `POST /api/contacto` | Recibe las solicitudes de formación y envía el correo |
 
-La redirección de `/setup` se declara en `astro.config.mjs`: con `i18n.routing.prefixDefaultLocale`, la salida estática no emite rutas sin prefijo de idioma.
+Las redirecciones cortas se declaran en `astro.config.mjs`: con `i18n.routing.prefixDefaultLocale`, la salida estática no emite rutas sin prefijo de idioma.
+
+La landing de formación es la única página con el slug traducido (`formacion` / `training`), así que no puede resolverse con la ruta dinámica `[lang]`: cada idioma declara su archivo en `src/pages/es/` y `src/pages/en/`, y ambos renderizan `src/components/training/TrainingPage.astro`. Las dos URL se declaran una sola vez en `src/data/training.ts`, y de ahí salen el canonical, los hreflang, el conmutador de idioma y el sitemap.
 
 ---
 
@@ -234,7 +241,23 @@ ADMIN_USER=tu_usuario
 ADMIN_PASS=tu_contraseña_segura
 PORT=80          # opcional, por defecto 80
 APP_ROOT=/app    # opcional, solo en Docker
+
+# Solicitudes de /formacion — SendGrid
+SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxx
+SENDGRID_EMAIL_FROM=web@gosalvez.es       # remitente verificado en SendGrid
+SENDGRID_EMAIL_FROM_NAME=Adrián Gosálvez  # opcional
+CONTACT_TO=direccion_real@ejemplo.com     # a dónde llegan las solicitudes
 ```
+
+En producción se definen en el stack de Portainer, junto a `ADMIN_USER` y `ADMIN_PASS`.
+
+### Por qué el correo lo envía el servidor
+
+`CONTACT_TO` nunca llega al navegador. El formulario publica en `POST /api/contacto` y es `admin/contact.js` quien envía el correo: la dirección de destino no aparece en el HTML, ni en el JavaScript, ni en las peticiones de red. Un `mailto:` la habría dejado a la vista de cualquiera.
+
+El endpoint valida los campos, limita a 5 solicitudes por IP y hora, y descarta los bots con un campo señuelo. Si falta `SENDGRID_API_KEY`, `SENDGRID_EMAIL_FROM` o `CONTACT_TO` responde `503` sin tumbar el servidor, y el formulario muestra el error correspondiente.
+
+El envío usa la API de SendGrid (`POST /v3/mail/send`) con `fetch` nativo, sin SDK. El correo lleva `reply_to` con la dirección de quien escribe, así que responder desde el buzón contesta directamente a la empresa. El proveedor está aislado en `sendViaSendgrid()` y `contactConfig()`: cambiarlo no toca la validación, el límite de peticiones ni el formulario.
 
 ---
 

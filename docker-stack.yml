@@ -1,3 +1,15 @@
+# ─────────────────────────────────────────────────────────────
+# Stack de gosalvez.es
+#
+# Portainer lo despliega directamente desde GitHub:
+#   Stacks → Add stack → Repository
+#     Repository URL:  https://github.com/agosalvez/cv
+#     Reference:       refs/heads/main
+#     Compose path:    docker-stack.yml
+#
+# Los valores de las variables se definen en "Environment variables"
+# del propio stack en Portainer. Ninguna vive en el repositorio.
+# ─────────────────────────────────────────────────────────────
 version: '3.3'
 
 services:
@@ -9,8 +21,17 @@ services:
       - cv-data:/app/src/data
       - cv-public:/app/public
     environment:
+      # ── Panel de administración ──────────────────────────
       - ADMIN_USER=${ADMIN_USER}
       - ADMIN_PASS=${ADMIN_PASS}
+
+      # ── Solicitudes de /formacion (SendGrid) ─────────────
+      # El correo lo envía el servidor: CONTACT_TO no llega
+      # nunca al navegador ni aparece en el repositorio.
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_EMAIL_FROM=${SENDGRID_EMAIL_FROM}
+      - SENDGRID_EMAIL_FROM_NAME=${SENDGRID_EMAIL_FROM_NAME}
+      - CONTACT_TO=${CONTACT_TO}
     networks:
       - traefik
     labels:
