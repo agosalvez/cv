@@ -1,0 +1,374 @@
+---
+/**
+ * Composición de la landing de formación.
+ *
+ * Las dos rutas (`/es/formacion` y `/en/training`) son archivos de una línea
+ * que renderizan este componente: el slug está traducido, pero la página es
+ * exactamente la misma.
+ */
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import SiteNav from '../site/SiteNav.astro';
+import ProgramCard from './ProgramCard.astro';
+import TrainingForm from './TrainingForm.astro';
+import UseCaseGrid from './UseCaseGrid.astro';
+import {
+  localize,
+  trainingAbout,
+  trainingClosing,
+  trainingGoalQuote,
+  trainingHero,
+  trainingPrograms,
+  trainingProblem,
+  trainingProcess,
+  trainingRoutes,
+  trainingSeo,
+  trainingUi,
+  trainingUrls,
+  trainingUseCases,
+  type TrainingLang,
+} from '../../data/training';
+
+interface Props {
+  lang: TrainingLang;
+}
+
+const { lang } = Astro.props;
+const otherLang: TrainingLang = lang === 'es' ? 'en' : 'es';
+
+const { personal } = JSON.parse(readFileSync(join(process.cwd(), 'src/data/cv.json'), 'utf8'));
+
+const title = localize(trainingSeo.title, lang);
+const description = localize(trainingSeo.description, lang);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: localize(trainingHero.title, lang),
+  description,
+  serviceType: lang === 'es' ? 'Formación en inteligencia artificial para empresas' : 'Artificial intelligence training for companies',
+  url: trainingUrls[lang],
+  areaServed: { '@type': 'Country', name: 'España' },
+  audience: { '@type': 'BusinessAudience', name: lang === 'es' ? 'Pymes y empresas' : 'SMEs and companies' },
+  provider: {
+    '@type': 'Person',
+    name: personal.name,
+    jobTitle: personal.title,
+    url: 'https://gosalvez.es',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: lang === 'es' ? 'Modalidades de formación' : 'Training formats',
+    itemListElement: trainingPrograms.map((program) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Course',
+        name: localize(program.title, lang),
+        description: localize(program.summary, lang),
+        provider: { '@type': 'Person', name: personal.name },
+      },
+    })),
+  },
+};
+
+/** Estilos compartidos por los rótulos y encabezados de sección. */
+const eyebrow = 'font-mono text-xs uppercase tracking-[0.2em] text-blue-600';
+const heading = 'mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-[1.75rem]';
+const container = 'mx-auto max-w-screen-xl px-6 lg:px-10';
+---
+
+<Layout
+  title={title}
+  lang={lang}
+  description={description}
+  canonical={trainingUrls[lang]}
+  alternateUrls={trainingUrls}
+  ogType="website"
+  jsonLd={jsonLd}
+>
+  <a
+    href="#contenido"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900 focus:shadow-lg focus:outline focus:outline-2 focus:outline-blue-600"
+  >
+    {localize(trainingUi.skipToContent, lang)}
+  </a>
+
+  <SiteNav lang={lang} name={personal.name} current="training" altHref={trainingRoutes[otherLang]} />
+
+  <main id="contenido">
+    <!-- ══════════ HERO ══════════ -->
+    <header class="bg-slate-900 pb-16 pt-28 lg:pb-20 lg:pt-36">
+      <div class={container}>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">
+          {localize(trainingHero.eyebrow, lang)}
+        </p>
+        <h1 class="mt-5 max-w-4xl text-3xl font-bold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-5xl">
+          {localize(trainingHero.title, lang)}
+        </h1>
+        <p class="mt-6 max-w-2xl text-base leading-relaxed text-slate-300">
+          {localize(trainingHero.intro, lang)}
+        </p>
+
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a
+            href="#solicitar"
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+          >
+            {localize(trainingHero.ctaPrimary, lang)}
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+          <a
+            href="#modalidades"
+            class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-slate-600 hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+          >
+            {localize(trainingHero.ctaSecondary, lang)}
+          </a>
+        </div>
+
+        <dl class="mt-12 grid max-w-3xl grid-cols-1 gap-6 border-t border-slate-800 pt-8 sm:grid-cols-3">
+          {
+            trainingHero.facts.map((fact) => (
+              <div>
+                <dt class="font-mono text-xl font-semibold tracking-tight text-white sm:text-2xl">
+                  {localize(fact.value, lang)}
+                </dt>
+                <dd class="mt-1 text-xs leading-snug text-slate-400">{localize(fact.label, lang)}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <!-- ══════════ PROBLEMA ══════════ -->
+    <section id="punto-de-partida" aria-labelledby="problema-title" class="scroll-mt-24 bg-white py-14 lg:py-20">
+      <div class={container}>
+        <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+          <div class="lg:col-span-5">
+            <div class="lg:sticky lg:top-24">
+              <p class={eyebrow}>{localize(trainingProblem.eyebrow, lang)}</p>
+              <h2 id="problema-title" class={heading}>{localize(trainingProblem.title, lang)}</h2>
+              <p class="mt-4 text-[15px] leading-relaxed text-slate-600">
+                {localize(trainingProblem.intro, lang)}
+              </p>
+            </div>
+          </div>
+
+          <ul class="divide-y divide-slate-200 border-t border-slate-200 lg:col-span-7 lg:border-t-0 lg:pt-0">
+            {
+              trainingProblem.items.map((item) => (
+                <li class="py-5 first:pt-0 lg:first:pt-0">
+                  <h3 class="text-[15px] font-semibold tracking-tight text-slate-900">
+                    {localize(item.title, lang)}
+                  </h3>
+                  <p class="mt-1.5 text-sm leading-relaxed text-slate-600">{localize(item.text, lang)}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ MODALIDADES ══════════ -->
+    <section
+      id="modalidades"
+      aria-labelledby="modalidades-title"
+      class="scroll-mt-24 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
+    >
+      <div class={container}>
+        <p class={eyebrow}>{lang === 'es' ? 'Modalidades' : 'Formats'}</p>
+        <h2 id="modalidades-title" class={`${heading} max-w-3xl`}>
+          {
+            lang === 'es'
+              ? 'Dos formatos, según a quién va dirigido'
+              : 'Two formats, depending on who it is for'
+          }
+        </h2>
+        <p class="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+          {
+            lang === 'es'
+              ? 'Uno para decidir dónde aplicar la IA en la empresa. Otro para que el equipo la use bien en su trabajo diario. Se pueden contratar por separado o de forma consecutiva.'
+              : 'One to decide where AI fits in the company. Another so the team uses it properly in their daily work. They can be booked separately or one after the other.'
+          }
+        </p>
+
+        <div class="mt-10 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+          <ProgramCard program={trainingPrograms[0]} lang={lang} />
+          <ProgramCard program={trainingPrograms[1]} lang={lang} tone="dark" />
+        </div>
+
+        <figure class="mx-auto mt-10 max-w-2xl border-l-2 border-blue-600 pl-5">
+          <blockquote>
+            <p class="text-lg font-medium leading-snug text-slate-800 sm:text-xl">
+              {localize(trainingGoalQuote.text, lang)}
+            </p>
+          </blockquote>
+          <figcaption class="mt-2 text-xs text-slate-500">
+            {localize(trainingGoalQuote.caption, lang)}
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══════════ APLICACIONES ══════════ -->
+    <section
+      id="aplicaciones"
+      aria-labelledby="aplicaciones-title"
+      class="scroll-mt-24 border-t border-slate-200 bg-white py-14 lg:py-20"
+    >
+      <div class={container}>
+        <p class={eyebrow}>{localize(trainingUseCases.eyebrow, lang)}</p>
+        <h2 id="aplicaciones-title" class={`${heading} max-w-3xl`}>
+          {localize(trainingUseCases.title, lang)}
+        </h2>
+        <p class="mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+          {localize(trainingUseCases.intro, lang)}
+        </p>
+
+        <UseCaseGrid items={trainingUseCases.items} lang={lang} />
+      </div>
+    </section>
+
+    <!-- ══════════ CÓMO FUNCIONA ══════════ -->
+    <section
+      id="proceso"
+      aria-labelledby="proceso-title"
+      class="scroll-mt-24 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
+    >
+      <div class={container}>
+        <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+          <div class="lg:col-span-4">
+            <p class={eyebrow}>{localize(trainingProcess.eyebrow, lang)}</p>
+            <h2 id="proceso-title" class={heading}>{localize(trainingProcess.title, lang)}</h2>
+            <p class="mt-4 text-[15px] leading-relaxed text-slate-600">
+              {localize(trainingProcess.intro, lang)}
+            </p>
+          </div>
+
+          <!-- Los pasos van numerados porque el orden es real: cada uno depende del anterior. -->
+          <ol class="relative lg:col-span-8">
+            {
+              trainingProcess.steps.map((step, index) => (
+                <li class="relative flex gap-5 pb-7 last:pb-0">
+                  <div class="flex flex-col items-center">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white font-mono text-xs font-semibold text-slate-700">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    {index < trainingProcess.steps.length - 1 && (
+                      <span class="mt-1 w-px flex-1 bg-slate-300" aria-hidden="true" />
+                    )}
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[15px] font-semibold tracking-tight text-slate-900">
+                      {localize(step.title, lang)}
+                    </h3>
+                    <p class="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-600">
+                      {localize(step.text, lang)}
+                    </p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SOBRE MÍ ══════════ -->
+    <section
+      id="quien"
+      aria-labelledby="quien-title"
+      class="scroll-mt-24 border-t border-slate-200 bg-white py-14 lg:py-20"
+    >
+      <div class={container}>
+        <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
+          <div class="lg:col-span-3">
+            <img
+              src="/profile.jpg"
+              alt={personal.name}
+              width="320"
+              height="320"
+              loading="lazy"
+              class="h-32 w-32 rounded-2xl object-cover ring-1 ring-slate-200 sm:h-40 sm:w-40 lg:h-auto lg:w-full"
+            />
+          </div>
+
+          <div class="lg:col-span-9">
+            <p class={eyebrow}>{localize(trainingAbout.eyebrow, lang)}</p>
+            <h2 id="quien-title" class={`${heading} max-w-2xl`}>{localize(trainingAbout.title, lang)}</h2>
+
+            <p class="mt-4 font-mono text-xs text-slate-500">
+              {personal.name} · {personal.title}
+            </p>
+
+            <div class="mt-5 space-y-4">
+              {
+                trainingAbout.paragraphs.map((paragraph) => (
+                  <p class="max-w-2xl text-[15px] leading-relaxed text-slate-600">
+                    {localize(paragraph, lang)}
+                  </p>
+                ))
+              }
+            </div>
+
+            <a
+              href={`/${lang}`}
+              class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-blue-700 transition-colors hover:text-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              {localize(trainingAbout.cta, lang)}
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CIERRE Y SOLICITUD ══════════ -->
+    <section id="solicitar" aria-labelledby="solicitar-title" class="scroll-mt-24 bg-slate-900 py-16 lg:py-24">
+      <div class={container}>
+        <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+          <div class="lg:col-span-6">
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">
+              {localize(trainingClosing.eyebrow, lang)}
+            </p>
+            <h2
+              id="solicitar-title"
+              class="mt-4 max-w-xl text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl"
+            >
+              {localize(trainingClosing.title, lang)}
+            </h2>
+            <p class="mt-5 max-w-lg text-base leading-relaxed text-slate-300">
+              {localize(trainingClosing.text, lang)}
+            </p>
+          </div>
+
+          <div class="lg:col-span-6">
+            <TrainingForm lang={lang} />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style is:global>
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

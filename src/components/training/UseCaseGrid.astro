@@ -1,0 +1,71 @@
+---
+/**
+ * Rejilla de aplicaciones.
+ *
+ * Se dibuja como una cuadrícula continua (celdas separadas por una línea de
+ * 1px) en lugar de tarjetas sueltas: el bloque se lee como un inventario, que
+ * es lo que es. Cada celda lleva un ejemplo concreto en monoespaciada, para
+ * que la aplicación no se quede en un adjetivo.
+ */
+import { localize, type TrainingLang, type TrainingUseCase } from '../../data/training';
+
+interface Props {
+  items: readonly TrainingUseCase[];
+  lang: TrainingLang;
+}
+
+const { items, lang } = Astro.props;
+
+/** Trazados de 24×24, en el mismo estilo de línea que el resto del sitio. */
+const icons: Record<string, string> = {
+  document:
+    'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+  mail: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+  report:
+    'M9 17v-6m4 6V7m4 10v-4M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z',
+  table: 'M3 10h18M9 4v16M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z',
+  search: 'M21 21l-4.35-4.35M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z',
+  support:
+    'M18 13v3a5 5 0 01-5 5h-1m-6-8v-2a7 7 0 1114 0v2m-14 0a2 2 0 012-2h1v6H6a2 2 0 01-2-2v-2zm16 0a2 2 0 00-2-2h-1v6h1a2 2 0 002-2v-2z',
+  sales: 'M3 17l6-6 4 4 8-8m0 0h-5m5 0v5',
+  slides: 'M4 4h16v11H4V4zm8 11v4m-3 0h6M8 9l2.5 2.5L16 6',
+  automation:
+    'M4 7h6m4 0h6M4 17h6m4 0h6M12 4a3 3 0 100 6 3 3 0 000-6zm0 10a3 3 0 100 6 3 3 0 000-6z',
+  knowledge:
+    'M12 6.5A4.5 4.5 0 007.5 4H4v13h3.5a4.5 4.5 0 014.5 2.5m0-13A4.5 4.5 0 0116.5 4H20v13h-3.5a4.5 4.5 0 00-4.5 2.5m0-13v13',
+};
+---
+
+<div class="mt-10 grid gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200 sm:grid-cols-2">
+  {
+    items.map((item) => (
+      <article class="bg-white p-6 lg:p-7">
+        <div class="flex items-start gap-3.5">
+          <span
+            class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600"
+            aria-hidden="true"
+          >
+            <svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.8"
+                d={icons[item.icon] ?? icons.document}
+              />
+            </svg>
+          </span>
+
+          <div class="min-w-0">
+            <h3 class="text-[15px] font-semibold tracking-tight text-slate-900">
+              {localize(item.title, lang)}
+            </h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-slate-600">{localize(item.text, lang)}</p>
+            <p class="mt-3 border-l-2 border-slate-200 pl-3 font-mono text-xs leading-relaxed text-slate-500">
+              {localize(item.example, lang)}
+            </p>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+</div>

@@ -110,6 +110,14 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
         ))}
         <li class="ml-1 border-l border-slate-700 pl-2">
           <a
+            href={lang === 'es' ? '/es/formacion' : '/en/training'}
+            class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+          >
+            {lang === 'es' ? 'Formación' : 'Training'}
+          </a>
+        </li>
+        <li>
+          <a
             href={`/${lang}/setup`}
             class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
           >
@@ -153,8 +161,14 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
         </a>
       ))}
       <a
-        href={`/${lang}/setup`}
+        href={lang === 'es' ? '/es/formacion' : '/en/training'}
         class="block border-t border-slate-800 mt-2 pt-3 pb-2 text-sm text-slate-400 hover:text-white transition-colors"
+      >
+        {lang === 'es' ? 'Formación' : 'Training'}
+      </a>
+      <a
+        href={`/${lang}/setup`}
+        class="block pb-2 text-sm text-slate-400 hover:text-white transition-colors"
       >
         Setup
       </a>

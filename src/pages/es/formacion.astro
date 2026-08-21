@@ -1,0 +1,12 @@
+---
+/**
+ * Landing de formación en español.
+ *
+ * El slug está traducido (`/en/training`), así que no se puede resolver con la
+ * ruta dinámica `[lang]`: cada idioma declara su archivo y ambos renderizan el
+ * mismo componente.
+ */
+import TrainingPage from '../../components/training/TrainingPage.astro';
+---
+
+<TrainingPage lang="es" />

@@ -1,0 +1,10 @@
+---
+/**
+ * Redirección de `/formacion` al idioma por defecto.
+ *
+ * Igual que `/setup`: en la salida estática el enrutado i18n descarta las rutas
+ * sin prefijo de idioma, así que el `/formacion/index.html` lo emite la entrada
+ * `redirects` de `astro.config.mjs`. Ambas apuntan al mismo destino.
+ */
+return Astro.redirect('/es/formacion');
+---

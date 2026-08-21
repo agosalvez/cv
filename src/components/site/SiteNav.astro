@@ -1,0 +1,105 @@
+---
+/**
+ * Barra de navegación fija de las páginas internas (`/setup`, formación).
+ *
+ * El CV mantiene su propia barra porque además ancla las secciones de la
+ * página y el botón de impresión. Aquí solo hay navegación entre páginas.
+ *
+ * `altHref` es la URL de la página actual en el otro idioma: no se puede
+ * derivar del idioma porque los slugs están traducidos (`/es/formacion` es
+ * `/en/training`).
+ */
+type Lang = 'es' | 'en';
+
+interface Props {
+  lang: Lang;
+  name: string;
+  current: 'cv' | 'training' | 'setup';
+  altHref: string;
+}
+
+const { lang, name, current, altHref } = Astro.props;
+const otherLang: Lang = lang === 'es' ? 'en' : 'es';
+
+const labels = {
+  es: { nav: 'Navegación principal', cv: 'CV', training: 'Formación', setup: 'Setup', language: 'Idioma' },
+  en: { nav: 'Main navigation', cv: 'CV', training: 'Training', setup: 'Setup', language: 'Language' },
+} as const;
+
+const t = labels[lang];
+
+/**
+ * En móvil la barra lleva las iniciales en lugar del nombre completo: con tres
+ * enlaces y el conmutador de idioma, el nombre entero deja el selector fuera de
+ * pantalla por debajo de 640 px.
+ */
+const initials = name
+  .split(/\s+/)
+  .map((word) => word[0])
+  .slice(0, 2)
+  .join('')
+  .toUpperCase();
+
+const links = [
+  { key: 'cv', href: `/${lang}`, label: t.cv },
+  { key: 'training', href: lang === 'es' ? '/es/formacion' : '/en/training', label: t.training },
+  { key: 'setup', href: `/${lang}/setup`, label: t.setup },
+] as const;
+
+const langPill =
+  'px-2.5 py-1 rounded-full text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400';
+---
+
+<nav
+  class="fixed inset-x-0 top-0 z-50 h-16 border-b border-slate-800 bg-slate-900/95 backdrop-blur"
+  aria-label={t.nav}
+>
+  <div class="mx-auto flex h-full max-w-screen-2xl items-center justify-between gap-4 px-6 lg:px-10">
+    <a
+      href={`/${lang}`}
+      class="shrink-0 text-sm font-bold tracking-tight text-white transition-colors hover:text-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+      aria-label={name}
+    >
+      <span class="sm:hidden" aria-hidden="true">{initials}</span>
+      <span class="hidden sm:inline">{name}</span>
+    </a>
+
+    <div class="flex items-center gap-2 sm:gap-4">
+      <ul class="flex items-center gap-1 text-sm font-medium">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={link.key === current ? 'page' : undefined}
+                class:list={[
+                  'rounded-md px-2.5 py-1.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 sm:px-3',
+                  link.key === current
+                    ? 'bg-slate-800 text-white'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white',
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="flex items-center gap-1.5 border-l border-slate-800 pl-2 sm:pl-4">
+        <span class="sr-only" id="site-lang-label">{t.language}</span>
+        <span
+          class={`${langPill} bg-blue-600 text-white`}
+          aria-current="true"
+          aria-describedby="site-lang-label">{lang.toUpperCase()}</span
+        >
+        <a
+          href={altHref}
+          hreflang={otherLang}
+          class={`${langPill} bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white`}
+          aria-describedby="site-lang-label">{otherLang.toUpperCase()}</a
+        >
+      </div>
+    </div>
+  </div>
+</nav>
