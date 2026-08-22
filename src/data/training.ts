@@ -81,14 +81,14 @@ export interface TrainingImage {
 export const trainingImages = {
   /** Retrato principal, en la cabecera. Es la que más pesa en la credibilidad. */
   portrait: {
-    src: '/images/formacion/retrato-hero.svg',
-    width: 1000,
-    height: 1250,
+    src: '/images/formacion/retrato-hero.jpg',
+    width: 400,
+    height: 400,
     alt: {
       es: 'Adrián Gosálvez, ingeniero de software especializado en inteligencia artificial',
       en: 'Adrián Gosálvez, software engineer specialised in artificial intelligence',
     },
-    temporary: true,
+    temporary: false,
   },
   /** Impartiendo: demuestra que la formación es una actividad real, no una idea. */
   teaching: {
