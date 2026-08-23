@@ -82,8 +82,8 @@ export const trainingImages = {
   /** Retrato principal, en la cabecera. Es la que más pesa en la credibilidad. */
   portrait: {
     src: '/images/formacion/retrato-hero.jpg',
-    width: 400,
-    height: 400,
+    width: 1000,
+    height: 1250,
     alt: {
       es: 'Adrián Gosálvez, ingeniero de software especializado en inteligencia artificial',
       en: 'Adrián Gosálvez, software engineer specialised in artificial intelligence',
@@ -92,25 +92,25 @@ export const trainingImages = {
   },
   /** Impartiendo: demuestra que la formación es una actividad real, no una idea. */
   teaching: {
-    src: '/images/formacion/impartiendo.svg',
-    width: 1600,
-    height: 1067,
+    src: '/images/formacion/impartiendo.jpg',
+    width: 1448,
+    height: 965,
     alt: {
-      es: 'Adrián Gosálvez impartiendo una sesión de formación ante una pantalla',
-      en: 'Adrián Gosálvez running a training session in front of a screen',
+      es: 'Adrián Gosálvez explicando ante una pantalla a un equipo de trabajo',
+      en: 'Adrián Gosálvez explaining to a work team in front of a screen',
     },
-    temporary: true,
+    temporary: false,
   },
   /** Trabajando: respalda el perfil técnico en la sección de quién imparte. */
   working: {
-    src: '/images/formacion/trabajando.svg',
-    width: 1600,
-    height: 1067,
+    src: '/images/formacion/trabajando.jpg',
+    width: 1448,
+    height: 965,
     alt: {
-      es: 'Adrián Gosálvez trabajando en su escritorio',
-      en: 'Adrián Gosálvez working at his desk',
+      es: 'Adrián Gosálvez trabajando con el portátil en la oficina',
+      en: 'Adrián Gosálvez working on his laptop at the office',
     },
-    temporary: true,
+    temporary: false,
   },
 } satisfies Record<string, TrainingImage>;
 

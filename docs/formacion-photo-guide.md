@@ -1,8 +1,12 @@
 # Guía de fotos — landing de formación
 
-Las tres imágenes de `/es/formacion` son marcadores provisionales: un SVG con la
-instrucción impresa encima. Este documento explica qué foto va en cada hueco y
-cómo sustituirla.
+**Los tres huecos ya tienen fotografía real** (agosto de 2026), de la sesión
+corporativa de Aunoa. Este documento se conserva como criterio para cuando haya
+que repetirlas: qué va en cada hueco y con qué encuadre.
+
+Dos avances quedaron pendientes respecto a lo descrito aquí: la foto de la sala
+de reuniones lleva las caras del equipo sustituidas para no publicar la imagen
+de terceros, y en la de «trabajando» la mirada va a cámara y no a la pantalla.
 
 Las fotos importan aquí más que en el resto de la web. La página se abre después
 de haberte conocido, y su trabajo es confirmar que hay una persona real y
