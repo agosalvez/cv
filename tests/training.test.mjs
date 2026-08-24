@@ -37,9 +37,10 @@ test('both languages cross-reference each other as alternates', async () => {
   // sale de `trainingUrls`, que declara las dos URL una sola vez.
   assert.match(page, /alternateUrls=\{trainingUrls\}/);
   assert.match(page, /canonical=\{trainingUrls\[lang\]\}/);
-  // El conmutador navega dentro del sitio: ruta relativa, no URL absoluta,
-  // para que en desarrollo no salte a producción.
-  assert.match(page, /altHref=\{trainingRoutes\[otherLang\]\}/);
+  // Los hreflang del <head> se mantienen aunque la barra ya no muestre el
+  // conmutador: son señal para buscadores, no navegación visible.
+  const nav = await read("src/components/training/TrainingNav.astro");
+  assert.doesNotMatch(nav, /altHref/);
 });
 
 test('the SEO title matches the one agreed for the page', async () => {
@@ -187,14 +188,36 @@ test('training components never hardcode image paths', async () => {
   }
 });
 
-test('the training page reuses the shared site chrome', async () => {
+test('the training page has its own chrome, not the site nav', async () => {
   const page = await read('src/components/training/TrainingPage.astro');
+  const nav = await read('src/components/training/TrainingNav.astro');
+
+  // La landing se abre tras un QR o un enlace de un referido: quien llega viene
+  // a por un servicio. Una barra con «Trayectoria» y «Setup» dice «web
+  // personal» donde hace falta decir «proveedor», y setup es una vía de fuga.
+  assert.match(page, /import TrainingNav from '\.\/TrainingNav\.astro'/);
+  assert.doesNotMatch(page, /SiteNav/);
+  assert.doesNotMatch(nav, /\/setup/);
+
+  // Navega la propia página y deja el contacto siempre a la vista.
+  assert.match(nav, /data-toc=\{item\.id\}/);
+  assert.match(nav, /wa\.me/);
+  // Sin conmutador de idioma: se vende a pymes españolas, y un selector ES/EN
+  // invita a irse de la página recién abierta.
+  assert.doesNotMatch(nav, /hreflang/);
+
+  // El enlace al CV se mantiene, pero en «Quién la imparte», que es donde
+  // surge la pregunta de quién eres.
+  assert.match(page, /href=\{`\/\$\{lang\}`\}/);
+  assert.match(page, /import Layout from '\.\.\/\.\.\/layouts\/Layout\.astro'/);
+});
+
+test('setup keeps the shared site nav', async () => {
   const setupNav = await read('src/components/setup/SetupNav.astro');
 
-  // Una sola barra de navegación para las páginas internas.
-  assert.match(page, /import SiteNav from '\.\.\/site\/SiteNav\.astro'/);
+  // El cambio es solo de la landing comercial: el resto del sitio sigue
+  // navegándose entre CV y setup.
   assert.match(setupNav, /import SiteNav from '\.\.\/site\/SiteNav\.astro'/);
-  assert.match(page, /import Layout from '\.\.\/\.\.\/layouts\/Layout\.astro'/);
 });
 
 test('the CV links to the training page in both languages', async () => {

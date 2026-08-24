@@ -15,13 +15,12 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Layout from '../../layouts/Layout.astro';
-import SiteNav from '../site/SiteNav.astro';
+import TrainingNav from './TrainingNav.astro';
 import ContactButtons from './ContactButtons.astro';
 import FaqList from './FaqList.astro';
 import ImpactTable from './ImpactTable.astro';
 import ProgramCard from './ProgramCard.astro';
 import TrainingForm from './TrainingForm.astro';
-import TrainingToc from './TrainingToc.astro';
 import UseCaseGrid from './UseCaseGrid.astro';
 import {
   localize,
@@ -149,11 +148,11 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     {localize(trainingUi.skipToContent, lang)}
   </a>
 
-  <SiteNav lang={lang} name={personal.name} current="training" altHref={trainingRoutes[otherLang]} />
+  <TrainingNav lang={lang} name={personal.name} items={tocItems} />
 
   <main id="contenido">
     <!-- ══════════ CABECERA ══════════ -->
-    <header class="bg-slate-900 pb-14 pt-24 lg:pb-20 lg:pt-32">
+    <header class="bg-slate-900 pb-14 pt-10 lg:pb-20 lg:pt-16">
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
           <div class:list={[showPhoto(trainingImages.portrait) ? 'lg:col-span-7' : 'lg:col-span-9']}>
@@ -202,10 +201,8 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
       </div>
     </header>
 
-    <TrainingToc lang={lang} items={tocItems} />
-
     <!-- ══════════ EL ARGUMENTO ══════════ -->
-    <section id="argumento" aria-labelledby="argumento-title" class="scroll-mt-28 bg-white py-14 lg:py-20">
+    <section id="argumento" aria-labelledby="argumento-title" class="scroll-mt-36 lg:scroll-mt-24 bg-white py-14 lg:py-20">
       <div class={container}>
         <p class={eyebrow}>{localize(trainingImpact.eyebrow, lang)}</p>
         <h2 id="argumento-title" class={`${heading} max-w-3xl`}>{localize(trainingImpact.title, lang)}</h2>
@@ -219,7 +216,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="punto-de-partida"
       aria-labelledby="problema-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
     >
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
@@ -249,7 +246,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="modalidades"
       aria-labelledby="modalidades-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-white py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-white py-14 lg:py-20"
     >
       <div class={container}>
         <p class={eyebrow}>{lang === 'es' ? 'Modalidades y precios' : 'Formats and prices'}</p>
@@ -343,7 +340,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="aplicaciones"
       aria-labelledby="aplicaciones-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
     >
       <div class={container}>
         <p class={eyebrow}>{localize(trainingUseCases.eyebrow, lang)}</p>
@@ -360,7 +357,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="sesion"
       aria-labelledby="sesion-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-white py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-white py-14 lg:py-20"
     >
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
@@ -390,7 +387,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="proceso"
       aria-labelledby="proceso-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
     >
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
@@ -433,7 +430,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="no-es"
       aria-labelledby="no-es-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-white py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-white py-14 lg:py-20"
     >
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
@@ -469,7 +466,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="preguntas"
       aria-labelledby="preguntas-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-slate-50 py-14 lg:py-20"
     >
       <div class={container}>
         <p class={eyebrow}>{localize(trainingFaq.eyebrow, lang)}</p>
@@ -483,7 +480,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     <section
       id="quien"
       aria-labelledby="quien-title"
-      class="scroll-mt-28 border-t border-slate-200 bg-white py-14 lg:py-20"
+      class="scroll-mt-36 lg:scroll-mt-24 border-t border-slate-200 bg-white py-14 lg:py-20"
     >
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
@@ -533,7 +530,7 @@ const lead = 'mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-600';
     </section>
 
     <!-- ══════════ CIERRE Y SOLICITUD ══════════ -->
-    <section id="solicitar" aria-labelledby="solicitar-title" class="scroll-mt-28 bg-slate-900 py-16 lg:py-24">
+    <section id="solicitar" aria-labelledby="solicitar-title" class="scroll-mt-36 lg:scroll-mt-24 bg-slate-900 py-16 lg:py-24">
       <div class={container}>
         <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div class="lg:col-span-6">
