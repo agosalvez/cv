@@ -338,14 +338,19 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     cta: { es: 'Quiero este workshop', en: 'I want this workshop' },
     priceFrom: 750,
-    priceIncludes: { es: 'hasta 10 asistentes', en: 'up to 10 attendees' },
+    priceIncludes: { es: 'adaptación de los casos incluida', en: 'tailoring of the cases included' },
     priceNotes: [
-      { es: 'De 11 a 20 asistentes: +150 €', en: '11 to 20 attendees: +150 €' },
-      { es: 'Más de 20: presupuesto personalizado', en: 'Over 20: custom quote' },
+      { es: 'Según el tamaño del grupo y la modalidad', en: 'Depending on group size and format' },
     ],
     note: {
-      es: 'Los casos y ejemplos se adaptan parcialmente a la actividad de la empresa.',
-      en: 'Cases and examples are partly adapted to the company’s activity.',
+      es:
+        'El workshop se puede hacer con grupos de distintos tamaños. En grupos reducidos da tiempo a ' +
+        'dedicar más rato a preguntas, casos concretos y atención individual; para grupos numerosos ' +
+        'adaptamos la dinámica y el formato de la sesión.',
+      en:
+        'The workshop runs with groups of any size. Smaller groups leave more room for questions, ' +
+        'specific cases and individual attention; for larger groups we adapt the format and the ' +
+        'way the session runs.',
     },
   },
   {
@@ -354,11 +359,11 @@ export const trainingPrograms: TrainingProgram[] = [
     title: { es: 'Dirección + workshop', en: 'Management + workshop' },
     summary: {
       es:
-        'Las dos sesiones, normalmente en la misma semana: primero la dirección decide dónde ' +
-        'aplicarlo y después el equipo aprende a hacerlo. Es la combinación que mejor funciona.',
+        'Las dos sesiones, normalmente en la misma semana. La opción más completa para alinear ' +
+        'primero a dirección y después llevar la IA al trabajo diario del equipo.',
       en:
-        'Both sessions, usually in the same week: management decides where to apply it first, then ' +
-        'the team learns how. It is the combination that works best.',
+        'Both sessions, usually in the same week. The most complete option: align management ' +
+        'first, then take AI into the team’s daily work.',
     },
     duration: { es: '1,5 – 2 h + 3 h', en: '1.5 – 2 h + 3 h' },
     audienceLabel: { es: 'Para quién', en: 'Who it is for' },
@@ -610,11 +615,11 @@ export const trainingImpact = {
   },
   intro: {
     es:
-      'Ejemplos de tareas que se resuelven durante la propia sesión, con documentos reales de ' +
-      'la empresa. Lo que rinda en vuestro caso se comprueba ahí mismo.',
+      'Durante la sesión veremos cómo aplicar la IA a este tipo de tareas para reducir de forma ' +
+      'notable el tiempo necesario, trabajando con documentos reales de la empresa.',
     en:
-      'Examples of tasks solved during the session itself, with the company’s own documents. ' +
-      'What it does for you is checked right there.',
+      'During the session we look at how to apply AI to this kind of task to cut the time it takes ' +
+      'substantially, working with the company’s own documents.',
   },
   tasks: [
     {
@@ -659,11 +664,11 @@ export const trainingImpact = {
    */
   disclaimer: {
     es:
-      'Tiempos orientativos. El ahorro real varía según la tarea, la experiencia de quien la hace, ' +
-      'la calidad de la información de partida, la herramienta y cuánta revisión necesite después.',
+      'Tiempos orientativos utilizados como ejemplo. El ahorro real puede variar según la tarea, la ' +
+      'experiencia del usuario, la información disponible y el nivel de revisión necesario.',
     en:
-      'Indicative timings. The real saving varies with the task, the experience of whoever does it, ' +
-      'the quality of the source material, the tool and how much review it needs afterwards.',
+      'Indicative timings, used as an example. The real saving can vary with the task, the user’s ' +
+      'experience, the information available and the level of review needed.',
   },
   /** La aritmética queda a la vista para que cada cual ponga sus números. */
   math: {
@@ -824,18 +829,16 @@ export const trainingFaq = {
       },
     },
     {
-      question: { es: '¿Cuánta gente puede asistir?', en: 'How many people can attend?' },
+      question: { es: '¿Cuántas personas pueden asistir?', en: 'How many people can attend?' },
       answer: {
         es:
-          'El precio del workshop incluye hasta 10 asistentes. De 11 a 20 hay un suplemento de 150 €, ' +
-          'y por encima de 20 se presupuesta aparte. Al margen del precio, la sesión rinde más con ' +
-          'grupos pequeños: entre seis y diez personas es donde da tiempo a atender a cada una. ' +
-          'La sesión de dirección suele ser de dos a ocho.',
+          'No hay un límite estricto: el formato se adapta al tamaño del equipo. Los grupos ' +
+          'reducidos permiten más interacción y atención individual; con grupos grandes ajustamos ' +
+          'las dinámicas para aprovechar mejor la sesión. Dime cuántos sois y lo encajamos.',
         en:
-          'The workshop price covers up to 10 attendees. From 11 to 20 there is a 150 € supplement, ' +
-          'and above 20 it is quoted separately. Price aside, the session works best with small ' +
-          'groups: six to ten people is where there is time to attend to everyone. The management ' +
-          'session is usually two to eight people.',
+          'There is no strict limit: the format adapts to the size of the team. Smaller groups allow ' +
+          'more interaction and individual attention; with larger ones we adjust the exercises to ' +
+          'make the most of the session. Tell me how many you are and we will fit it.',
       },
     },
   ],
