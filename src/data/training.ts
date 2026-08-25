@@ -297,10 +297,11 @@ export const trainingPrograms: TrainingProgram[] = [
     summary: {
       es:
         'Formación práctica en la que cada asistente trabaja con IA sobre tareas parecidas a las que ' +
-        'hace durante su jornada. Se sale habiendo resuelto trabajo real, no habiendo visto una demo.',
+        'hace durante su jornada. Se sale habiendo practicado sobre trabajo real, no habiendo visto ' +
+        'una demo.',
       en:
         'Hands-on training where each attendee works with AI on tasks similar to the ones they do ' +
-        'during their day. People leave having solved real work, not having watched a demo.',
+        'during their day. People leave having practised on real work, not having watched a demo.',
     },
     duration: { es: '3 horas', en: '3 hours' },
     audienceLabel: { es: 'Para quién', en: 'Who it is for' },
@@ -324,8 +325,8 @@ export const trainingPrograms: TrainingProgram[] = [
     outcomesLabel: { es: 'Con qué se sale', en: 'What you leave with' },
     outcomes: [
       {
-        es: 'Tareas del día a día resueltas en una fracción del tiempo habitual',
-        en: 'Day-to-day tasks solved in a fraction of the usual time',
+        es: 'Aprender a resolver tareas del día a día en menos tiempo con ayuda de IA',
+        en: 'Learning to get day-to-day tasks done in less time with AI',
       },
       {
         es: 'Un método para pedir bien las cosas y revisar lo que devuelve',
@@ -706,10 +707,13 @@ export const trainingSessionDay = {
       },
     },
     {
-      title: { es: 'Un portátil por asistente', en: 'One laptop per attendee' },
+      title: {
+        es: 'Un portátil por asistente o por pareja, según la dinámica del grupo',
+        en: 'One laptop per attendee, or per pair, depending on how the group works',
+      },
       text: {
-        es: 'En el workshop cada persona trabaja con sus manos; nadie mira.',
-        en: 'In the workshop everyone works hands-on; nobody just watches.',
+        es: 'En el workshop se trabaja con las manos; nadie se limita a mirar.',
+        en: 'In the workshop people work hands-on; nobody just watches.',
       },
     },
     {
