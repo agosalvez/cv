@@ -610,11 +610,11 @@ export const trainingImpact = {
   },
   intro: {
     es:
-      'Son tareas que se resuelven durante la propia sesión, con documentos reales de la ' +
-      'empresa. No hay que creerse nada: se comprueba en el momento.',
+      'Ejemplos de tareas que se resuelven durante la propia sesión, con documentos reales de ' +
+      'la empresa. Lo que rinda en vuestro caso se comprueba ahí mismo.',
     en:
-      'These are tasks solved during the session itself, with the company’s own documents. ' +
-      'Nothing to take on faith: it is checked on the spot.',
+      'Examples of tasks solved during the session itself, with the company’s own documents. ' +
+      'What it does for you is checked right there.',
   },
   tasks: [
     {
@@ -652,6 +652,19 @@ export const trainingImpact = {
   ],
   beforeLabel: { es: 'Antes', en: 'Before' },
   afterLabel: { es: 'Después', en: 'After' },
+  /**
+   * Los tiempos salen de tareas que se resuelven en la propia sesión, pero
+   * varían mucho según quién y con qué. Decirlo aquí evita que la tabla se lea
+   * como una promesa de resultado.
+   */
+  disclaimer: {
+    es:
+      'Tiempos orientativos. El ahorro real varía según la tarea, la experiencia de quien la hace, ' +
+      'la calidad de la información de partida, la herramienta y cuánta revisión necesite después.',
+    en:
+      'Indicative timings. The real saving varies with the task, the experience of whoever does it, ' +
+      'the quality of the source material, the tool and how much review it needs afterwards.',
+  },
   /** La aritmética queda a la vista para que cada cual ponga sus números. */
   math: {
     title: { es: 'Haced el cálculo con vuestros números', en: 'Run the numbers for your team' },
@@ -814,11 +827,15 @@ export const trainingFaq = {
       question: { es: '¿Cuánta gente puede asistir?', en: 'How many people can attend?' },
       answer: {
         es:
-          'El workshop rinde con grupos de hasta doce personas; por encima deja de dar tiempo a atender ' +
-          'a cada uno. La sesión de dirección suele ser de dos a ocho.',
+          'El precio del workshop incluye hasta 10 asistentes. De 11 a 20 hay un suplemento de 150 €, ' +
+          'y por encima de 20 se presupuesta aparte. Al margen del precio, la sesión rinde más con ' +
+          'grupos pequeños: entre seis y diez personas es donde da tiempo a atender a cada una. ' +
+          'La sesión de dirección suele ser de dos a ocho.',
         en:
-          'The workshop works with groups of up to twelve; beyond that there is no time to attend to ' +
-          'everyone. The management session is usually two to eight people.',
+          'The workshop price covers up to 10 attendees. From 11 to 20 there is a 150 € supplement, ' +
+          'and above 20 it is quoted separately. Price aside, the session works best with small ' +
+          'groups: six to ten people is where there is time to attend to everyone. The management ' +
+          'session is usually two to eight people.',
       },
     },
   ],
