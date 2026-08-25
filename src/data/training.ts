@@ -359,10 +359,10 @@ export const trainingPrograms: TrainingProgram[] = [
     title: { es: 'Dirección + workshop', en: 'Management + workshop' },
     summary: {
       es:
-        'Las dos sesiones, normalmente en la misma semana. La opción más completa para alinear ' +
+        'Las dos sesiones, normalmente en la misma semana. Es la opción más completa para alinear ' +
         'primero a dirección y después llevar la IA al trabajo diario del equipo.',
       en:
-        'Both sessions, usually in the same week. The most complete option: align management ' +
+        'Both sessions, usually in the same week. It is the most complete option: align management ' +
         'first, then take AI into the team’s daily work.',
     },
     duration: { es: '1,5 – 2 h + 3 h', en: '1.5 – 2 h + 3 h' },
@@ -615,11 +615,13 @@ export const trainingImpact = {
   },
   intro: {
     es:
-      'Durante la sesión veremos cómo aplicar la IA a este tipo de tareas para reducir de forma ' +
-      'notable el tiempo necesario, trabajando con documentos reales de la empresa.',
+      'Son ejemplos de tareas que pueden trabajarse durante la propia sesión con documentos y ' +
+      'situaciones reales de la empresa. El objetivo es comprobar en la práctica cuánto tiempo ' +
+      'puede ahorrar la IA en cada caso.',
     en:
-      'During the session we look at how to apply AI to this kind of task to cut the time it takes ' +
-      'substantially, working with the company’s own documents.',
+      'These are examples of tasks that can be worked on during the session itself, with the ' +
+      'company’s own documents and situations. The point is to see in practice how much time AI ' +
+      'can save in each case.',
   },
   tasks: [
     {
@@ -664,10 +666,10 @@ export const trainingImpact = {
    */
   disclaimer: {
     es:
-      'Tiempos orientativos utilizados como ejemplo. El ahorro real puede variar según la tarea, la ' +
-      'experiencia del usuario, la información disponible y el nivel de revisión necesario.',
+      'Tiempos orientativos utilizados como ejemplo. El resultado real puede variar según la tarea, ' +
+      'la experiencia del usuario, la información disponible y el nivel de revisión necesario.',
     en:
-      'Indicative timings, used as an example. The real saving can vary with the task, the user’s ' +
+      'Indicative timings, used as an example. The actual result can vary with the task, the user’s ' +
       'experience, the information available and the level of review needed.',
   },
   /** La aritmética queda a la vista para que cada cual ponga sus números. */
