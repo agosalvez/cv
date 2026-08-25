@@ -338,10 +338,10 @@ export const trainingPrograms: TrainingProgram[] = [
     ],
     cta: { es: 'Quiero este workshop', en: 'I want this workshop' },
     priceFrom: 750,
-    priceIncludes: { es: 'adaptación de los casos incluida', en: 'tailoring of the cases included' },
-    priceNotes: [
-      { es: 'Según el tamaño del grupo y la modalidad', en: 'Depending on group size and format' },
-    ],
+    priceIncludes: {
+      es: 'Grupos de distintos tamaños · formato adaptable',
+      en: 'Groups of any size · adaptable format',
+    },
     note: {
       es:
         'El workshop se puede hacer con grupos de distintos tamaños. En grupos reducidos da tiempo a ' +
@@ -538,11 +538,11 @@ export const trainingPricing = {
   title: { es: 'Qué cuesta', en: 'What it costs' },
   intro: {
     es:
-      'Presupuesto cerrado por sesión, no por hora. El importe depende del número de ' +
-      'asistentes, de la modalidad y de si es presencial u online.',
+      'Presupuesto cerrado por sesión, no por hora. Se adapta a la modalidad, el formato, el ' +
+      'tamaño del grupo y el nivel de personalización.',
     en:
-      'A closed price per session, not per hour. The amount depends on the number of ' +
-      'attendees, the format and whether it is on-site or online.',
+      'A closed price per session, not per hour. It adapts to the format, how the session runs, ' +
+      'the size of the group and the level of tailoring.',
   },
   from: { es: 'desde', en: 'from' },
   vat: { es: '+ IVA', en: '+ VAT' },
@@ -832,13 +832,13 @@ export const trainingFaq = {
       question: { es: '¿Cuántas personas pueden asistir?', en: 'How many people can attend?' },
       answer: {
         es:
-          'No hay un límite estricto: el formato se adapta al tamaño del equipo. Los grupos ' +
-          'reducidos permiten más interacción y atención individual; con grupos grandes ajustamos ' +
-          'las dinámicas para aprovechar mejor la sesión. Dime cuántos sois y lo encajamos.',
+          'No hay un límite estricto. El formato se adapta al tamaño del grupo. Con equipos ' +
+          'reducidos puedo dedicar más tiempo a preguntas, casos concretos y atención individual; ' +
+          'en grupos numerosos adapto la dinámica para que la sesión siga siendo útil para todos.',
         en:
-          'There is no strict limit: the format adapts to the size of the team. Smaller groups allow ' +
-          'more interaction and individual attention; with larger ones we adjust the exercises to ' +
-          'make the most of the session. Tell me how many you are and we will fit it.',
+          'There is no strict limit. The format adapts to the size of the group. With smaller teams ' +
+          'I can spend more time on questions, specific cases and individual attention; with larger ' +
+          'groups I adapt the exercises so the session stays useful for everyone.',
       },
     },
   ],
