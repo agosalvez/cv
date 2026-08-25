@@ -14,6 +14,12 @@
  * Tampoco lleva conmutador de idioma: el servicio se vende a pymes españolas y
  * un selector ES/EN en la barra invita a irse de la página que se acaba de
  * abrir. La versión inglesa sigue existiendo y accesible por su URL.
+ *
+ * Bajo `lg` las secciones se pliegan en un desplegable. Antes iban en una tira
+ * horizontal, pero una tira desplazable no anuncia que haya más contenido a la
+ * derecha: se veían tres secciones y las otras cuatro no existían para el
+ * visitante. El botón, además, devuelve una fila entera de alto en una página
+ * que se lee sobre todo desde el móvil.
  */
 import { localize, trainingContact, type Localized, type TrainingLang } from '../../data/training';
 
@@ -26,8 +32,8 @@ interface Props {
 const { lang, name, items } = Astro.props;
 
 const t = {
-  es: { nav: 'Navegación', contact: 'Contacto' },
-  en: { nav: 'Navigation', contact: 'Contact' },
+  es: { nav: 'Navegación', contact: 'Contacto', menu: 'Secciones', close: 'Cerrar' },
+  en: { nav: 'Navigation', contact: 'Contact', menu: 'Sections', close: 'Close' },
 }[lang];
 
 const whatsappUrl = trainingContact.whatsapp
@@ -44,6 +50,8 @@ const initials = name
   .join('')
   .toUpperCase();
 
+const linkClass =
+  'toc-link whitespace-nowrap rounded-md font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400';
 ---
 
 <nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/95 backdrop-blur" aria-label={t.nav}>
@@ -57,16 +65,12 @@ const initials = name
       <span class="hidden sm:inline">{name}</span>
     </a>
 
-    <!-- Las secciones se pliegan a una tira desplazable propia bajo `lg`. -->
+    <!-- En pantalla ancha caben todas las secciones a la vista. -->
     <ul class="hidden items-center gap-1 text-sm lg:flex">
       {
         items.map((item) => (
           <li>
-            <a
-              href={`#${item.id}`}
-              data-toc={item.id}
-              class="toc-link whitespace-nowrap rounded-md px-3 py-1.5 font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-            >
+            <a href={`#${item.id}`} data-toc={item.id} class={`${linkClass} px-3 py-1.5`}>
               {localize(item.label, lang)}
             </a>
           </li>
@@ -74,7 +78,7 @@ const initials = name
       }
     </ul>
 
-    <div class="flex shrink-0 items-center gap-3">
+    <div class="flex shrink-0 items-center gap-2 sm:gap-3">
       {
         whatsappUrl ? (
           <a
@@ -98,47 +102,103 @@ const initials = name
         )
       }
 
+      <button
+        id="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-panel"
+        aria-label={t.menu}
+        class="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:border-slate-600 hover:bg-slate-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 lg:hidden"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            id="nav-icon"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <span class="hidden xs:inline">{t.menu}</span>
+      </button>
     </div>
   </div>
 
-  <!-- Bajo `lg` las secciones van en su propia tira, desplazable en horizontal. -->
-  <div class="border-t border-slate-800 lg:hidden">
-    <div class="mx-auto max-w-screen-xl px-6">
-      <ul class="flex gap-1 overflow-x-auto py-2 text-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {
-          items.map((item) => (
-            <li>
-              <a
-                href={`#${item.id}`}
-                data-toc={item.id}
-                class="toc-link whitespace-nowrap rounded-md px-2.5 py-1 font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-              >
-                {localize(item.label, lang)}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+  <!-- Desplegable de secciones. Oculto de partida y sin JavaScript queda
+       accesible, porque el enlace de salto lleva al contenido igualmente. -->
+  <div id="nav-panel" hidden class="border-t border-slate-800 lg:hidden">
+    <ul class="mx-auto max-w-screen-xl px-4 py-2">
+      {
+        items.map((item) => (
+          <li>
+            <a
+              href={`#${item.id}`}
+              data-toc={item.id}
+              class={`${linkClass} block px-3 py-2.5 text-[15px]`}
+            >
+              {localize(item.label, lang)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </nav>
 
-<script>
-  // Resalta la sección visible. Los enlaces están duplicados (barra ancha y
-  // tira estrecha), así que se marcan todos los que apuntan a la misma sección.
-  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
-
-  const keepInStrip = (link: HTMLAnchorElement) => {
-    const scroller = link.closest('ul');
-    if (!scroller || scroller.scrollWidth <= scroller.clientWidth) return;
-    const linkRect = link.getBoundingClientRect();
-    const stripRect = scroller.getBoundingClientRect();
-    if (linkRect.left < stripRect.left) {
-      scroller.scrollLeft += linkRect.left - stripRect.left - 12;
-    } else if (linkRect.right > stripRect.right) {
-      scroller.scrollLeft += linkRect.right - stripRect.right + 12;
+<style>
+  /* Un solo punto de corte propio: por debajo de 380 px el rótulo del botón
+     compite con el de WhatsApp por el ancho. */
+  @media (min-width: 380px) {
+    .xs\:inline {
+      display: inline;
     }
-  };
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('nav-panel');
+  const icon = document.getElementById('nav-icon');
+
+  const HAMBURGER = 'M4 6h16M4 12h16M4 18h16';
+  const CROSS = 'M6 18L18 6M6 6l12 12';
+
+  if (toggle && panel && icon) {
+    const setOpen = (open: boolean) => {
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      icon.setAttribute('d', open ? CROSS : HAMBURGER);
+    };
+
+    toggle.addEventListener('click', () => setOpen(panel.hidden));
+
+    // Al elegir una sección el panel sobra: taparía justo lo que se va a leer.
+    panel.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Un toque fuera cierra: en móvil es el gesto que espera todo el mundo.
+    document.addEventListener('click', (event) => {
+      const target = event.target as Node;
+      if (!panel.hidden && !panel.contains(target) && !toggle.contains(target)) setOpen(false);
+    });
+
+    // Al pasar a pantalla ancha los enlaces vuelven a la barra: el panel
+    // quedaría abierto y vacío de sentido.
+    matchMedia('(min-width: 1024px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+
+  // Resalta la sección visible. Los enlaces están duplicados (barra ancha y
+  // panel), así que se marcan todos los que apuntan a la misma sección.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
 
   const setActive = (id: string | undefined) => {
     for (const link of links) {
@@ -146,12 +206,8 @@ const initials = name
       link.classList.toggle('bg-slate-800', active);
       link.classList.toggle('text-white', active);
       link.classList.toggle('text-slate-400', !active);
-      if (active) {
-        link.setAttribute('aria-current', 'true');
-        keepInStrip(link);
-      } else {
-        link.removeAttribute('aria-current');
-      }
+      if (active) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
     }
   };
 
