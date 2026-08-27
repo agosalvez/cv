@@ -60,6 +60,17 @@ function totalExpYears(exps: any[]): number {
 
 const expYears = totalExpYears(experiences);
 
+/**
+ * PDF del CV ya redactado, no el diálogo de impresión del navegador.
+ *
+ * `window.print()` deja el resultado en manos del visitante: márgenes, escala,
+ * cabecera con la URL y, en el movil, a menudo ni eso. El fichero se genera con
+ * `npm run cv:pdf` desde esta misma página y su hoja de estilos de impresión,
+ * así que el contenido es el mismo pero la maquetación está decidida aquí.
+ */
+const pdfHref = lang === 'es' ? '/cv-adrian-gosalvez.pdf' : '/cv-adrian-gosalvez-en.pdf';
+const pdfLabel = lang === 'es' ? 'Descargar CV en PDF' : 'Download CV as PDF';
+
 function duration(startDate: string, endDate?: string, lang: string = 'es'): string {
   const s = new Date(startDate + '-01');
   const e = endDate ? new Date(endDate + '-01') : new Date();
@@ -108,32 +119,23 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
             </a>
           </li>
         ))}
-        <li class="ml-1 border-l border-slate-700 pl-2">
-          <a
-            href={lang === 'es' ? '/es/formacion' : '/en/training'}
-            class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-          >
-            {lang === 'es' ? 'Formación' : 'Training'}
-          </a>
-        </li>
-        <li>
-          <a
-            href={`/${lang}/setup`}
-            class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-          >
-            Setup
-          </a>
-        </li>
       </ul>
 
       <!-- PDF + móvil -->
       <div class="flex items-center gap-2">
-        <button onclick="window.print()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+        <a
+          href={pdfHref}
+          download
+          type="application/pdf"
+          aria-label={pdfLabel}
+          title={pdfLabel}
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+        >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
           </svg>
           PDF
-        </button>
+        </a>
         <!-- Móvil hamburger -->
         <button id="menu-btn" aria-label={lang === 'es' ? 'Abrir menú' : 'Open menu'} aria-expanded="false" aria-controls="mobile-menu" class="md:hidden p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-all" onclick="const m=document.getElementById('mobile-menu');const open=m.classList.toggle('hidden')===false;this.setAttribute('aria-expanded',String(open))">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,18 +162,6 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
           {lang === 'es' ? item.labelEs : item.labelEn}
         </a>
       ))}
-      <a
-        href={lang === 'es' ? '/es/formacion' : '/en/training'}
-        class="block border-t border-slate-800 mt-2 pt-3 pb-2 text-sm text-slate-400 hover:text-white transition-colors"
-      >
-        {lang === 'es' ? 'Formación' : 'Training'}
-      </a>
-      <a
-        href={`/${lang}/setup`}
-        class="block pb-2 text-sm text-slate-400 hover:text-white transition-colors"
-      >
-        Setup
-      </a>
     </div>
   </nav>
 
@@ -337,7 +327,7 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
         <h2 class="section-title">{t(lang, 'section.experience')}</h2>
         <div class="divide-y divide-slate-50">
           {experiences.map((exp, i) => (
-            <div class={`py-6 ${i === 0 ? 'pt-0' : ''}`}>
+            <div class={`cv-entry py-6 ${i === 0 ? 'pt-0' : ''}`}>
               <div class="flex items-start gap-4">
                 <!-- Logo -->
                 <a href={`https://${exp.domain}`} target="_blank" rel="noopener" class="shrink-0 w-11 h-11 rounded-xl overflow-hidden border border-slate-100 shadow-sm bg-white flex items-center justify-center transition-transform duration-200 hover:scale-110 hover:shadow-md">
@@ -542,6 +532,8 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
     /* Ocultar todo lo que no es print */
     .no-print { display: none !important; }
     aside { display: none !important; }
+    /* «Sobre mí» es de la web: en papel resta sitio a la experiencia. */
+    #about { display: none !important; }
     .min-h-screen { padding-top: 0 !important; background: white !important; }
     .flex.flex-col { display: block !important; }
 
@@ -591,7 +583,29 @@ function duration(startDate: string, endDate?: string, lang: string = 'es'): str
       box-shadow: none !important;
       border: 1px solid #e2e8f0 !important;
     }
-    .section-title { margin-bottom: 8px !important; font-size: 8px !important; }
+    .section-title { margin-bottom: 8px !important; font-size: 8px !important; break-after: avoid; }
+
+    /*
+     * La experiencia es más alta que una página: si se le prohíbe partirse,
+     * el navegador la empuja entera a la hoja siguiente y deja la primera en
+     * blanco bajo la cabecera. Se parte por donde haga falta, pero nunca en
+     * mitad de un puesto.
+     */
     section { break-inside: avoid; }
+    #experience { break-inside: auto; }
+    .cv-entry { break-inside: avoid; }
+    .print-skills { break-inside: avoid; }
+
+    /*
+     * En pantalla el aire entre puestos se agradece; en papel cada hoja de más
+     * es una hoja que nadie lee. Al apretar el interlineado y los márgenes de
+     * cada puesto entran dos más por página, y el CV baja de cuatro hojas a
+     * tres sin tocar el contenido.
+     */
+    .cv-entry { padding-top: 9px !important; padding-bottom: 9px !important; }
+    .cv-entry h3 { font-size: 13px !important; }
+    .cv-entry ul { margin-bottom: 6px !important; }
+    .cv-entry li { line-height: 1.35 !important; }
+    .cv-entry ul > li + li { margin-top: 2px !important; }
   }
 </style>

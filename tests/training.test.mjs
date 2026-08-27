@@ -220,13 +220,16 @@ test('setup keeps the shared site nav', async () => {
   assert.match(setupNav, /import SiteNav from '\.\.\/site\/SiteNav\.astro'/);
 });
 
-test('the CV links to the training page in both languages', async () => {
+test('the CV menu only navigates the CV', async () => {
   const cv = await read('src/pages/[lang]/index.astro');
 
-  assert.match(cv, /'\/es\/formacion' : '\/en\/training'/);
-  assert.match(cv, /'Formación' : 'Training'/);
-  // El enlace a setup sigue en la navegación.
-  assert.match(cv, /\/\$\{lang\}\/setup/);
+  // El CV es la web personal y la landing de formación se vende aparte: un
+  // enlace a «Formación» en esta barra mezcla las dos cosas. Ambas páginas
+  // siguen publicadas y se alcanzan por su URL (`/ia` y `/setup`), pero desde
+  // aquí no se ofrecen.
+  assert.doesNotMatch(cv, /'\/es\/formacion' : '\/en\/training'/);
+  assert.doesNotMatch(cv, /'Formación' : 'Training'/);
+  assert.doesNotMatch(cv, /\/\$\{lang\}\/setup/);
 });
 
 test('training adds no dependencies', async () => {

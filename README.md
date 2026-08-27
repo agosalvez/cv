@@ -106,7 +106,13 @@ cv-adriangosalvez/
 | `/formacion` | Redirige a `/es/formacion` |
 | `/training` | Redirige a `/en/training` |
 | `/es/formacion`, `/en/training` | Landing de formación en IA para empresas |
+| `/ia` | Atajo hablado a `/es/formacion`, el que lleva el QR |
+| `/cv-adrian-gosalvez.pdf`, `/cv-adrian-gosalvez-en.pdf` | CV en PDF, el que descarga el botón de la barra |
 | `POST /api/contacto` | Recibe las solicitudes de formación y envía el correo |
+
+El menú del CV solo navega sus propias secciones. La landing de formación y la
+página de setup siguen publicadas y se alcanzan por su URL, pero no se ofrecen
+desde ahí: el CV es la web personal y la formación se vende aparte.
 
 Las redirecciones cortas se declaran en `astro.config.mjs`: con `i18n.routing.prefixDefaultLocale`, la salida estática no emite rutas sin prefijo de idioma.
 
@@ -139,7 +145,26 @@ npm run admin    # admin en http://localhost:4323
 
 # tests (runner nativo de Node, sin dependencias extra)
 npm test
+
+# regenerar el PDF del CV (necesario tras tocar src/data/cv.json)
+npm run cv:pdf
 ```
+
+### El PDF del CV
+
+El botón «PDF» de la barra descarga un fichero ya maquetado en vez de abrir el
+diálogo de impresión del navegador. Los dos PDF (`public/cv-adrian-gosalvez.pdf`
+y su versión inglesa) los genera `npm run cv:pdf`: compila el sitio, lo sirve en
+un puerto suelto e imprime `/es` y `/en` con el Chrome que ya está instalado,
+usando la hoja de estilos `@media print` de la propia página. Así el PDF y la web
+no pueden contar cosas distintas, y el repositorio no gana ninguna dependencia.
+
+En papel se omite «Sobre mí»: quien lo lee ya tiene el puesto y los años en la
+cabecera, y el párrafo de presentación le quitaba sitio a la experiencia.
+
+`scripts/cv-pdf.lock.json` guarda la huella del CV con la que se generaron. Si se
+edita `src/data/cv.json` y no se regeneran, `npm test` falla en vez de dejar que
+se publique un PDF viejo.
 
 ---
 

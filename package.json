@@ -8,6 +8,7 @@
     "admin": "npm --prefix admin start",
     "build": "astro build",
     "preview": "astro preview",
+    "cv:pdf": "node scripts/cv-pdf.mjs",
     "test": "node --test \"tests/**/*.test.mjs\""
   },
   "dependencies": {
