@@ -69,8 +69,15 @@ app.get('/api/version', (_req, res) => {
 // ruta no dependa del contenido de `dist/`.
 app.post('/api/contacto', contactLimiter, contactHandler());
 
+// ── Descargas directas — público ────────────────────────────
+// Viven fuera de public/ porque ese directorio es un volumen y no
+// recogería ficheros nuevos de la imagen.
+const DOWNLOADS_DIR = join(ROOT, 'downloads');
+app.get('/tesis', (_req, res) => res.download(join(DOWNLOADS_DIR, 'tesis.pptx'), 'Tesis-Maria-Botella.pptx'));
+app.get('/tesispdf', (_req, res) => res.download(join(DOWNLOADS_DIR, 'tesis.pdf'), 'Tesis-Maria-Botella.pdf'));
+
 // ── CV estático — público ───────────────────────────────────
-app.get('/', (_req, res) => res.redirect(301, '/es'));
+app.get('/',(_req, res) => res.redirect(301, '/es'));
 app.use(express.static(DIST_DIR));
 app.use(express.static(join(ROOT, 'public')));
 

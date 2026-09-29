@@ -23,6 +23,9 @@ RUN npm ci --omit=dev
 # Servidor + UI del admin
 COPY admin/ ./
 
+# Descargas directas (/tesis, /tesispdf), fuera del volumen de public/
+COPY downloads/ ./downloads/
+
 # CV compilado
 COPY --from=builder /build/dist ./dist
 
