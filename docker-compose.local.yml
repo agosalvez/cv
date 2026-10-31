@@ -2,7 +2,7 @@ services:
 
   # ── CV (Astro dev server) ────────────────────────────────────
   cv:
-    image: node:20-alpine
+    image: node:24.22.1-alpine
     working_dir: /app
     volumes:
       - .:/app
@@ -12,7 +12,7 @@ services:
 
   # ── Admin backoffice ─────────────────────────────────────────
   admin:
-    image: node:20-alpine
+    image: node:24.22.1-alpine
     working_dir: /app/admin
     volumes:
       - .:/app

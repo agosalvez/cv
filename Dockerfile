@@ -1,5 +1,5 @@
 # ── Stage 1: Build Astro ─────────────────────────────────────
-FROM node:20-alpine AS builder
+FROM node:24.22.1-alpine AS builder
 WORKDIR /build
 COPY package*.json ./
 RUN npm ci
@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # ── Stage 2: Runtime (Express sirve CV + Admin) ───────────────
-FROM node:20-alpine
+FROM node:24.22.1-alpine
 WORKDIR /app
 ENV APP_ROOT=/app
 
