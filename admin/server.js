@@ -76,8 +76,8 @@ const DOWNLOADS_DIR = join(ROOT, 'downloads');
 app.get('/tesis', (_req, res) => res.download(join(DOWNLOADS_DIR, 'tesis.pptx'), 'Tesis-Maria-Botella.pptx'));
 app.get('/tesispdf', (_req, res) => res.download(join(DOWNLOADS_DIR, 'tesis.pdf'), 'Tesis-Maria-Botella.pdf'));
 
-// ── CV estático — público ───────────────────────────────────
-app.get('/',(_req, res) => res.redirect(301, '/es'));
+// ── Sitio estático — público ────────────────────────────────
+// `/` es la portada (`dist/index.html`); el CV vive en `/es` y `/en`.
 app.use(express.static(DIST_DIR));
 app.use(express.static(join(ROOT, 'public')));
 
@@ -112,6 +112,6 @@ app.post('/api/logo', authLimiter, basicAuth, upload.single('logo'), (req, res) 
 // ── Arrancar ────────────────────────────────────────────────
 const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
-  console.log(`✅ CV en http://localhost:${PORT}/es`);
+  console.log(`✅ Web en http://localhost:${PORT} (CV en /es)`);
   console.log(`🔐 Admin en http://localhost:${PORT}/admin`);
 });

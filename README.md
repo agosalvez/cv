@@ -1,6 +1,6 @@
 # gosalvez.es
 
-CV personal bilingüe y página de setup, construidos con **Astro + TailwindCSS**, con panel de administración propio, self-hosted y desplegados automáticamente en cada push.
+Portada de servicios, CV personal bilingüe, landing de formación y página de setup, construidos con **Astro + TailwindCSS**, con panel de administración propio, self-hosted y desplegados automáticamente en cada push.
 
 <div align="center">
 
@@ -24,12 +24,14 @@ Mantener el CV en un PDF significa reeditarlo y volver a exportarlo cada vez que
 
 ## Qué incluye
 
+- **Portada** — `/`, en español: quién soy, los tres servicios (formación, proyectos y mentoría) y el contacto por WhatsApp, con el CV a un clic.
 - **Bilingüe** — Español e inglés, rutas `/es` y `/en`, con hreflang y x-default.
 - **Página de setup** — `/es/setup` y `/en/setup`, con el espacio de trabajo documentado desde datos.
 - **Landing de formación** — `/es/formacion` y `/en/training`, con formulario de solicitud.
 - **Panel de administración** — Edición del contenido del CV desde el navegador.
 - **Un solo `cv.json`** — El admin lo escribe, la web lo lee.
 - **SEO** — Open Graph, Twitter Card, JSON-LD, sitemap y robots.txt.
+- **Analítica sin cookies** — Umami, desactivada hasta configurarla en `src/data/analytics.ts`; los botones de contacto se miden como eventos.
 - **Exportación a PDF** — Hoja de estilos de impresión con cabecera propia.
 - **CI/CD** — Push a `main` → GitHub Actions → Docker Hub → Portainer.
 - **Sin JavaScript de cliente en el CV** — HTML estático.
@@ -66,6 +68,8 @@ cv-adriangosalvez/
 │   ├── components/
 │   │   └── setup/               # componentes de la página de setup
 │   ├── data/
+│   │   ├── analytics.ts         # configuración de Umami (null = desactivada)
+│   │   ├── home.ts              # contenido de la portada
 │   │   ├── cv.json              # ← toda la info del CV aquí
 │   │   └── setup.ts             # contenido, imágenes y enlaces de /setup
 │   ├── i18n/
@@ -73,7 +77,7 @@ cv-adriangosalvez/
 │   ├── layouts/
 │   │   └── Layout.astro         # head, SEO, meta tags
 │   └── pages/
-│       ├── index.astro          # redirección a /es
+│       ├── index.astro          # portada
 │       ├── setup.astro          # redirección a /es/setup
 │       └── [lang]/
 │           ├── index.astro      # la página del CV
@@ -99,7 +103,7 @@ cv-adriangosalvez/
 
 | Ruta | Qué hace |
 |------|----------|
-| `/` | Redirige a `/es` |
+| `/` | Portada: servicios y contacto (solo en español) |
 | `/es`, `/en` | CV en español e inglés |
 | `/setup` | Redirige a `/es/setup` |
 | `/es/setup`, `/en/setup` | Página de setup en español e inglés |
@@ -115,6 +119,8 @@ página de setup siguen publicadas y se alcanzan por su URL, pero no se ofrecen
 desde ahí: el CV es la web personal y la formación se vende aparte.
 
 Las redirecciones cortas se declaran en `astro.config.mjs`: con `i18n.routing.prefixDefaultLocale`, la salida estática no emite rutas sin prefijo de idioma.
+
+La portada es la excepción: `i18n.routing.redirectToDefaultLocale: false` evita que Astro sustituya `/` por una redirección a `/es/`, y `admin/server.js` sirve `dist/index.html` sin redirigir. Solo existe en español, así que no declara hreflang (`alternateUrls={null}`); el pie enlaza al CV en inglés.
 
 La landing de formación es la única página con el slug traducido (`formacion` / `training`), así que no puede resolverse con la ruta dinámica `[lang]`: cada idioma declara su archivo en `src/pages/es/` y `src/pages/en/`, y ambos renderizan `src/components/training/TrainingPage.astro`. Las dos URL se declaran una sola vez en `src/data/training.ts`, y de ahí salen el canonical, los hreflang, el conmutador de idioma y el sitemap.
 
@@ -256,6 +262,23 @@ Para sustituirlas por fotografías propias:
 Las imágenes viven bajo `public/images/` y no bajo `public/setup/` porque ese directorio se serviría en la misma URL que la página `/setup` y sobrescribiría su redirección al construir el sitio.
 
 La sección de conexiones y alimentación no lleva fotografía, y la distribución de pantallas usa un esquema dibujado en HTML en lugar de una imagen de relleno.
+
+---
+
+## Analítica
+
+La web usa [Umami](https://umami.is): no guarda cookies ni datos personales, así que no necesita banner de consentimiento. Mientras `src` y `websiteId` sean `null` en `src/data/analytics.ts`, el script no se carga.
+
+Para activarla, crea el sitio en una instancia de Umami (propia o Umami Cloud) y copia la URL de `script.js` y el identificador del sitio en ese archivo. `data-domains` limita el recuento a `gosalvez.es`, así que las visitas en local no cuentan.
+
+Los botones de contacto llevan `data-umami-event` y aparecen como eventos en Umami:
+
+| Evento | Dónde |
+|--------|-------|
+| `home-whatsapp`, `home-cv`, `home-linkedin` | Botones de la portada |
+| `home-formacion`, `home-proyectos`, `home-mentoria` | Enlace de cada servicio en la portada |
+| `training-whatsapp`, `training-form` | Botones de contacto de `/formacion` |
+| `training-form-submit` | Envío del formulario de `/formacion` (intentos, no envíos confirmados) |
 
 ---
 

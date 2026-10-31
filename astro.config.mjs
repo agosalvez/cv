@@ -18,6 +18,8 @@ export default defineConfig({
     locales: ['es', 'en'],
     routing: {
       prefixDefaultLocale: true,
+      // `/` es la portada (`src/pages/index.astro`), no una redirección al CV.
+      redirectToDefaultLocale: false,
     },
   },
   vite: {

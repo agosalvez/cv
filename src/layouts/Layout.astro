@@ -1,4 +1,6 @@
 ---
+import { umami } from '../data/analytics';
+
 interface Props {
   title: string;
   lang: string;
@@ -8,8 +10,11 @@ interface Props {
   jsonLd?: object;
   /** `profile` en el CV; las páginas internas usan `website`. */
   ogType?: string;
-  /** URL equivalente en cada idioma; por defecto, la portada del CV. */
-  alternateUrls?: Record<'es' | 'en', string>;
+  /**
+   * URL equivalente en cada idioma; por defecto, la portada del CV. `null` en
+   * las páginas que solo existen en un idioma: no se declaran hreflang.
+   */
+  alternateUrls?: Record<'es' | 'en', string> | null;
 }
 const {
   title,
@@ -43,9 +48,15 @@ const ogLocale = (value: string) => (value === 'es' ? 'es_ES' : 'en_GB');
     <link rel="canonical" href={canonical} />
 
     <!-- Hreflang i18n -->
-    <link rel="alternate" hreflang="es" href={alternateUrls.es} />
-    <link rel="alternate" hreflang="en" href={alternateUrls.en} />
-    <link rel="alternate" hreflang="x-default" href={alternateUrls.es} />
+    {
+      alternateUrls && (
+        <>
+          <link rel="alternate" hreflang="es" href={alternateUrls.es} />
+          <link rel="alternate" hreflang="en" href={alternateUrls.en} />
+          <link rel="alternate" hreflang="x-default" href={alternateUrls.es} />
+        </>
+      )
+    }
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
@@ -75,6 +86,13 @@ const ogLocale = (value: string) => (value === 'es' ? 'es_ES' : 'en_GB');
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Analítica sin cookies (ver src/data/analytics.ts) -->
+    {
+      umami.src && umami.websiteId && (
+        <script is:inline defer src={umami.src} data-website-id={umami.websiteId} data-domains={umami.domains} />
+      )
+    }
   </head>
   <body class="bg-white text-slate-800 font-sans antialiased">
     <slot />

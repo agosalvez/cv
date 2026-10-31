@@ -126,11 +126,13 @@ export const trainingHero = {
     es:
       'Ayudo a empresas y equipos a descubrir cómo aplicar la inteligencia artificial en las tareas ' +
       'que ya hacen cada día: ahorrar tiempo, reducir trabajo repetitivo y manejar mejor documentación, ' +
-      'textos y datos. Sin teoría innecesaria y sin programar.',
+      'textos y datos. Sin teoría innecesaria y sin programar. La imparte un ingeniero que construye ' +
+      'sistemas de IA en producción, no un divulgador.',
     en:
       'I help companies and teams find out how to apply artificial intelligence to the work they already ' +
       'do every day: saving time, cutting repetitive work and handling documents, text and data better. ' +
-      'No unnecessary theory and no programming.',
+      'No unnecessary theory and no programming. Run by an engineer who builds AI systems in production, ' +
+      'not a commentator.',
   },
   ctaPrimary: { es: 'Solicitar información', en: 'Request information' },
   ctaSecondary: { es: 'Ver modalidades', en: 'See the two formats' },
@@ -906,19 +908,22 @@ export const trainingProcess = {
 export const trainingAbout = {
   eyebrow: { es: 'Quién la imparte', en: 'Who runs it' },
   title: {
-    es: 'Formación impartida por alguien que trabaja con esto todos los días',
-    en: 'Training run by someone who works with this every day',
+    es: 'La imparte alguien que construye sistemas de IA en producción',
+    en: 'Run by someone who builds AI systems in production',
   },
   paragraphs: [
     {
       es:
-        'Soy ingeniero de software especializado en inteligencia artificial. Llevo más de doce años ' +
-        'en el sector, liderando equipos y proyectos de transformación digital para empresas públicas ' +
-        'y privadas, y trabajo a diario construyendo sistemas que usan modelos de lenguaje.',
+        'Soy AI Engineer y Tech Lead. Trabajo a diario integrando modelos de lenguaje en productos reales ' +
+        'y llevando a producción sistemas que responden con la documentación de cada empresa. Tengo un ' +
+        'máster en Inteligencia Artificial y más de doce años en el sector, liderando equipos de hasta diez ' +
+        'personas y proyectos para el Ayuntamiento de Valencia y la Generalitat Valenciana.',
       en:
-        'I am a software engineer specialised in artificial intelligence. I have spent more than twelve ' +
-        'years in the industry, leading teams and digital transformation projects for public and private ' +
-        'companies, and I work daily building systems that use language models.',
+        'I am an AI Engineer and Tech Lead. I work every day integrating language models into real products ' +
+        'and taking to production systems that answer from each company’s own documentation. I hold a ' +
+        'master’s degree in Artificial Intelligence and have spent more than twelve years in the industry, ' +
+        'leading teams of up to ten people and projects for Valencia City Council and the Valencian regional ' +
+        'government.',
     },
     {
       es:
@@ -927,6 +932,14 @@ export const trainingAbout = {
       en:
         'That is the whole difference: what is covered in the session comes from applying it on real ' +
         'projects, not from repeating headlines. Which is also why it is clear about what not to do.',
+    },
+    {
+      es:
+        'Y si en la sesión aparece un proceso que merece una herramienta propia —un asistente sobre ' +
+        'vuestra documentación, una automatización—, también puedo construirla.',
+      en:
+        'And if the session turns up a process that deserves its own tool —an assistant over your ' +
+        'documentation, an automation— I can build that too.',
     },
   ],
   cta: { es: 'Ver mi trayectoria completa', en: 'See my full background' },
