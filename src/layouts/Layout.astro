@@ -1,5 +1,6 @@
 ---
 import { umami } from '../data/analytics';
+import { experienceYears } from '../data/experience';
 
 interface Props {
   title: string;
@@ -19,7 +20,7 @@ interface Props {
 const {
   title,
   lang,
-  description = 'Adrián Gosálvez — AI Engineer & Tech Lead con más de 12 años de experiencia end-to-end. Especializado en LLMs, RAG y liderazgo técnico.',
+  description = `Adrián Gosálvez — AI Engineer & Tech Lead con más de ${experienceYears} años de experiencia end-to-end. Especializado en LLMs, RAG y liderazgo técnico.`,
   canonical = `https://gosalvez.es/${lang}`,
   ogImage = 'https://gosalvez.es/profile.jpg',
   jsonLd,

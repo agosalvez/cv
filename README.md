@@ -24,7 +24,7 @@ Mantener el CV en un PDF significa reeditarlo y volver a exportarlo cada vez que
 
 ## Qué incluye
 
-- **Portada** — `/`, en español: quién soy, los tres servicios (formación, proyectos y mentoría) y el contacto por WhatsApp, con el CV a un clic.
+- **Portada** — `/`, en español: quién soy, los dos servicios (formación y mentoría) y el contacto por WhatsApp, con el CV a un clic.
 - **Bilingüe** — Español e inglés, rutas `/es` y `/en`, con hreflang y x-default.
 - **Página de setup** — `/es/setup` y `/en/setup`, con el espacio de trabajo documentado desde datos.
 - **Landing de formación** — `/es/formacion` y `/en/training`, con formulario de solicitud.
@@ -276,7 +276,7 @@ Los botones de contacto llevan `data-umami-event` y aparecen como eventos en Uma
 | Evento | Dónde |
 |--------|-------|
 | `home-whatsapp`, `home-cv`, `home-linkedin` | Botones de la portada |
-| `home-formacion`, `home-proyectos`, `home-mentoria` | Enlace de cada servicio en la portada |
+| `home-formacion`, `home-mentoria` | Enlace de cada servicio en la portada |
 | `training-whatsapp`, `training-form` | Botones de contacto de `/formacion` |
 | `training-form-submit` | Envío del formulario de `/formacion` (intentos, no envíos confirmados) |
 

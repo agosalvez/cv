@@ -32,7 +32,7 @@ test('the home page links to the CV, LinkedIn and every service', async () => {
   assert.match(home, /href="\/en"/);
   // La formación enlaza a su página; el resto abre WhatsApp con su mensaje.
   assert.match(data, /href: trainingRoutes\.es/);
-  for (const id of ['formacion', 'proyectos', 'mentoria']) {
+  for (const id of ['formacion', 'mentoria']) {
     assert.match(data, new RegExp(`id: '${id}'`), id);
   }
 });
@@ -73,4 +73,14 @@ test('sitemap lists the home page', async () => {
   const sitemap = await read('public/sitemap.xml');
 
   assert.match(sitemap, /<loc>https:\/\/gosalvez\.es\/<\/loc>/);
+});
+
+test('years of experience come from the CV dates, not from hand-written figures', async () => {
+  // El CV las calcula a partir de las fechas; un número escrito a mano en otra
+  // página acaba contradiciéndolo en cuanto pasa un año.
+  for (const path of ['src/data/home.ts', 'src/data/training.ts', 'src/layouts/Layout.astro', 'src/pages/[lang]/index.astro']) {
+    const source = await read(path);
+    assert.doesNotMatch(source, /\d+\+? (años|years)|doce años|twelve years/, path);
+  }
+  assert.match(await read('src/data/home.ts'), /experienceYears/);
 });

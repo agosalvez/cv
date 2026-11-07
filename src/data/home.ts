@@ -10,6 +10,7 @@
  *
  * Todo el texto vive en este archivo; `src/pages/index.astro` solo lo pinta.
  */
+import { experienceYears } from './experience';
 import { trainingContact, trainingPrograms, trainingRoutes } from './training';
 
 /** Enlace a WhatsApp con el mensaje inicial ya escrito. */
@@ -26,15 +27,15 @@ const trainingPriceFrom = Math.min(
 export const homeSeo = {
   title: 'Adrián Gosálvez — IA aplicada para empresas y developers',
   description:
-    'AI Engineer y Tech Lead con más de 12 años en el sector. Formación en IA para empresas, ' +
-    'proyectos de IA a medida y mentoría para developers.',
+    `AI Engineer y Tech Lead con más de ${experienceYears} años en el sector. Formación en IA para empresas ` +
+    'y mentoría para developers.',
 };
 
 export const homeHero = {
   eyebrow: 'AI Engineer · Tech Lead · Valencia',
   title: 'Inteligencia artificial aplicada al trabajo real, de la mano de quien la construye',
   intro:
-    'Llevo más de 12 años desarrollando software y liderando equipos, y hoy construyo sistemas de IA ' +
+    `Llevo más de ${experienceYears} años desarrollando software y liderando equipos, y hoy construyo sistemas de IA ` +
     'que funcionan en producción. Esa experiencia la pongo al servicio de empresas que quieren usar la ' +
     'IA con criterio y de developers que quieren crecer con ella.',
   whatsappLabel: 'Escríbeme por WhatsApp',
@@ -45,14 +46,14 @@ export const homeHero = {
 
 /** Datos de respaldo. Todos salen del CV; ninguno es una promesa. */
 export const homeFacts = [
-  { value: '+12 años', label: 'en el sector, de developer a Tech Lead' },
+  { value: `+${experienceYears} años`, label: 'en el sector, de developer a Tech Lead' },
   { value: 'IA en producción', label: 'LLMs y RAG en sistemas reales' },
   { value: 'Máster en IA', label: 'Universidad Alfonso X el Sabio' },
 ];
 
 export interface HomeService {
   /** Identificador estable: también es el nombre del evento en la analítica. */
-  id: 'formacion' | 'proyectos' | 'mentoria';
+  id: 'formacion' | 'mentoria';
   title: string;
   text: string;
   /** Precio orientativo. Solo se muestra cuando está publicado. */
@@ -74,16 +75,6 @@ export const homeServices: HomeService[] = [
     cta: 'Ver la formación',
     href: trainingRoutes.es,
     whatsappMessage: trainingContact.whatsappMessage.es,
-  },
-  {
-    id: 'proyectos',
-    title: 'Proyectos de IA a medida',
-    text:
-      'Asistentes que responden con la documentación de tu empresa, automatizaciones de tareas ' +
-      'repetitivas e integración de modelos de lenguaje en tus herramientas. De la idea a producción.',
-    cta: 'Cuéntame tu caso',
-    href: null,
-    whatsappMessage: 'Hola Adrián, te escribo por un proyecto de IA.',
   },
   {
     id: 'mentoria',

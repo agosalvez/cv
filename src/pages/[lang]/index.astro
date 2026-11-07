@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Layout from '../../layouts/Layout.astro';
 import { t, type Lang } from '../../i18n/translations';
+import { experienceYears } from '../../data/experience';
 
 const rawData = JSON.parse(readFileSync(join(process.cwd(), 'src/data/cv.json'), 'utf8'));
 const { personal, about, experiences, education, skillGroups, publications, languages, preferences, portfolio, references } = rawData;
@@ -17,8 +18,8 @@ const title = `${personal.name} — ${personal.title}`;
 const location = lang === 'es' ? personal.locationEs : personal.locationEn;
 
 const description = lang === 'es'
-  ? `${personal.name} — AI Engineer & Tech Lead con más de 20 años de experiencia end-to-end. Especializado en LLMs, RAG y liderazgo técnico.`
-  : `${personal.name} — AI Engineer & Tech Lead with 20+ years of end-to-end experience. Specialized in LLMs, RAG and technical leadership.`;
+  ? `${personal.name} — AI Engineer & Tech Lead con más de ${experienceYears} años de experiencia end-to-end. Especializado en LLMs, RAG y liderazgo técnico.`
+  : `${personal.name} — AI Engineer & Tech Lead with ${experienceYears}+ years of end-to-end experience. Specialized in LLMs, RAG and technical leadership.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -36,29 +37,7 @@ function initials(name: string) {
   return name.split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
 }
 
-function totalExpYears(exps: any[]): number {
-  const intervals = exps
-    .filter(e => e.startDate)
-    .map(e => ({
-      start: new Date(e.startDate + '-01').getTime(),
-      end: e.endDate ? new Date(e.endDate + '-01').getTime() : Date.now()
-    }))
-    .sort((a, b) => a.start - b.start);
-
-  const merged: {start: number, end: number}[] = [];
-  for (const iv of intervals) {
-    if (!merged.length || iv.start > merged[merged.length - 1].end) {
-      merged.push({ ...iv });
-    } else {
-      merged[merged.length - 1].end = Math.max(merged[merged.length - 1].end, iv.end);
-    }
-  }
-
-  const totalMs = merged.reduce((acc, iv) => acc + (iv.end - iv.start), 0);
-  return Math.floor(totalMs / (1000 * 60 * 60 * 24 * 365.25));
-}
-
-const expYears = totalExpYears(experiences);
+const expYears = experienceYears;
 
 /**
  * PDF del CV ya redactado, no el diálogo de impresión del navegador.

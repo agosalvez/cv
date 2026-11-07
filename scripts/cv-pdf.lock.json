@@ -1,7 +1,7 @@
 {
   "comentario": "Huella del contenido del CV cuando se generaron los PDF. Si no cuadra, ejecuta `npm run cv:pdf`.",
-  "sources": "92dd1c5012700ec27dda16a1b38da49541f0c02c6ce48cb4b1434e668c0a3d38",
-  "generated": "2026-08-27",
+  "sources": "f86e0296e19ef49d415ca4094f34be6872f1e88357b3fa30ca5557897f60698f",
+  "generated": "2026-10-31",
   "files": [
     "public/cv-adrian-gosalvez.pdf",
     "public/cv-adrian-gosalvez-en.pdf"

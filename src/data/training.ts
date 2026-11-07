@@ -11,6 +11,8 @@
  * o el correo de contacto no debe requerir tocar el marcado.
  */
 
+import { experienceYears } from './experience';
+
 export type TrainingLang = 'es' | 'en';
 
 /** Texto disponible en los dos idiomas de la web. */
@@ -754,8 +756,8 @@ export const trainingNotFor = {
       en: 'Anyone after a trends talk or a motivational session. This is hands-on work.',
     },
     {
-      es: 'Quien necesita desarrollar un producto de IA a medida. Eso es otro servicio: también lo hago, pero no es esto.',
-      en: 'Anyone who needs a custom AI product built. That is a different service — I do it too, but this is not it.',
+      es: 'Quien necesita que le desarrollen un producto de IA a medida. Esto es formación, no desarrollo.',
+      en: 'Anyone who needs a custom AI product built. This is training, not development.',
     },
     {
       es: 'Quien espera que la IA arregle un proceso que ya está roto sin cambiar nada más.',
@@ -916,12 +918,12 @@ export const trainingAbout = {
       es:
         'Soy AI Engineer y Tech Lead. Trabajo a diario integrando modelos de lenguaje en productos reales ' +
         'y llevando a producción sistemas que responden con la documentación de cada empresa. Tengo un ' +
-        'máster en Inteligencia Artificial y más de doce años en el sector, liderando equipos de hasta diez ' +
+        `máster en Inteligencia Artificial y más de ${experienceYears} años en el sector, liderando equipos de hasta diez ` +
         'personas y proyectos para el Ayuntamiento de Valencia y la Generalitat Valenciana.',
       en:
         'I am an AI Engineer and Tech Lead. I work every day integrating language models into real products ' +
         'and taking to production systems that answer from each company’s own documentation. I hold a ' +
-        'master’s degree in Artificial Intelligence and have spent more than twelve years in the industry, ' +
+        `master’s degree in Artificial Intelligence and have spent more than ${experienceYears} years in the industry, ` +
         'leading teams of up to ten people and projects for Valencia City Council and the Valencian regional ' +
         'government.',
     },
@@ -932,14 +934,6 @@ export const trainingAbout = {
       en:
         'That is the whole difference: what is covered in the session comes from applying it on real ' +
         'projects, not from repeating headlines. Which is also why it is clear about what not to do.',
-    },
-    {
-      es:
-        'Y si en la sesión aparece un proceso que merece una herramienta propia —un asistente sobre ' +
-        'vuestra documentación, una automatización—, también puedo construirla.',
-      en:
-        'And if the session turns up a process that deserves its own tool —an assistant over your ' +
-        'documentation, an automation— I can build that too.',
     },
   ],
   cta: { es: 'Ver mi trayectoria completa', en: 'See my full background' },
